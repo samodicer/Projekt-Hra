@@ -39,26 +39,16 @@ class Game{
         game.floor.drawFloor();
         game.player.drawPlayer();
 
-        if (game.collision(game.floor) == true) { 
+        if (game.player.collision(game.floor) == true) { 
             console.log("KOLIZIA");
         } 
         
-        if (game.collision(game.floor2) == true) { 
+        if (game.player.collision(game.floor2) == true) { 
             console.log("KOLIZIA2");
         } 
 
         window.requestAnimationFrame(game.loop);
 
-    }
-
-    collision(object){
-        if ((game.player.top > object.bottom || game.player.right < object.left || game.player.bottom < object.top || game.player.left > object.right)) {
- 
-            return false;
-      
-        }
-      
-        else return true;
     }
 
 }
@@ -144,6 +134,16 @@ class Player{
         }
     }
 
+    collision(object){
+        if ((game.player.top > object.bottom || game.player.right < object.left || game.player.bottom < object.top || game.player.left > object.right)) {
+ 
+            return false;
+      
+        }
+      
+        else return true;
+    }
+
     moveLeft(){
 
         if (game.controller.left) {
@@ -210,19 +210,15 @@ class Player{
     shoot(){
 
         var rect = game.canvas.getBoundingClientRect();
-        var cursorX = this.x+45 - (game.controller.xtarget - rect.left);console.log("curx:"+cursorX);
-        var cursorY = this.y+20 - (game.controller.ytarget - rect.top);console.log("cury:"+cursorY);
+        var posX = this.x+35 - (game.controller.xtarget - rect.left);
+        var posY = this.y+20 - (game.controller.ytarget - rect.top);
 
-        let direction = Math.atan2(cursorX,cursorY);
-
+        let direction = Math.atan2(posX,posY);
         let dirX = Math.sin(direction);
         let dirY = Math.cos(direction);
 
-        console.log("direction:"+direction);
-        console.log("dx:"+dirX);
-        console.log("dy:"+dirY);
+        var b = new Bullet (this.x+35,this.y+20,dirX,dirY);
 
-        var b = new Bullet (this.x+45,this.y+20,dirX,dirY);
         this.bullets.push(b);
     }
 
@@ -295,10 +291,24 @@ class Bullet{
         this.x -=  this.dx * this.speed;
         this.y -= this.dy * this.speed;
 
+        if (this.collision(game.floor) == true) { 
+            console.log("bum");
+        } 
 
         if(this.x < 0 || this.x > game.canvas.width || this.y < 0 || this.y > game.canvas.height){
             return false
         } else return true;
+    
+    }
+
+    collision(object){
+        if ((this.y > object.bottom || this.x < object.left || this.y < object.top || this.x > object.right)) {
+ 
+            return false;
+      
+        }
+      
+        else return true;
     }
 }
 
