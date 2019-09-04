@@ -208,22 +208,21 @@ class Player{
     }
 
     shoot(){
-        //var dx = Math.sin(game.controller.xtarget);console.log("dx:"+game.controller.xtarget);
-       // var dy = Math.cos(game.controller.ytarget);console.log("dy:"+game.controller.ytarget);
 
-        var directionX = game.controller.xtarget - (this.x+45);
-        var directionY = game.controller.ytarget - (this.y+20);
+        var rect = game.canvas.getBoundingClientRect();
+        var cursorX = this.x+45 - (game.controller.xtarget - rect.left);console.log("curx:"+cursorX);
+        var cursorY = this.y+20 - (game.controller.ytarget - rect.top);console.log("cury:"+cursorY);
 
-        var mag = Math.sqrt(directionX * directionX + directionY * directionY); 
+        let direction = Math.atan2(cursorX,cursorY);
 
-        // Normalize the direction
-        //var len = Math.sqrt(directionX * directionX + directionY * directionY);
-        //directionX /= len;
-        //directionY /= len;
-        console.log("dx:"+directionX);
-        console.log("dy:"+directionY);
+        let dirX = Math.sin(direction);
+        let dirY = Math.cos(direction);
 
-        var b = new Bullet (this.x+45,this.y+20,directionX,directionY,mag);
+        console.log("direction:"+direction);
+        console.log("dx:"+dirX);
+        console.log("dy:"+dirY);
+
+        var b = new Bullet (this.x+45,this.y+20,dirX,dirY);
         this.bullets.push(b);
     }
 
@@ -277,16 +276,12 @@ class Floor{
 }
 
 class Bullet{
-    constructor(x,y,dx,dy,mag){
+    constructor(x,y,dx,dy){
         this.x = x;
         this.y = y;
         this.dx = dx;
         this.dy = dy;
-        this.speed = 5;
-        this.mag = mag;
-        this.velocity_x;
-        this.velocity_y;
-
+        this.speed = 10;
     }
 
     drawBullet(){
@@ -297,10 +292,9 @@ class Bullet{
     }
 
     updateBullet(){
-        this.velocity_x = (this.dx / this.mag) * this.speed;
-        this.velocity_y = (this.dy / this.mag) * this.speed;
-        this.x += this.velocity_x;
-        this.y += this.velocity_y;
+        this.x -=  this.dx * this.speed;
+        this.y -= this.dy * this.speed;
+
 
         if(this.x < 0 || this.x > game.canvas.width || this.y < 0 || this.y > game.canvas.height){
             return false
@@ -342,7 +336,6 @@ class Controller{
         game.controller.click = true;
         game.controller.xtarget = event.x;
         game.controller.ytarget = event.y;
-        console.log(game.controller.xtarget+" -- "+game.controller.ytarget);
         game.player.shoot();
     }
 
@@ -353,7 +346,7 @@ let game = new Game();
 
 window.addEventListener("keydown", game.controller.keyListener);
 window.addEventListener("keyup", game.controller.keyListener);
-window.addEventListener("click", game.controller.clickListener);
+game.canvas.addEventListener("click", game.controller.clickListener);
 
 
 img1.addEventListener("load", function(event) {// When the load event fires, do this:
