@@ -6,17 +6,25 @@ class Game{
     constructor(){
         this.canvas = document.querySelector("canvas");
         this.context = canvas.getContext("2d");
-        this.buffer = document.createElement("canvas").getContext("2d");
-        this.display = document.createElement("canvas").getContext("2d");
-        this.player = new Player(100,100,0,0,62,62,false,new Animation());
+        this.world = new World();
+        this.player = new Player(100,300,0,0,62,62,false,100,300,new Animation());
         this.sprite_sheet = new Sprite_sheet([[0, 1, 2, 3], [4, 5, 6, 7, 8, 9, 10, 11], [12, 13, 14, 15, 16, 17, 18, 19]],img1,42);
         this.controller = new Controller();
-        this.floor = new Floor(450,460,10,90,"#edb51c");
-        this.floor2 = new Floor(380,390,10,60,"#edb51c");
+
+    }
+
+    start(){
+
+        document.getElementById('menu').style.display="none";
+        document.getElementById('canvas').style.display="block";
+        window.addEventListener("keydown", game.controller.keyListener);
+        window.addEventListener("keyup", game.controller.keyListener);
+        game.canvas.addEventListener("click", game.controller.clickListener);
+        window.requestAnimationFrame(game.loop);// Start the game loop.
+        this.playername= document.getElementById('player_name').value;
     }
 
     loop(){
-
         game.player.moveLeft();
         game.player.moveRight();
         game.player.jump();
@@ -24,35 +32,181 @@ class Game{
 
         game.player.update();
         
-        game.player.y_velocity += 1.0;// gravity
+        game.player.y_velocity += 0.8;// gravity
+        game.player.old_x = game.player.x;
+        game.player.old_y = game.player.y;
         game.player.x += game.player.x_velocity;
         game.player.y += game.player.y_velocity;
         game.player.x_velocity *= 0.9;// friction
         game.player.y_velocity *= 0.9;// friction
 
-        game.player.onGroud();
         game.player.offScreen();
-    
-          
+       
         game.player.animation.update();
 
-        game.floor.drawFloor();
+        game.world.drawWorld();
         game.player.drawPlayer();
 
-        if (game.player.collision(game.floor) == true) { 
-            console.log("KOLIZIA");
-        } 
-        
-        if (game.player.collision(game.floor2) == true) { 
-            console.log("KOLIZIA2");
-        } 
 
+        var tile_x = Math.floor((game.player.x + game.player.width * 0.5) / game.world.tile_size);
+        var tile_y = Math.floor((game.player.y + game.player.height) / game.world.tile_size);
+        // get the value at the tile position in the map
+        var value_at_index = game.world.map[tile_y * game.world.columns + tile_x];
+
+        if (value_at_index != 0) {
+
+            // simply call one of the routing functions in the collision object and pass
+            // in values for the collision tile's location in grid/map space
+            game.world.collision(value_at_index,game.player, tile_y, tile_x);
+    
+        }
+        
+        tile_x = Math.floor((game.player.x + game.player.width * 0.5) / game.world.tile_size);
+        tile_y = Math.floor((game.player.y + game.player.height) / game.world.tile_size);
+        value_at_index = game.world.map[tile_y * game.world.columns + tile_x];
+  
+        if (value_at_index != 0) {
+  
+            game.world.collision(value_at_index,game.player, tile_y, tile_x);
+  
+        }
+
+        //console.log ( "tile_x: " + tile_x + "<br>tile_y: " + tile_y + "<br>map index: " + tile_y + " * " + game.world.columns + " + " + tile_x + " = " + String(tile_y * game.world.columns + tile_x) + "<br>tile value: " + game.world.map[tile_y * game.world.columns + tile_x] );
         window.requestAnimationFrame(game.loop);
 
     }
 
 }
 
+class World{
+    constructor(){
+        this.columns = 19;
+        this.rows = 12;
+        this.tile_size = 40;
+        // [ 0=  no collision] , [ 1= right , top collision ] , [ 2= left , top collision ] , [ 3= only right collision ] , [ 4= top , left ,right collision ] , [ 5 = only top collision ]
+        this.map = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+                    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+                    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+                    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+                    0,0,0,0,0,0,5,0,0,0,0,0,0,0,0,0,0,0,0,
+                    0,0,0,0,0,0,0,0,5,0,5,0,0,0,0,0,0,0,0,
+                    0,0,0,0,0,0,0,0,0,0,0,5,0,0,0,0,0,0,0,
+                    0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,5,0,0,0,
+                    0,0,0,0,0,0,0,0,0,0,0,0,5,5,0,0,0,0,0,
+                    1,0,0,0,0,0,0,2,5,5,1,0,0,0,0,0,0,0,4,
+                    3,0,0,4,5,5,5,5,5,5,3,0,2,4,0,0,4,0,4,
+                    5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5]
+    }
+
+    drawWorld(){
+        for (let index = game.world.map.length - 1; index > -1; -- index) {
+            game.context.fillStyle = (game.world.map[index] > 0)?("#0099" + game.world.map[index] + "f"):"#303840";
+            game.context.fillRect((index % game.world.columns) * game.world.tile_size, Math.floor(index / game.world.columns) * game.world.tile_size, game.world.tile_size, game.world.tile_size);
+          }
+        game.context.font = '30px Courier New';
+        game.context.fillStyle = "red";
+        game.context.fillText(game.playername, 10, 30);  
+        
+    }
+
+    collision(value_at_index,object,row,column){
+
+        switch(value_at_index){
+            case 1 :             
+                    if (this.topCollision(object, row)) { return; }// if no top collision
+                    this.rightCollision(object, column);           // try right side collision
+                    break;
+            case 2 :
+                    if (this.topCollision(object, row)) { return; }
+                    this.leftCollision(object, column);       
+                    break;
+            case 3 :
+                    this.rightCollision(object, column);
+                    break;
+                    
+            case 4 :         
+                    if (this.topCollision(object, row)) { return; }// you only want to do one
+                    if (this.leftCollision(object, column)) { return; }// of these collision
+                    this.rightCollision(object, column);// responses. that's why there are if statements     
+                    break;
+            case 5 : 
+                    this.topCollision(object, row);              
+                    break;           
+
+
+        }
+
+    }
+
+    leftCollision(object, column) {
+
+        if (object.x_velocity > 0) {// If the object is moving right
+
+          var left = column * game.world.tile_size;// calculate the left side of the collision tile
+
+          if (object.x + object.width * 0.5 > left && object.old_x <= left) {// If the object was to the right of the collision object, but now is to the left of it
+
+            object.x_velocity = 0;// Stop moving
+            object.x = object.old_x = left - object.width * 0.5 - 0.001;// place object outside of collision
+            // the 0.001 is just to ensure that the object is no longer in the same tile space as the collision tile
+            // due to the way object tile position is calculated, moving the object to the exact boundary of the collision tile
+            // would not move it out if its tile space, meaning that another collision with an adjacent tile might not be detected in another broad phase check
+
+            return true;
+
+          }
+
+        }
+
+        return false;
+
+    }
+
+    rightCollision(object, column) {
+
+        if (object.x_velocity < 0) {
+
+          var right = (column + 1) * game.world.tile_size;
+
+          if (object.x + object.width * 0.5 < right && object.old_x + object.width * 0.5 >= right) {
+
+            object.x_velocity = 0;
+            object.old_x = object.x = right - object.width * 0.5;
+
+            return true;
+
+          }
+
+        }
+
+        return false;
+
+      }
+
+      topCollision(object, row) {
+
+        if (object.y_velocity > 0) {
+
+          var top = row * game.world.tile_size;
+
+          if (object.y + object.height > top && object.old_y + object.height <= top) {
+
+            object.jumping = false;
+            object.y_velocity = 0;
+            object.old_y = object.y = top - object.height - 0.01;
+
+            return true;
+
+          }
+
+        }
+
+        return false;
+
+      }
+
+    
+}
 class Animation{
     constructor(frame_set , delay){
         this.count = 0;
@@ -99,9 +253,11 @@ class Sprite_sheet{
     }
 }
 
+
+
 class Player{
 
-    constructor(x,y,x_velocity,y_velocity,height,width,jumping,animation){
+    constructor(x,y,x_velocity,y_velocity,height,width,jumping,old_x,old_y,animation){
         this.x = x;
         this.y= y;
         this.x_velocity = x_velocity;
@@ -109,6 +265,8 @@ class Player{
         this.height= height;
         this.width = width;
         this.jumping = jumping;
+        this.old_x = old_x;
+        this.old_y = old_y;
         this.animation = animation;
         this.bullets= [];
     }
@@ -168,7 +326,7 @@ class Player{
 
         if (game.controller.up && game.player.jumping == false) {
 
-            game.player.y_velocity -= 17;
+            game.player.y_velocity -= 21;
             game.player.jumping = true;
         
         }
@@ -183,16 +341,6 @@ class Player{
         }
     }
 
-    onGroud(){
-
-        if (game.player.y > 500 - 20-40) {
-        
-            game.player.jumping = false;
-            game.player.y = 500- 20-40;
-            game.player.y_velocity = 0;
-        
-          }
-    }
 
     offScreen(){
                 
@@ -224,49 +372,11 @@ class Player{
 
     drawPlayer(){
         game.context.drawImage(game.sprite_sheet.image, game.player.animation.frame * 42, 0, 42, 42, Math.floor(game.player.x), Math.floor(game.player.y), 42+20, 42+20);
-        game.display.drawImage(game.buffer.canvas, 0, 0, game.buffer.canvas.width, game.buffer.canvas.height, 0, 0, game.display.canvas.width, game.display.canvas.height);
+        game.context.drawImage(game.context.canvas, 0, 0, game.context.canvas.width, game.context.canvas.height, 0, 0, game.context.canvas.width, game.context.canvas.height);
 
         for (var i=0 ; i < this.bullets.length ; i++){
             this.bullets[i].drawBullet();
         }
-    }
-
-}
-
-class Floor{
-    constructor(x,y,height,width,color){
-        this.x = x;
-        this.y = y;
-        this.height = height;
-        this.width = width;
-        this.color = color;
-    }
-
-    get bottom() { 
-        return this.y + this.height;
-    }
-    get left() { 
-        return this.x;
-    }
-    get right() { 
-        return this.x + this.width;
-    }
-    get top() { 
-        return this.y;
-    }
-
-    drawFloor(){
-        game.context.fillStyle = "#202020"; // bg 
-        game.context.fillRect(0, 0, 800, 500);// bg
-        game.context.fillStyle = game.floor.color;
-        game.context.beginPath();
-        game.context.rect(game.floor.x, game.floor.y, game.floor.width, game.floor.height);
-        game.context.fill();
-        game.context.closePath();
-        game.context.beginPath();
-        game.context.rect(game.floor2.x, game.floor2.y, game.floor2.width, game.floor2.height);
-        game.context.fill();
-        game.context.closePath();
     }
 
 }
@@ -282,6 +392,7 @@ class Bullet{
 
     drawBullet(){
         game.context.beginPath();
+        game.context.fillStyle = "red";
         game.context.arc(this.x, this.y, 3, 0, 2*Math.PI);
         game.context.fill();
         game.context.closePath();
@@ -291,24 +402,10 @@ class Bullet{
         this.x -=  this.dx * this.speed;
         this.y -= this.dy * this.speed;
 
-        if (this.collision(game.floor) == true) { 
-            console.log("bum");
-        } 
-
         if(this.x < 0 || this.x > game.canvas.width || this.y < 0 || this.y > game.canvas.height){
             return false
         } else return true;
     
-    }
-
-    collision(object){
-        if ((this.y > object.bottom || this.x < object.left || this.y < object.top || this.x > object.right)) {
- 
-            return false;
-      
-        }
-      
-        else return true;
     }
 }
 
@@ -352,15 +449,3 @@ class Controller{
     
 }
 
-let game = new Game();
-
-window.addEventListener("keydown", game.controller.keyListener);
-window.addEventListener("keyup", game.controller.keyListener);
-game.canvas.addEventListener("click", game.controller.clickListener);
-
-
-img1.addEventListener("load", function(event) {// When the load event fires, do this:
-
-    window.requestAnimationFrame(game.loop);// Start the game loop.
-  
-});

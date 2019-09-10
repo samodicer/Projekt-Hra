@@ -3,21 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <title>HRA </title>
-    <style>
-        canvas{
-            border:2px solid red;
-            padding-left: 0;
-            padding-right: 0;
-            margin-left: auto;
-            margin-right: auto;
-            display: block;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 
 <body>
-    <canvas id="canvas" width="800" height="500"></canvas>
-    <script type="text/javascript" src="skuska.js"></script>
+    <div id="container"> 
+        <div id="menu"> 
+            <div class="form_div" id ="name_form">
+                    <label for="player_name">Zadaj svoj nick:</label> <br/> 
+                    <input type="text" id="player_name" name="player_name"> 
+            </div>
+
+            <div class="form_div" id ="start_button">
+                    <button id="start_game" name="start_game" onclick="action('startGame');">Hraj</button>
+            </div>
+        </div>
+        <canvas id="canvas" width="760" height="480"></canvas>
+        <script type="text/javascript" src="skuska.js"></script>
+    </div>
+
+    <script type="text/javascript">
+
+        var game = new Game();
+
+        function action(action,element) {
+				
+            switch(action) {
+                    
+                case "startGame":
+                     game.start();
+                    break;
+    
+            }
+    
+        }
+
+    </script>
 </body>
 
 </html>
