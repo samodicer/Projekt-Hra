@@ -1,5 +1,5 @@
 let img1 = new Image();
-img1.src = "sprite.png";
+img1.src = "./images/sprite.png";
 
 
 class Game{
@@ -8,7 +8,7 @@ class Game{
         this.context = canvas.getContext("2d");
         this.world = new World();
         this.player = new Player(100,300,0,0,62,62,false,100,300,new Animation());
-        this.sprite_sheet = new Sprite_sheet([[0, 1, 2, 3], [4, 5, 6, 7, 8, 9, 10, 11], [12, 13, 14, 15, 16, 17, 18, 19]],img1,42);
+        this.sprite_sheet = new Sprite_sheet([[0, 1, 2, 3], [4, 5, 6, 7] , [8, 9, 10, 11, 12, 13, 14, 15], [16, 17, 18, 19, 20, 21, 22, 23]],img1,42);
         this.controller = new Controller();
 
     }
@@ -20,6 +20,7 @@ class Game{
         window.addEventListener("keydown", game.controller.keyListener);
         window.addEventListener("keyup", game.controller.keyListener);
         game.canvas.addEventListener("click", game.controller.clickListener);
+        game.canvas.addEventListener("mousemove", game.controller.mousemoveListener);
         window.requestAnimationFrame(game.loop);// Start the game loop.
         this.playername= document.getElementById('player_name').value;
     }
@@ -29,7 +30,6 @@ class Game{
         game.player.moveRight();
         game.player.jump();
         game.player.idle();
-
         game.player.update();
         
         game.player.y_velocity += 0.8;// gravity
@@ -307,7 +307,7 @@ class Player{
         if (game.controller.left) {
       
             game.player.x_velocity -= 0.3;
-            game.player.animation.change(game.sprite_sheet.frame_sets[2], 7);
+            game.player.animation.change(game.sprite_sheet.frame_sets[3], 7);
         
         }
     }
@@ -317,7 +317,7 @@ class Player{
         if (game.controller.right) {
         
             game.player.x_velocity += 0.3;
-            game.player.animation.change(game.sprite_sheet.frame_sets[1], 7);
+            game.player.animation.change(game.sprite_sheet.frame_sets[2], 7);
         
         }
     }
@@ -336,7 +336,8 @@ class Player{
 
         if (!game.controller.left && !game.controller.right) {
   
-            game.player.animation.change(game.sprite_sheet.frame_sets[0], 10);
+            if(game.controller.mousex > this.x+25 ) game.player.animation.change(game.sprite_sheet.frame_sets[0], 10);
+            else game.player.animation.change(game.sprite_sheet.frame_sets[1], 10);
       
         }
     }
@@ -358,14 +359,14 @@ class Player{
     shoot(){
 
         var rect = game.canvas.getBoundingClientRect();
-        var posX = this.x+35 - (game.controller.xtarget - rect.left);
-        var posY = this.y+20 - (game.controller.ytarget - rect.top);
+        var posX = this.x+25 - (game.controller.xtarget - rect.left);
+        var posY = this.y+25 - (game.controller.ytarget - rect.top);
 
         let direction = Math.atan2(posX,posY);
         let dirX = Math.sin(direction);
         let dirY = Math.cos(direction);
 
-        var b = new Bullet (this.x+35,this.y+20,dirX,dirY);
+        var b = new Bullet (this.x+25,this.y+25,dirX,dirY);
 
         this.bullets.push(b);
     }
@@ -414,9 +415,9 @@ class Controller{
         this.left= false;
         this.right = false;
         this.up = false;
-        this.click=false;
         this.xtarget=0;
         this.ytarget=0;
+        this.mousex = 500;
     }
 
 
@@ -440,11 +441,16 @@ class Controller{
     }
 
     clickListener = function(event) {
-        game.controller.click = true;
         game.controller.xtarget = event.x;
         game.controller.ytarget = event.y;
         game.player.shoot();
     }
+
+    mousemoveListener = function(event) {
+        var rect = game.canvas.getBoundingClientRect();
+        game.controller.mousex = event.clientX - rect.left;
+    }
+
 
     
 }
