@@ -7,6 +7,7 @@ class Game{
         this.canvas = document.querySelector("canvas");
         this.context = canvas.getContext("2d");
         this.world = new World();
+        this.camera = new Camera();
         this.player = new Player(100,300,0,0,62,62,false,100,300,new Animation());
         this.sprite_sheet = new Sprite_sheet([[0, 1, 2, 3], [4, 5, 6, 7] , [8, 9, 10, 11, 12, 13, 14, 15], [16, 17, 18, 19, 20, 21, 22, 23]],img1,42);
         this.controller = new Controller();
@@ -31,6 +32,8 @@ class Game{
         game.player.jump();
         game.player.idle();
         game.player.update();
+
+        game.camera.update(game.player.x + (game.player.width/2), game.player.y + (game.player.height/2));
         
         game.player.y_velocity += 0.8;// gravity
         game.player.old_x = game.player.x;
@@ -40,7 +43,7 @@ class Game{
         game.player.x_velocity *= 0.9;// friction
         game.player.y_velocity *= 0.9;// friction
 
-        game.player.offScreen();
+        //game.player.offScreen();
        
         game.player.animation.update();
 
@@ -80,29 +83,46 @@ class Game{
 
 class World{
     constructor(){
-        this.columns = 19;
-        this.rows = 12;
+        this.columns = 38;
+        this.rows = 15;
         this.tile_size = 40;
-        // [ 0=  no collision] , [ 1= right , top collision ] , [ 2= left , top collision ] , [ 3= only right collision ] , [ 4= top , left ,right collision ] , [ 5 = only top collision ]
-        this.map = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-                    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-                    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-                    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-                    0,0,0,0,0,0,5,0,0,0,0,0,0,0,0,0,0,0,0,
-                    0,0,0,0,0,0,0,0,5,0,5,0,0,0,0,0,0,0,0,
-                    0,0,0,0,0,0,0,0,0,0,0,5,0,0,0,0,0,0,0,
-                    0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,5,0,0,0,
-                    0,0,0,0,0,0,0,0,0,0,0,0,5,5,0,0,0,0,0,
-                    1,0,0,0,0,0,0,2,5,5,1,0,0,0,0,0,0,0,4,
-                    3,0,0,4,5,5,5,5,5,5,3,0,2,4,0,0,4,0,4,
-                    5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5]
+        // [ 0=  no collision] , [ 1= right , top collision ] , [ 2= left , top collision ] , [ 3= only right collision ] , [ 4= top , left ,right collision ] , [ 5 = only top collision ] , [ 6 = only left collision ]
+        this.map = [4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,
+                    3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,
+                    3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,
+                    3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,
+                    3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,
+                    3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,
+                    3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,
+                    3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,
+                    3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,
+                    3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,
+                    3,0,0,0,0,2,5,5,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,
+                    3,0,0,0,0,6,5,5,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,
+                    3,0,0,0,2,6,5,5,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,
+                    5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,
+                    5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5]
     }
 
     drawWorld(){
-        for (let index = game.world.map.length - 1; index > -1; -- index) {
+        game.context.fillStyle = "#000000";
+        game.context.fillRect(0, 0, game.camera.screen[0], game.camera.screen[1]);
+        
+        /*for (let index = game.world.map.length - 1; index > -1; -- index) {
             game.context.fillStyle = (game.world.map[index] > 0)?("#0099" + game.world.map[index] + "f"):"#303840";
             game.context.fillRect((index % game.world.columns) * game.world.tile_size, Math.floor(index / game.world.columns) * game.world.tile_size, game.world.tile_size, game.world.tile_size);
-          }
+        }*/
+
+        for(var y = game.camera.startTile[1]; y < game.camera.endTile[1]; ++y)
+        {
+            for(var x = game.camera.startTile[0]; x < game.camera.endTile[0]; ++x)
+            {
+                game.context.fillStyle = (game.world.map[((y*game.world.columns)+x)] > 0)?("#0099" + game.world.map[((y*game.world.columns)+x)] + "f"):"#303840";
+    
+                game.context.fillRect( game.camera.offset[0] + (x*game.world.tile_size), game.camera.offset[1] + (y*game.world.tile_size),game.world.tile_size, game.world.tile_size);
+            }
+        }
+
         game.context.font = '30px Courier New';
         game.context.fillStyle = "red";
         game.context.fillText(game.playername, 10, 30);  
@@ -131,7 +151,10 @@ class World{
                     break;
             case 5 : 
                     this.topCollision(object, row);              
-                    break;           
+                    break;          
+            case 6 : 
+                    this.leftCollision(object, column);             
+                    break;                     
 
 
         }
@@ -206,6 +229,36 @@ class World{
       }
 
     
+}
+
+class Camera{
+    constructor(){
+        this.screen= [760,480];
+        this.startTile= [0,0];
+        this.endTile= [0,0];
+        this.offset= [0,0];
+    }
+
+    update(px,py){
+        this.offset[0] = Math.floor((this.screen[0]/2) - px);
+        this.offset[1] = Math.floor((this.screen[1]/2) - py);
+        
+        var tile = [ Math.floor(px/game.world.tile_size), Math.floor(py/game.world.tile_size) ]; 
+
+        this.startTile[0] = tile[0] - 1 - Math.ceil((this.screen[0]/2) / game.world.tile_size);
+        this.startTile[1] = tile[1] - 1 - Math.ceil((this.screen[1]/2) / game.world.tile_size);
+        
+        if(this.startTile[0] < 0) { this.startTile[0] = 0; }
+        if(this.startTile[1] < 0) { this.startTile[1] = 0; }
+        
+        this.endTile[0] = tile[0] + 1 + Math.ceil((this.screen[0]/2) / game.world.tile_size);
+		this.endTile[1] = tile[1] + 1 + Math.ceil((this.screen[1]/2) / game.world.tile_size);
+
+		if(this.endTile[0] >= game.world.columns) { this.endTile[0] = game.world.columns; }
+		if(this.endTile[1] >= game.world.rows) { this.endTile[1] = game.world.rows; }
+
+
+    }
 }
 class Animation{
     constructor(frame_set , delay){
@@ -336,7 +389,7 @@ class Player{
 
         if (!game.controller.left && !game.controller.right) {
   
-            if(game.controller.mousex > this.x+25 ) game.player.animation.change(game.sprite_sheet.frame_sets[0], 10);
+            if(game.controller.mousex > this.x+25+game.camera.offset[0] ) game.player.animation.change(game.sprite_sheet.frame_sets[0], 10);
             else game.player.animation.change(game.sprite_sheet.frame_sets[1], 10);
       
         }
@@ -345,39 +398,54 @@ class Player{
 
     offScreen(){
                 
-        if (game.player.x < -32) {
-        
-            game.player.x = 800;
-        
-        } else if (game.player.x > 800) {// if player goes past right boundary
-        
-            game.player.x = -32;
-        
-        }
+        if (game.player.x < 0) {
+
+            game.player.x_velocity = 0;
+            game.player.old_x = game.player.x = 0;
+    
+          } else if (game.player.x + game.player.width > game.context.canvas.width) {
+    
+            game.player.x_velocity = 0;
+            game.player.old_x = game.player.x = game.context.canvas.width - game.player.width;
+    
+          }
+    
+          if (game.player.y < 0) {
+    
+            game.player.y_velocity = 0;
+            game.player.old_y = game.player.y = 0;
+    
+          } else if (game.player.y + game.player.height > game.context.canvas.height) {
+    
+            game.player.y_velocity = 0;
+            game.player.old_y = game.player.y = game.context.canvas.height - game.player.height;
+    
+          }
     }
 
     shoot(){
 
         var rect = game.canvas.getBoundingClientRect();
-        var posX = this.x+25 - (game.controller.xtarget - rect.left);
-        var posY = this.y+25 - (game.controller.ytarget - rect.top);
+        var posX = this.x+25+game.camera.offset[0] - (game.controller.xtarget - rect.left);
+        var posY = this.y+25+game.camera.offset[1] - (game.controller.ytarget - rect.top);
 
         let direction = Math.atan2(posX,posY);
         let dirX = Math.sin(direction);
         let dirY = Math.cos(direction);
 
-        var b = new Bullet (this.x+25,this.y+25,dirX,dirY);
+        var b = new Bullet (this.x+25+game.camera.offset[0],this.y+25+game.camera.offset[1],dirX,dirY);
 
         this.bullets.push(b);
     }
 
     drawPlayer(){
-        game.context.drawImage(game.sprite_sheet.image, game.player.animation.frame * 42, 0, 42, 42, Math.floor(game.player.x), Math.floor(game.player.y), 42+20, 42+20);
+        game.context.drawImage(game.sprite_sheet.image, game.player.animation.frame * 42, 0, 42, 42, Math.floor(game.camera.offset[0] + game.player.x), Math.floor(game.camera.offset[1] + game.player.y), 42+20, 42+20);
         game.context.drawImage(game.context.canvas, 0, 0, game.context.canvas.width, game.context.canvas.height, 0, 0, game.context.canvas.width, game.context.canvas.height);
 
         for (var i=0 ; i < this.bullets.length ; i++){
             this.bullets[i].drawBullet();
         }
+
     }
 
 }
