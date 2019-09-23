@@ -426,8 +426,8 @@ class Player{
     shoot(){
 
         var rect = game.canvas.getBoundingClientRect();
-        var posX = this.x+25+game.camera.offset[0] - (game.controller.xtarget - rect.left);
-        var posY = this.y+25+game.camera.offset[1] - (game.controller.ytarget - rect.top);
+        var posX = this.x+25+game.camera.offset[0] - (game.controller.xtarget+6 - rect.left);//+6 -> pricitavam polovicu velkosti crosshairu
+        var posY = this.y+25+game.camera.offset[1] - (game.controller.ytarget+6 - rect.top);
 
         let direction = Math.atan2(posX,posY);
         let dirX = Math.sin(direction);
