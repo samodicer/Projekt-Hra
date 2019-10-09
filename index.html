@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>HRA </title>
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css" href="style/style.css">
 </head>
 
 <body>
@@ -19,7 +19,14 @@
             </div>
         </div>
         <canvas id="canvas" width="760" height="480"></canvas>
-        <script type="text/javascript" src="skuska.js"></script>
+        <script type="text/javascript" src="js/Game.js"></script>
+        <script type="text/javascript" src="js/World.js"></script>
+        <script type="text/javascript" src="js/Player.js"></script>
+        <script type="text/javascript" src="js/Bullet.js"></script>
+        <script type="text/javascript" src="js/Animation.js"></script>
+        <script type="text/javascript" src="js/Sprite_sheet.js"></script>
+        <script type="text/javascript" src="js/Camera.js"></script>
+        <script type="text/javascript" src="js/Controller.js"></script>
     </div>
 
     <script type="text/javascript">
@@ -31,7 +38,7 @@
             switch(action) {
                     
                 case "startGame":
-                     game.start();
+                    game.start();
                     break;
     
             }
