@@ -4,15 +4,17 @@ class Bullet{
         this.y = y;
         this.dx = dx;
         this.dy = dy;
-        this.speed = 10;
+        this.speed = 12;
     }
 
     drawBullet(){
         game.context.beginPath();
-        game.context.fillStyle = "red";
-        game.context.arc(this.x, this.y, 3, 0, 2*Math.PI);
+        game.context.fillStyle = "#dec314";
+        game.context.arc(this.x, this.y, 2, 0, 2*Math.PI);
         game.context.fill();
         game.context.closePath();
+
+
     }
 
     updateBullet(){

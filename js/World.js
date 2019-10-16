@@ -3,21 +3,21 @@ class World{
         this.columns = 38;
         this.rows = 15;
         this.tile_size = 40;
-        // [ 0=  no collision] , [ 1= right , top collision ] , [ 2= left , top collision ] , [ 3= only right collision ] , [ 4= top , left ,right collision ] , [ 5 = only top collision ] , [ 6 = only left collision ]
-        this.map = [4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,
-                    3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,
-                    3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,
-                    3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,
-                    3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,
-                    3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,
-                    3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,
-                    3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,
-                    3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,
-                    3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,
-                    3,0,0,0,0,2,5,5,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,
-                    3,0,0,0,0,6,5,5,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,
-                    3,0,0,0,2,6,5,5,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,
-                    5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,
+        // [ 0=  right,top ] , [ 1= right ] , [ 2= top ] , [ 3= left , top ] , [ 4= left ] , [ 5 = ground ] , [ 6 = wall ] , [ 7 = wall with stripes ] , [ 8 = top,right,left ]
+        this.map = [5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,
+                    1,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,4,
+                    1,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,4,
+                    1,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,4,
+                    1,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,4,
+                    1,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,4,
+                    1,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,4,
+                    1,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,4,
+                    1,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,4,
+                    1,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,4,
+                    1,6,6,6,6,3,2,2,0,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,4,
+                    1,6,6,6,3,4,5,5,1,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,4,
+                    1,7,7,7,4,5,5,5,1,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,8,7,7,7,7,7,7,7,4,
+                    1,2,2,2,4,5,5,5,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,4,
                     5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5]
     }
 
@@ -30,13 +30,23 @@ class World{
             game.context.fillRect((index % game.world.columns) * game.world.tile_size, Math.floor(index / game.world.columns) * game.world.tile_size, game.world.tile_size, game.world.tile_size);
         }*/
 
+
+
         for(var y = game.camera.startTile[1]; y < game.camera.endTile[1]; ++y)
         {
             for(var x = game.camera.startTile[0]; x < game.camera.endTile[0]; ++x)
             {
-                game.context.fillStyle = (game.world.map[((y*game.world.columns)+x)] > 0)?("#0099" + game.world.map[((y*game.world.columns)+x)] + "f"):"#303840";
+              var value = game.world.map[((y*game.world.columns)+x)];
+              /* This is the x and y location at which to cut the tile image out of the
+              tile_sheet.image. */
+              var source_x = (value % game.tile_sheet.columns) * game.tile_sheet.tile_width;
+              var source_y = Math.floor(value / game.tile_sheet.columns) * game.tile_sheet.tile_height;
+              /* This is the x and y location at which to draw the tile image we are cutting
+              from the tile_sheet.image to the buffer canvas. */
+              var destination_x = (((y*game.world.columns)+x) % game.world.columns) * game.tile_sheet.tile_width;
+              var destination_y = Math.floor(((y*game.world.columns)+x) / game.world.columns) * game.tile_sheet.tile_height;
     
-                game.context.fillRect( game.camera.offset[0] + (x*game.world.tile_size), game.camera.offset[1] + (y*game.world.tile_size),game.world.tile_size, game.world.tile_size);
+              game.context.drawImage(game.tile_sheet.image, source_x, source_y, game.tile_sheet.tile_width, game.tile_sheet.tile_height,game.camera.offset[0]+destination_x, game.camera.offset[1]+destination_y, game.tile_sheet.tile_width, game.tile_sheet.tile_height);   
             }
         }
 
@@ -48,32 +58,29 @@ class World{
 
     collision(value_at_index,object,row,column){
 
-        switch(value_at_index){
-            case 1 :             
+        switch(value_at_index){   
+            case 0 :   
                     if (this.topCollision(object, row)) { return; }// if no top collision
                     this.rightCollision(object, column);           // try right side collision
-                    break;
-            case 2 :
+                    break;    
+            case 1 :    
+                    this.rightCollision(object, column);
+                    break;      
+            case 2 :  
+                    this.topCollision(object, row);              
+                    break;     
+            case 3 :
                     if (this.topCollision(object, row)) { return; }
                     this.leftCollision(object, column);       
                     break;
-            case 3 :
-                    this.rightCollision(object, column);
-                    break;
-                    
-            case 4 :         
+            case 4 :
+                    this.leftCollision(object, column);             
+                    break;       
+            case 8 :
                     if (this.topCollision(object, row)) { return; }// you only want to do one
                     if (this.leftCollision(object, column)) { return; }// of these collision
                     this.rightCollision(object, column);// responses. that's why there are if statements     
                     break;
-            case 5 : 
-                    this.topCollision(object, row);              
-                    break;          
-            case 6 : 
-                    this.leftCollision(object, column);             
-                    break;                     
-
-
         }
 
     }

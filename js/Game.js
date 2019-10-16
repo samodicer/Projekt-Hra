@@ -14,6 +14,7 @@ class Game{
     start(){
         game.loadImages();
         this.sprite_sheet = new Sprite_sheet([[0, 1, 2, 3], [4, 5, 6, 7] , [8, 9, 10, 11, 12, 13, 14, 15], [16, 17, 18, 19, 20, 21, 22, 23]],this.findImage("player_sprite"),42);
+        this.tile_sheet = new Tile_sheet(this.findImage("tile_sheet"),40,40,3);
         document.getElementById('menu').style.display="none";
         document.getElementById('canvas').style.display="block";
         window.addEventListener("keydown", game.controller.keyListener);
@@ -27,7 +28,8 @@ class Game{
     loadImages(){
         let images = [
             ["player_sprite","./images/sprite.png"],
-            ["crosshair","./images/crosshair.png"]
+            ["crosshair","./images/crosshair.png"],
+            ["tile_sheet","./images/tile_sheet.png"],
         ]
 
         for(let i = 0; i < images.length ; i++) {
@@ -85,7 +87,7 @@ class Game{
         // get the value at the tile position in the map
         var value_at_index = game.world.map[tile_y * game.world.columns + tile_x];
 
-        if (value_at_index != 0) {
+        if (value_at_index != 5 || 6 || 7) {
 
             // simply call one of the routing functions in the collision object and pass
             // in values for the collision tile's location in grid/map space
@@ -103,7 +105,7 @@ class Game{
   
         }
 
-        //console.log ( "tile_x: " + tile_x + "<br>tile_y: " + tile_y + "<br>map index: " + tile_y + " * " + game.world.columns + " + " + tile_x + " = " + String(tile_y * game.world.columns + tile_x) + "<br>tile value: " + game.world.map[tile_y * game.world.columns + tile_x] );
+       // console.log ( "tile_x: " + tile_x + "<br>tile_y: " + tile_y + "<br>map index: " + tile_y + " * " + game.world.columns + " + " + tile_x + " = " + String(tile_y * game.world.columns + tile_x) + "<br>tile value: " + game.world.map[tile_y * game.world.columns + tile_x] );
         window.requestAnimationFrame(game.loop);
 
     }
