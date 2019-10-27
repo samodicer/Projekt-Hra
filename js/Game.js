@@ -5,7 +5,7 @@ class Game{
         this.context = canvas.getContext("2d");
         this.world = new World();
         this.camera = new Camera();
-        this.player = new Player(100,300,0,0,62,62,false,100,300,new Animation());
+        this.player = new Player(100,400,0,0,57,57,true,false,100,300,new Animation());
         this.controller = new Controller();
         this.images = [];
 
@@ -58,6 +58,7 @@ class Game{
 	}
 
     loop(){
+        game.player.checkShooting();
         game.player.moveLeft();
         game.player.moveRight();
         game.player.jump();
@@ -73,39 +74,13 @@ class Game{
         game.player.y += game.player.y_velocity;
         game.player.x_velocity *= 0.9;// friction
         game.player.y_velocity *= 0.9;// friction
-
-        //game.player.offScreen();
-       
         game.player.animation.update();
 
         game.world.drawWorld();
         game.player.drawPlayer();
-
-
-        var tile_x = Math.floor((game.player.x + game.player.width * 0.5) / game.world.tile_size);
-        var tile_y = Math.floor((game.player.y + game.player.height) / game.world.tile_size);
-        // get the value at the tile position in the map
-        var value_at_index = game.world.map[tile_y * game.world.columns + tile_x];
-
-        if (value_at_index != 5 || 6 || 7) {
-
-            // simply call one of the routing functions in the collision object and pass
-            // in values for the collision tile's location in grid/map space
-            game.world.collision(value_at_index,game.player, tile_y, tile_x);
-    
-        }
+        game.player.PlayerCollision();
+        game.player.BulletCollision();
         
-        tile_x = Math.floor((game.player.x + game.player.width * 0.5) / game.world.tile_size);
-        tile_y = Math.floor((game.player.y + game.player.height) / game.world.tile_size);
-        value_at_index = game.world.map[tile_y * game.world.columns + tile_x];
-  
-        if (value_at_index != 0) {
-  
-            game.world.collision(value_at_index,game.player, tile_y, tile_x);
-  
-        }
-
-       // console.log ( "tile_x: " + tile_x + "<br>tile_y: " + tile_y + "<br>map index: " + tile_y + " * " + game.world.columns + " + " + tile_x + " = " + String(tile_y * game.world.columns + tile_x) + "<br>tile value: " + game.world.map[tile_y * game.world.columns + tile_x] );
         window.requestAnimationFrame(game.loop);
 
     }

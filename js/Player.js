@@ -1,6 +1,6 @@
 class Player{
 
-    constructor(x,y,x_velocity,y_velocity,height,width,jumping,old_x,old_y,animation){
+    constructor(x,y,x_velocity,y_velocity,height,width,jumping,shooting,old_x,old_y,animation){
         this.x = x;
         this.y= y;
         this.x_velocity = x_velocity;
@@ -8,6 +8,7 @@ class Player{
         this.height= height;
         this.width = width;
         this.jumping = jumping;
+        this.shooting = shooting;
         this.old_x = old_x;
         this.old_y = old_y;
         this.animation = animation;
@@ -35,7 +36,61 @@ class Player{
         }
     }
 
-    collision(object){
+    checkShooting(){
+        if (this.bullets.length == 0) this.shooting = false;
+        else this.shooting = true;
+    }
+
+    PlayerCollision(){
+        var tile_x = Math.floor((game.player.x + game.player.width * 0.5) / game.world.tile_size);
+        var tile_y = Math.floor((game.player.y + game.player.height) / game.world.tile_size);
+        // get the value at the tile position in the map
+        var value_at_index = game.world.map[tile_y * game.world.columns + tile_x];
+
+        if (value_at_index != 5 || 6 ) {
+
+            // simply call one of the routing functions in the collision object and pass
+            // in values for the collision tile's location in grid/map space
+            game.world.collision(value_at_index,game.player, tile_y, tile_x);
+    
+        }
+        
+        tile_x = Math.floor((game.player.x + game.player.width * 0.5) / game.world.tile_size);
+        tile_y = Math.floor((game.player.y + game.player.height) / game.world.tile_size);
+        value_at_index = game.world.map[tile_y * game.world.columns + tile_x];
+  
+        if (value_at_index != 5 || 6 ) {
+  
+            game.world.collision(value_at_index,game.player, tile_y, tile_x);
+  
+        }   
+        //console.log ( "tile_x: " + tile_x + "<br>tile_y: " + tile_y + "<br>map index: " + tile_y + " * " + game.world.columns + " + " + tile_x + " = " + String(tile_y * game.world.columns + tile_x) + "<br>tile value: " + game.world.map[tile_y * game.world.columns + tile_x] );
+    }
+
+    BulletCollision(){
+        if(game.player.shooting == true) {
+            var to_delete ;
+            for (var i=0 ; i < game.player.bullets.length ; i++){
+                var tile_x = Math.floor((game.player.bullets[i].x ) / game.world.tile_size);
+                var tile_y = Math.floor((game.player.bullets[i].y) / game.world.tile_size);
+                // get the value at the tile position in the map
+                var value_at_index = game.world.map[tile_y * game.world.columns + tile_x];
+                
+                if (value_at_index != 6 ) {
+                    to_delete = i;
+                }                
+            }
+
+            if (typeof to_delete !== 'undefined'){
+                game.player.bullets.splice(to_delete,1); 
+            }
+        
+        }
+    }
+
+    /*collision(object){
+
+
         if ((game.player.top > object.bottom || game.player.right < object.left || game.player.bottom < object.top || game.player.left > object.right)) {
  
             return false;
@@ -43,7 +98,7 @@ class Player{
         }
       
         else return true;
-    }
+    }*/
 
     moveLeft(){
 
@@ -123,10 +178,11 @@ class Player{
         let dirX = Math.sin(direction);
         let dirY = Math.cos(direction);
 
-        var b = new Bullet (this.x+25+game.camera.offset[0],this.y+25+game.camera.offset[1],dirX,dirY);
-
+        var b = new Bullet (this.x+25,this.y+25,dirX,dirY);
         this.bullets.push(b);
     }
+
+
 
     drawPlayer(){
         game.context.drawImage(game.sprite_sheet.image, game.player.animation.frame * 42, 0, 42, 42, Math.floor(game.camera.offset[0] + game.player.x), Math.floor(game.camera.offset[1] + game.player.y), 42+20, 42+20);

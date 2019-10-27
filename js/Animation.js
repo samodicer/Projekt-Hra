@@ -1,10 +1,10 @@
 class Animation{
-    constructor(frame_set , delay){
+    constructor(){
         this.count = 0;
-        this.delay = delay;
+        this.delay = 0;
         this.frame = 0;
         this.frame_index = 0;
-        this.frame_set = frame_set;
+        this.frame_set = 0;
     }
 
     change(frame_set, delay = 15){
