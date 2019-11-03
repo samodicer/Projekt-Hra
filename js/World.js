@@ -2,7 +2,7 @@ class World{
     constructor(){
         this.columns = 38;
         this.rows = 16;
-        this.tile_size = 40;
+        this.tile_size = 50;
         // [ 0=  right,top ] , [ 1= right ] , [ 2= top ] , [ 3= left , top ] , [ 4= left ] , [ 5 = ground ] , [ 6 = wall ] , [ 7 = top left corner ] , [ 8 = top right corner ]
         this.map = [5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,
                     1,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,1,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,4,
@@ -117,7 +117,7 @@ class World{
 
         if (object.x_velocity < 0) {
 
-          var right = (column + 1) * game.world.tile_size;
+          var right = (column + 1) * game.world.tile_size ;
 
           if (object.x + object.width * 0.5 < right && object.old_x + object.width * 0.5 >= right) {
 

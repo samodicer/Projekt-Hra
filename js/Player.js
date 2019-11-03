@@ -104,8 +104,8 @@ class Player{
 
         if (game.controller.left) {
       
-            game.player.x_velocity -= 0.3;
-            game.player.animation.change(game.sprite_sheet.frame_sets[3], 7);
+            game.player.x_velocity -= 0.4;
+            game.player.animation.change(game.sprite_sheet.frame_sets[5], 7);
         
         }
     }
@@ -114,8 +114,8 @@ class Player{
         
         if (game.controller.right) {
         
-            game.player.x_velocity += 0.3;
-            game.player.animation.change(game.sprite_sheet.frame_sets[2], 7);
+            game.player.x_velocity += 0.4;
+            game.player.animation.change(game.sprite_sheet.frame_sets[4], 7);
         
         }
     }
@@ -124,7 +124,7 @@ class Player{
 
         if (game.controller.up && game.player.jumping == false) {
 
-            game.player.y_velocity -= 21;
+            game.player.y_velocity -= 23;
             game.player.jumping = true;
         
         }
@@ -178,15 +178,14 @@ class Player{
         let dirX = Math.sin(direction);
         let dirY = Math.cos(direction);
 
-        var b = new Bullet (this.x+25,this.y+25,dirX,dirY);
+        var b = new Bullet (this.x+this.height/2,this.y+this.width/2,dirX,dirY);
         this.bullets.push(b);
     }
 
 
 
     drawPlayer(){
-        game.context.drawImage(game.sprite_sheet.image, game.player.animation.frame * 42, 0, 42, 42, Math.floor(game.camera.offset[0] + game.player.x), Math.floor(game.camera.offset[1] + game.player.y), 42+20, 42+20);
-        game.context.drawImage(game.context.canvas, 0, 0, game.context.canvas.width, game.context.canvas.height, 0, 0, game.context.canvas.width, game.context.canvas.height);
+        game.context.drawImage(game.sprite_sheet.image, game.player.animation.frame * 100, 0, 100, 100, game.camera.offset[0] + game.player.x, game.camera.offset[1] + game.player.y, 100+20, 100+20);
 
         for (var i=0 ; i < this.bullets.length ; i++){
             this.bullets[i].drawBullet();
