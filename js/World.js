@@ -50,6 +50,22 @@ class World{
               game.context.drawImage(game.tile_sheet.image, source_x, source_y, game.tile_sheet.tile_width, game.tile_sheet.tile_height,game.camera.offset[0]+destination_x, game.camera.offset[1]+destination_y, game.tile_sheet.tile_width, game.tile_sheet.tile_height);   
             }
         }
+        game.context.drawImage(game.findImage("table"), 0, 0, 150, 100, 100+game.camera.offset[0],  250+game.camera.offset[1], 150, 100);
+        game.context.drawImage(game.findImage("plant"), 0, 0, 50, 80, 250+game.camera.offset[0],  278+game.camera.offset[1], 50, 80);
+        game.context.drawImage(game.findImage("plant"), 0, 0, 50, 80, 1000+game.camera.offset[0],  178+game.camera.offset[1], 50, 80);
+        game.context.drawImage(game.findImage("trashcan"), 0, 0, 40, 50, 52+game.camera.offset[0],  300+game.camera.offset[1], 40, 50);
+        game.context.drawImage(game.findImage("trashcan"), 0, 0, 40, 50, 1450+game.camera.offset[0],  650+game.camera.offset[1], 40, 50);
+        game.context.drawImage(game.findImage("window"), 0, 0, 100, 50, 132+game.camera.offset[0],  190+game.camera.offset[1], 100, 50);
+        game.context.drawImage(game.findImage("window"), 0, 0, 100, 50, 700+game.camera.offset[0],  570+game.camera.offset[1], 100, 50);
+        game.context.drawImage(game.findImage("window"), 0, 0, 100, 50, 1550+game.camera.offset[0],  550+game.camera.offset[1], 100, 50);
+        game.context.drawImage(game.findImage("window"), 0, 0, 100, 50, 1150+game.camera.offset[0],  80+game.camera.offset[1], 100, 50);
+        game.context.drawImage(game.findImage("window"), 0, 0, 100, 50, 1280+game.camera.offset[0],  80+game.camera.offset[1], 100, 50);
+        game.context.drawImage(game.findImage("cardrepertory"), 0, 0, 50, 90, 330+game.camera.offset[0],  260+game.camera.offset[1], 50, 90);
+        game.context.drawImage(game.findImage("cardrepertory"), 0, 0, 50, 90, 390+game.camera.offset[0],  260+game.camera.offset[1], 50, 90);
+        game.context.drawImage(game.findImage("cardrepertory"), 0, 0, 50, 90, 1500+game.camera.offset[0],  612+game.camera.offset[1], 50, 90);
+        game.context.drawImage(game.findImage("cardrepertory"), 0, 0, 50, 90, 1555+game.camera.offset[0],  612+game.camera.offset[1], 50, 90);
+        game.context.drawImage(game.findImage("cardrepertory"), 0, 0, 50, 90, 1610+game.camera.offset[0],  612+game.camera.offset[1], 50, 90);
+        game.context.drawImage(game.findImage("cardrepertory"), 0, 0, 50, 90, 1665+game.camera.offset[0],  612+game.camera.offset[1], 50, 90);
 
         game.context.font = '30px Courier New';
         game.context.fillStyle = "red";

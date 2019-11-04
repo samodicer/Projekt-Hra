@@ -5,7 +5,7 @@ class Game{
         this.context = canvas.getContext("2d");
         this.world = new World();
         this.camera = new Camera();
-        this.player = new Player(100,400,0,0,108,130,true,false,100,300,new Animation());
+        this.player = new Player(100,400,0,0,108,130,false,false,true,100,300,new Animation());
         this.controller = new Controller();
         this.images = [];
 
@@ -31,6 +31,11 @@ class Game{
             ["robot_sprite","./images/robot-sprite.png"],
             ["crosshair","./images/crosshair.png"],
             ["tile_sheet","./images/tile_sheet.png"],
+            ["table","./images/table.png"],
+            ["plant","./images/plant.png"],
+            ["trashcan","./images/trashcan.png"],
+            ["window","./images/window.png"],
+            ["cardrepertory","./images/cardrepertory.png"],
         ]
 
         for(let i = 0; i < images.length ; i++) {

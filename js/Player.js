@@ -1,6 +1,6 @@
 class Player{
 
-    constructor(x,y,x_velocity,y_velocity,height,width,jumping,shooting,old_x,old_y,animation){
+    constructor(x,y,x_velocity,y_velocity,height,width,jumping,shooting,idling,old_x,old_y,animation){
         this.x = x;
         this.y= y;
         this.x_velocity = x_velocity;
@@ -9,6 +9,7 @@ class Player{
         this.width = width;
         this.jumping = jumping;
         this.shooting = shooting;
+        this.idling= idling;
         this.old_x = old_x;
         this.old_y = old_y;
         this.animation = animation;
@@ -105,7 +106,10 @@ class Player{
         if (game.controller.left) {
       
             game.player.x_velocity -= 0.4;
-            game.player.animation.change(game.sprite_sheet.frame_sets[5], 7);
+            game.player.idling=false;
+            if (game.player.jumping==false) {
+                game.player.animation.change(game.sprite_sheet.frame_sets[5], 7);
+            }
         
         }
     }
@@ -115,8 +119,10 @@ class Player{
         if (game.controller.right) {
         
             game.player.x_velocity += 0.4;
-            game.player.animation.change(game.sprite_sheet.frame_sets[4], 7);
-        
+            game.player.idling=false;
+            if (game.player.jumping==false) {
+                game.player.animation.change(game.sprite_sheet.frame_sets[4], 7);
+            }
         }
     }
 
@@ -126,15 +132,34 @@ class Player{
 
             game.player.y_velocity -= 23;
             game.player.jumping = true;
-        
+
+            if (game.player.old_x < game.player.x && game.player.idling==false) {
+
+                game.player.animation.change(game.sprite_sheet.frame_sets[2], 7);
+
+            }else if (game.player.idling==true ) {
+
+                if (game.controller.mousex > this.x+this.width/2+game.camera.offset[0] ) game.player.animation.change(game.sprite_sheet.frame_sets[2], 7);
+                else game.player.animation.change(game.sprite_sheet.frame_sets[3], 7);
+
+            }else if (game.player.old_x == game.player.x && game.player.idling==false){
+
+                if (game.controller.right) game.player.animation.change(game.sprite_sheet.frame_sets[2], 7);
+                else game.player.animation.change(game.sprite_sheet.frame_sets[3], 7);
+
+            }else if ((game.player.old_x > game.player.x && game.player.idling==false)) {
+
+                game.player.animation.change(game.sprite_sheet.frame_sets[3], 7);
+
+            }
         }
     }
 
     idle(){
 
-        if (!game.controller.left && !game.controller.right) {
-  
-            if(game.controller.mousex > this.x+25+game.camera.offset[0] ) game.player.animation.change(game.sprite_sheet.frame_sets[0], 10);
+        if (!game.controller.left && !game.controller.right && game.player.jumping==false) {
+            game.player.idling = true;
+            if (game.controller.mousex > this.x+this.width/2+game.camera.offset[0] ) game.player.animation.change(game.sprite_sheet.frame_sets[0], 10);
             else game.player.animation.change(game.sprite_sheet.frame_sets[1], 10);
       
         }
@@ -171,14 +196,14 @@ class Player{
     shoot(){
 
         var rect = game.canvas.getBoundingClientRect();
-        var posX = this.x+25+game.camera.offset[0] - (game.controller.xtarget+6 - rect.left);//+6 -> pricitavam polovicu velkosti crosshairu
-        var posY = this.y+25+game.camera.offset[1] - (game.controller.ytarget+6 - rect.top);
+        var posX = this.x+this.width/2+game.camera.offset[0] - (game.controller.xtarget+6 - rect.left);//+6 -> pricitavam polovicu velkosti crosshairu
+        var posY = this.y+this.height/2+game.camera.offset[1] - (game.controller.ytarget+6 - rect.top);
 
         let direction = Math.atan2(posX,posY);
         let dirX = Math.sin(direction);
         let dirY = Math.cos(direction);
 
-        var b = new Bullet (this.x+this.height/2,this.y+this.width/2,dirX,dirY);
+        var b = new Bullet (this.x+this.width/2,this.y+this.height/2,dirX,dirY);
         this.bullets.push(b);
     }
 
@@ -186,7 +211,6 @@ class Player{
 
     drawPlayer(){
         game.context.drawImage(game.sprite_sheet.image, game.player.animation.frame * 100, 0, 100, 100, game.camera.offset[0] + game.player.x, game.camera.offset[1] + game.player.y, 100+20, 100+20);
-
         for (var i=0 ; i < this.bullets.length ; i++){
             this.bullets[i].drawBullet();
         }
