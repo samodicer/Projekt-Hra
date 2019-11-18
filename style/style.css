@@ -6,7 +6,7 @@ canvas{
     margin-left: auto;
     margin-right: auto;
     display: none;
-    cursor: url('../images/crosshair.png'), auto;
+    cursor: none;
 }
 #menu{
     text-align: center;

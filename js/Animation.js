@@ -5,9 +5,10 @@ class Animation{
         this.frame = 0;
         this.frame_index = 0;
         this.frame_set = 0;
+        this.column = 0;
     }
 
-    change(frame_set, delay = 15){
+    change(frame_set, delay = 15, column){
         if (this.frame_set != frame_set) {// If the frame set is different:
 
             this.count = 0;// Reset the count.
@@ -15,6 +16,8 @@ class Animation{
             this.frame_index = 0;// Start at the first frame in the new frame set.
             this.frame_set = frame_set;// Set the new frame set.
             this.frame = this.frame_set[this.frame_index];// Set the new frame value.
+            this.column = column;
+
       
         }
     }

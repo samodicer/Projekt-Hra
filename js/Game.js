@@ -5,7 +5,7 @@ class Game{
         this.context = canvas.getContext("2d");
         this.world = new World();
         this.camera = new Camera();
-        this.player = new Player(100,400,0,0,108,130,false,false,true,100,300,new Animation());
+        this.player = new Player(100,500,0,0,108,130,false,false,true,100,300,new Animation());
         this.controller = new Controller();
         this.images = [];
 
@@ -13,9 +13,7 @@ class Game{
 
     start(){
         game.loadImages();
-        this.sprite_sheet = new Sprite_sheet([[0,1,2,3,4,5,6,7,8,9] , [10,11,12,13,14,15,16,17,18,19] , [20,21,22,23,24,25,26,27,28,29],
-                                             [30,31,32,33,34,35,36,37,38,39] , [40,41,42,43,44,45,46,47] , [48,49,50,51,52,53,54,55]],this.findImage("robot_sprite"),100);
-        this.tile_sheet = new Tile_sheet(this.findImage("tile_sheet"),50,50,3);
+        game.loadSprites();
         document.getElementById('menu').style.display="none";
         document.getElementById('canvas').style.display="block";
         window.addEventListener("keydown", game.controller.keyListener);
@@ -28,8 +26,7 @@ class Game{
 
     loadImages(){
         let images = [
-            ["robot_sprite","./images/robot-sprite.png"],
-            ["crosshair","./images/crosshair.png"],
+            ["player_sprite","./images/player-sprite.png"],
             ["tile_sheet","./images/tile_sheet.png"],
             ["table","./images/table.png"],
             ["plant","./images/plant.png"],
@@ -61,7 +58,15 @@ class Game{
 
 		}
 
-	}
+    }
+    
+    loadSprites(){
+        this.sprite_sheet = new Sprite_sheet([[0,1,2,3,4,5,6,7,8,9] , [0,1,2,3,4,5,6,7,8,9] , [0,1,2,3,4,5,6,7,8,9],
+                                              [0,1,2,3,4,5,6,7,8,9] , [0,1,2,3,4,5,6,7] , [0,1,2,3,4,5,6,7], 
+                                              [0,1,2,3,4,5,6,7,8,9] , [0,1,2,3,4,5,6,7,8,9] , [0,1,2,3,4,5,6,7],
+                                              [0,1,2,3,4,5,6,7] , [0,1,2,3,4] , [0,1,2,3,4]] , this.findImage("player_sprite"),100);
+        this.tile_sheet = new Tile_sheet(this.findImage("tile_sheet"),50,50,3);    
+    }
 
     loop(){
         game.player.checkShooting();

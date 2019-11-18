@@ -1,10 +1,9 @@
 class Bullet{
-    constructor(x,y,dx,dy){
+    constructor(x,y,side){
         this.x = x;
         this.y = y;
-        this.dx = dx;
-        this.dy = dy;
         this.speed = 8;
+        this.side = side;
     }
 
     drawBullet(){
@@ -19,8 +18,11 @@ class Bullet{
 
 
     updateBullet(){
-        this.x -=  this.dx * this.speed;
-        this.y -= this.dy * this.speed;
+
+        if (this.side == "right") {
+            this.x =  this.x + this.speed;
+        } else  this.x =  this.x - this.speed;
+        
 
         if(game.camera.offset[0] +this.x < 0 || game.camera.offset[0] +this.x > game.canvas.width || game.camera.offset[1] +this.y < 0 || game.camera.offset[1] +this.y > game.canvas.height){
             return false

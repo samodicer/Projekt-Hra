@@ -108,7 +108,7 @@ class Player{
             game.player.x_velocity -= 0.4;
             game.player.idling=false;
             if (game.player.jumping==false) {
-                game.player.animation.change(game.sprite_sheet.frame_sets[5], 7);
+                game.player.animation.change(game.sprite_sheet.frame_sets[5], 7,5);
             }
         
         }
@@ -121,7 +121,7 @@ class Player{
             game.player.x_velocity += 0.4;
             game.player.idling=false;
             if (game.player.jumping==false) {
-                game.player.animation.change(game.sprite_sheet.frame_sets[4], 7);
+                game.player.animation.change(game.sprite_sheet.frame_sets[4], 7,4);
             }
         }
     }
@@ -135,21 +135,21 @@ class Player{
 
             if (game.player.old_x < game.player.x && game.player.idling==false) {
 
-                game.player.animation.change(game.sprite_sheet.frame_sets[2], 7);
+                game.player.animation.change(game.sprite_sheet.frame_sets[2], 7, 2);
 
             }else if (game.player.idling==true ) {
 
-                if (game.controller.mousex > this.x+this.width/2+game.camera.offset[0] ) game.player.animation.change(game.sprite_sheet.frame_sets[2], 7);
-                else game.player.animation.change(game.sprite_sheet.frame_sets[3], 7);
+                if (game.controller.mousex > this.x+this.width/2+game.camera.offset[0] ) game.player.animation.change(game.sprite_sheet.frame_sets[2], 7, 2);
+                else game.player.animation.change(game.sprite_sheet.frame_sets[3], 7, 3);
 
             }else if (game.player.old_x == game.player.x && game.player.idling==false){
 
-                if (game.controller.right) game.player.animation.change(game.sprite_sheet.frame_sets[2], 7);
-                else game.player.animation.change(game.sprite_sheet.frame_sets[3], 7);
+                if (game.controller.right) game.player.animation.change(game.sprite_sheet.frame_sets[2], 7 , 2);
+                else game.player.animation.change(game.sprite_sheet.frame_sets[3], 7, 3);
 
             }else if ((game.player.old_x > game.player.x && game.player.idling==false)) {
 
-                game.player.animation.change(game.sprite_sheet.frame_sets[3], 7);
+                game.player.animation.change(game.sprite_sheet.frame_sets[3], 7, 3);
 
             }
         }
@@ -159,8 +159,8 @@ class Player{
 
         if (!game.controller.left && !game.controller.right && game.player.jumping==false) {
             game.player.idling = true;
-            if (game.controller.mousex > this.x+this.width/2+game.camera.offset[0] ) game.player.animation.change(game.sprite_sheet.frame_sets[0], 10);
-            else game.player.animation.change(game.sprite_sheet.frame_sets[1], 10);
+            if (game.controller.mousex > this.x+this.width/2+game.camera.offset[0] ) game.player.animation.change(game.sprite_sheet.frame_sets[0], 10, 0);
+            else game.player.animation.change(game.sprite_sheet.frame_sets[1], 10, 1);
       
         }
     }
@@ -195,22 +195,36 @@ class Player{
 
     shoot(){
 
-        var rect = game.canvas.getBoundingClientRect();
-        var posX = this.x+this.width/2+game.camera.offset[0] - (game.controller.xtarget+6 - rect.left);//+6 -> pricitavam polovicu velkosti crosshairu
-        var posY = this.y+this.height/2+game.camera.offset[1] - (game.controller.ytarget+6 - rect.top);
+        //var rect = game.canvas.getBoundingClientRect();
+       // var posX = this.x+this.width/2+game.camera.offset[0] - (game.controller.xtarget+6 - rect.left);//+6 -> pricitavam polovicu velkosti crosshairu
+        //var posY = this.y+this.height/2+game.camera.offset[1] - (game.controller.ytarget+6 - rect.top);
 
-        let direction = Math.atan2(posX,posY);
-        let dirX = Math.sin(direction);
-        let dirY = Math.cos(direction);
-
-        var b = new Bullet (this.x+this.width/2,this.y+this.height/2,dirX,dirY);
+        //let direction = Math.atan2(posX,posY);
+        //let dirX = Math.sin(direction);
+        //let dirY = Math.cos(direction);
+        let side;
+        if (game.player.animation.column == 0 || game.player.animation.column == 2 || game.player.animation.column == 4 ) { 
+             side = "right";
+        } else side = "left";
+        
+        var b = new Bullet (this.x+this.width/2,this.y+this.height/2,side);
         this.bullets.push(b);
+
+       /* if (game.player.idling == true) {
+            if (game.controller.mousex > this.x+this.width/2+game.camera.offset[0] ){
+                game.player.animation.change(game.sprite_sheet.frame_sets[10], 7, 10);
+            } else  game.player.animation.change(game.sprite_sheet.frame_sets[11], 7, 11);
+        } else if (game.player.idling == false){
+            if (game.controller.mousex > this.x+this.width/2+game.camera.offset[0] ){
+                game.player.animation.change(game.sprite_sheet.frame_sets[8], 7, 8);
+            } else  game.player.animation.change(game.sprite_sheet.frame_sets[9], 7, 9);    
+        }*/
     }
 
 
 
     drawPlayer(){
-        game.context.drawImage(game.sprite_sheet.image, game.player.animation.frame * 100, 0, 100, 100, game.camera.offset[0] + game.player.x, game.camera.offset[1] + game.player.y, 100+20, 100+20);
+        game.context.drawImage(game.sprite_sheet.image, game.player.animation.frame * 100, game.player.animation.column * 100 , 100, 100, game.camera.offset[0] + game.player.x, game.camera.offset[1] + game.player.y, 100+20, 100+20);
         for (var i=0 ; i < this.bullets.length ; i++){
             this.bullets[i].drawBullet();
         }
