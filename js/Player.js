@@ -203,22 +203,24 @@ class Player{
         //let dirX = Math.sin(direction);
         //let dirY = Math.cos(direction);
         let side;
-        if (game.player.animation.column == 0 || game.player.animation.column == 2 || game.player.animation.column == 4 ) { 
+        if (game.player.animation.column == 0 || game.player.animation.column == 2 || game.player.animation.column == 4 
+            || game.player.animation.column == 6 || game.player.animation.column == 8 || game.player.animation.column == 10) { 
              side = "right";
         } else side = "left";
         
-        var b = new Bullet (this.x+this.width/2,this.y+this.height/2,side);
+        if(side == "right") var b = new Bullet (this.x+this.width/2+30,this.y+this.height/2+5,side);
+        else var b = new Bullet (this.x+this.width/2-30,this.y+this.height/2+5,side);
         this.bullets.push(b);
 
-       /* if (game.player.idling == true) {
+        if (game.player.idling == true) {
             if (game.controller.mousex > this.x+this.width/2+game.camera.offset[0] ){
                 game.player.animation.change(game.sprite_sheet.frame_sets[10], 7, 10);
             } else  game.player.animation.change(game.sprite_sheet.frame_sets[11], 7, 11);
         } else if (game.player.idling == false){
-            if (game.controller.mousex > this.x+this.width/2+game.camera.offset[0] ){
+            if (game.controller.right){
                 game.player.animation.change(game.sprite_sheet.frame_sets[8], 7, 8);
             } else  game.player.animation.change(game.sprite_sheet.frame_sets[9], 7, 9);    
-        }*/
+        }
     }
 
 
