@@ -33,6 +33,9 @@ class Game{
             ["trashcan","./images/trashcan.png"],
             ["window","./images/window.png"],
             ["cardrepertory","./images/cardrepertory.png"],
+            ["key","./images/key.png"],
+            ["life","./images/life.png"],
+            ["avatar","./images/avatar.png"],
         ]
 
         for(let i = 0; i < images.length ; i++) {

@@ -1,20 +1,21 @@
 class Animation{
     constructor(){
-        this.count = 0;
         this.delay = 0;
         this.frame = 0;
         this.frame_index = 0;
         this.frame_set = 0;
         this.column = 0;
+        this.count = 0;
         this.count2 = 0;
         this.count3 = 0;
+        this.count4 = 0;
+        this.count5 = 0;
     }
 
     change(frame_set, delay = 15, column){
         if (this.frame_set != frame_set) {// If the frame set is different:
-            if( (this.column == 10 || this.column == 11) && (column == 0 || column == 1) ){
+            if( (this.column == 10 ) && (column == 0) ){
                 this.count2++
-
                 if(this.count2==40){
                     this.count2 =0;
                     this.count = 0;// Reset the count.
@@ -24,11 +25,34 @@ class Animation{
                     this.frame = this.frame_set[this.frame_index];// Set the new frame value.
                     this.column = column;
                 }
-            }else if( (this.column == 8 || this.column == 9) && (column == 4 || column == 5) ) {
+            }else if( (this.column == 11) && (column == 1) ) {
                 this.count3++
-
                 if(this.count3==40){
                     this.count3 =0;
+                    this.count = 0;// Reset the count.
+                    this.delay = delay;// Set the delay.
+                    this.frame_index = 0;// Start at the first frame in the new frame set.
+                    this.frame_set = frame_set;// Set the new frame set.
+                    this.frame = this.frame_set[this.frame_index];// Set the new frame value.
+                    this.column = column;
+                }
+            }else if( (this.column == 8 ) && (column == 4) ) {
+                this.count4++
+
+                if(this.count4==40){
+                    this.count4 =0;
+                    this.count = 0;// Reset the count.
+                    this.delay = delay;// Set the delay.
+                    this.frame_index = 0;// Start at the first frame in the new frame set.
+                    this.frame_set = frame_set;// Set the new frame set.
+                    this.frame = this.frame_set[this.frame_index];// Set the new frame value.
+                    this.column = column;
+                }
+            }else if( (this.column == 9) && (column == 5) ) {
+                this.count5++
+
+                if(this.count5==40){
+                    this.count5 =0;
                     this.count = 0;// Reset the count.
                     this.delay = delay;// Set the delay.
                     this.frame_index = 0;// Start at the first frame in the new frame set.

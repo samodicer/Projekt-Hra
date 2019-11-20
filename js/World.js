@@ -66,10 +66,16 @@ class World{
         game.context.drawImage(game.findImage("cardrepertory"), 0, 0, 50, 90, 1555+game.camera.offset[0],  612+game.camera.offset[1], 50, 90);
         game.context.drawImage(game.findImage("cardrepertory"), 0, 0, 50, 90, 1610+game.camera.offset[0],  612+game.camera.offset[1], 50, 90);
         game.context.drawImage(game.findImage("cardrepertory"), 0, 0, 50, 90, 1665+game.camera.offset[0],  612+game.camera.offset[1], 50, 90);
+        game.context.drawImage(game.findImage("key"), 0, 0, 32, 12, 1800+game.camera.offset[0],  680+game.camera.offset[1], 32, 12);
 
-        game.context.font = '30px Courier New';
+        game.context.font = '20px Courier New';
         game.context.fillStyle = "red";
-        game.context.fillText(game.playername, 10, 30);  
+        game.context.fillText(game.playername, 50, 50);  
+        game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 10, 60, 20, 20);
+        game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 30, 60, 20, 20);
+        game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 50, 60, 20, 20);
+        game.context.drawImage(game.findImage("avatar"), 0, 0, 38, 44, 10, 10, 38, 44);
+
         
     }
 
