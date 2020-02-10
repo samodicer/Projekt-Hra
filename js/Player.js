@@ -203,8 +203,8 @@ class Player{
         //let dirX = Math.sin(direction);
         //let dirY = Math.cos(direction);
         let side;
-        if (game.player.animation.column == 0 || game.player.animation.column == 2 || game.player.animation.column == 4 
-            || game.player.animation.column == 6 || game.player.animation.column == 8 || game.player.animation.column == 10) { 
+        if (game.player.animation.row == 0 || game.player.animation.row == 2 || game.player.animation.row == 4 
+            || game.player.animation.row == 6 || game.player.animation.row == 8 || game.player.animation.row == 10) { 
              side = "right";
         } else side = "left";
         
@@ -226,7 +226,7 @@ class Player{
 
 
     drawPlayer(){
-        game.context.drawImage(game.sprite_sheet.image, game.player.animation.frame * 100, game.player.animation.column * 100 , 100, 100, game.camera.offset[0] + game.player.x, game.camera.offset[1] + game.player.y, 100+20, 100+20);
+        game.context.drawImage(game.sprite_sheet.image, game.player.animation.frame * 100, game.player.animation.row * 100 , 100, 100, game.camera.offset[0] + game.player.x, game.camera.offset[1] + game.player.y, 100+20, 100+20);
         for (var i=0 ; i < this.bullets.length ; i++){
             this.bullets[i].drawBullet();
         }

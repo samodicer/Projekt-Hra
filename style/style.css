@@ -1,19 +1,24 @@
+body{
+    background-color:rgb(56, 56, 56);    
+}
+
 canvas{
-    border:2px solid red;
+    border:2px solid #f8e728;
     padding-left: 0;
     padding-right: 0;
-    margin-top: 50px;
+    margin-top: 10px;
     margin-left: auto;
     margin-right: auto;
     display: none;
     cursor: none;
 }
+
 #menu{
     text-align: center;
-    border:2px solid red;
+    border:2px solid #f8e728;
     padding-left: 0;
     padding-right: 0;
-    margin-top: 50px;
+    margin-top: 10px;
     margin-left: auto;
     margin-right: auto;
     display: block;
@@ -21,13 +26,71 @@ canvas{
     height: 500px; 
     background-color:black;
 }
+
 #name_form{
-    color:white;
-    margin-top: 50px;
+    color:black;
+    margin-top: 10px;
     font-size: 20px;
+    font-family: 'Trebuchet MS';
 }
 
 #start_button{
     margin-top: 7px;
     font-size: large;
+}
+
+#logo{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 50px;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-drag: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}
+
+#wrapper{
+    transition:height 1s ease-out;
+    height:0;
+    overflow:hidden;
+}
+
+#wrapper2{
+    transition:height 1s ease-out;
+    height:0;
+    overflow:hidden;
+}
+
+#button1{
+    margin-top: 20px;
+}
+
+.slideDown{
+    background: #f8e728;
+    border-radius: 15px;
+    width:50%;
+    padding:20px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    font-family: 'Trebuchet MS';
+}
+
+input[type=text] {
+    text-align: center;
+    background-color: #f0e356;
+    color: black;
+    border: 2px solid black;
+    border-radius: 4px;
+    width: 70%;
+    height: 40px;
+    font-family: 'Trebuchet MS';
+    font-size: 25px;
+}
+
+input[type=text]:focus {
+    border: 3px solid black;
+    outline-width: 0;
 }

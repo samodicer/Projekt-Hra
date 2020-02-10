@@ -4,7 +4,7 @@ class Animation{
         this.frame = 0;
         this.frame_index = 0;
         this.frame_set = 0;
-        this.column = 0;
+        this.row = 0;
         this.count = 0;
         this.count2 = 0;
         this.count3 = 0;
@@ -12,9 +12,9 @@ class Animation{
         this.count5 = 0;
     }
 
-    change(frame_set, delay = 15, column){
+    change(frame_set, delay = 15, row){
         if (this.frame_set != frame_set) {// If the frame set is different:
-            if( (this.column == 10 ) && (column == 0) ){
+            if( (this.row == 10 ) && (row == 0) ){
                 this.count2++
                 if(this.count2==40){
                     this.count2 =0;
@@ -23,9 +23,9 @@ class Animation{
                     this.frame_index = 0;// Start at the first frame in the new frame set.
                     this.frame_set = frame_set;// Set the new frame set.
                     this.frame = this.frame_set[this.frame_index];// Set the new frame value.
-                    this.column = column;
+                    this.row = row;
                 }
-            }else if( (this.column == 11) && (column == 1) ) {
+            }else if( (this.row == 11) && (row == 1) ) {
                 this.count3++
                 if(this.count3==40){
                     this.count3 =0;
@@ -34,9 +34,9 @@ class Animation{
                     this.frame_index = 0;// Start at the first frame in the new frame set.
                     this.frame_set = frame_set;// Set the new frame set.
                     this.frame = this.frame_set[this.frame_index];// Set the new frame value.
-                    this.column = column;
+                    this.row = row;
                 }
-            }else if( (this.column == 8 ) && (column == 4) ) {
+            }else if( (this.row == 8 ) && (row == 4) ) {
                 this.count4++
 
                 if(this.count4==40){
@@ -46,9 +46,9 @@ class Animation{
                     this.frame_index = 0;// Start at the first frame in the new frame set.
                     this.frame_set = frame_set;// Set the new frame set.
                     this.frame = this.frame_set[this.frame_index];// Set the new frame value.
-                    this.column = column;
+                    this.row = row;
                 }
-            }else if( (this.column == 9) && (column == 5) ) {
+            }else if( (this.row == 9) && (row == 5) ) {
                 this.count5++
 
                 if(this.count5==40){
@@ -58,7 +58,7 @@ class Animation{
                     this.frame_index = 0;// Start at the first frame in the new frame set.
                     this.frame_set = frame_set;// Set the new frame set.
                     this.frame = this.frame_set[this.frame_index];// Set the new frame value.
-                    this.column = column;
+                    this.row = row;
                 }
             }else {
                 this.count = 0;// Reset the count.
@@ -66,7 +66,7 @@ class Animation{
                 this.frame_index = 0;// Start at the first frame in the new frame set.
                 this.frame_set = frame_set;// Set the new frame set.
                 this.frame = this.frame_set[this.frame_index];// Set the new frame value.
-                this.column = column;
+                this.row = row;
             }
       
         }

@@ -2,20 +2,38 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>HRA </title>
+    <title>THE ROBOT</title>
     <link rel="stylesheet" type="text/css" href="style/style.css">
 </head>
 
 <body>
+    <img id="logo" src ="images/therobot.png"></img>
     <div id="container"> 
         <div id="menu"> 
-            <div class="form_div" id ="name_form">
-                    <label for="player_name">Zadaj svoj nick:</label> <br/> 
-                    <input type="text" id="player_name" name="player_name"> 
+            <img id="button1" src="images/button1.png" width="170" height="80" alt="submit">
+            <div id="wrapper">
+                <div class="slideDown">
+                    <div class="form_div" id ="name_form">
+                        <label for="player_name"><b>ZADAJ PREZÝVKU:</b></label> <br/> 
+                        <input type="text" id="player_name" name="player_name"> 
+                    </div>
+    
+                    <div class="form_div" id ="start_button">
+                        <button id="start_game" name="start_game" onclick="action('startGame');">Hraj</button>
+                     </div>
+                </div>
             </div>
-
-            <div class="form_div" id ="start_button">
-                    <button id="start_game" name="start_game" onclick="action('startGame');">Hraj</button>
+            <img id="button2" src="images/button2.png" width="170" height="80" alt="submit">
+            <div id="wrapper2">
+                <div class="slideDown">
+                    <h1>OVLÁDANIE</h1>
+                    <p>
+                        ovladanieovladanieovladanieovladanieovladanieovladanieovladanieovladanieovladanie
+                        ovladanieovladanieovladanieovladanieovladanieovladanieovladanieovladanieovladanie
+                        ovladanieovladanieovladanieovladanieovladanieovladanieovladanieovladanieovladanie
+                        ovladanieovladanieovladanieovladanieovladanieovladanieovladanieovladanieovladanie
+                    </p>
+                </div>
             </div>
         </div>
         <canvas id="canvas" width="760" height="480"></canvas>
@@ -30,6 +48,14 @@
     </div>
 
     <script type="text/javascript">
+        document.getElementById("button1").addEventListener("click", function () {
+            document.getElementById("wrapper").style.height = "170px";
+            document.getElementById("wrapper2").style.height = "0px";
+        });
+        document.getElementById("button2").addEventListener("click", function () {
+            document.getElementById("wrapper2").style.height = "250px";
+            document.getElementById("wrapper").style.height = "0px";
+        });
 
         var game = new Game();
 
