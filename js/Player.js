@@ -16,7 +16,7 @@ class Player{
         this.bullets= [];
     }
 
-    get bottom() { 
+   /* get bottom() { 
         return this.y + this.height;
     }
     get left() { 
@@ -27,7 +27,7 @@ class Player{
     }
     get top() { 
         return this.y;
-    }
+    }*/
 
     update(){
         for (var i=0 ; i < this.bullets.length ; i++){
@@ -70,7 +70,9 @@ class Player{
 
     BulletCollision(){
         if(game.player.shooting == true) {
+
             var to_delete ;
+
             for (var i=0 ; i < game.player.bullets.length ; i++){
                 var tile_x = Math.floor((game.player.bullets[i].x ) / game.world.tile_size);
                 var tile_y = Math.floor((game.player.bullets[i].y) / game.world.tile_size);
@@ -84,6 +86,7 @@ class Player{
 
             if (typeof to_delete !== 'undefined'){
                 game.player.bullets.splice(to_delete,1); 
+
             }
         
         }
@@ -104,10 +107,11 @@ class Player{
     moveLeft(){
 
         if (game.controller.left) {
-      
             game.player.x_velocity -= 0.4;
             game.player.idling=false;
+
             if (game.player.jumping==false) {
+
                 game.player.animation.change(game.sprite_sheet.frame_sets[5], 7,5);
             }
         
@@ -116,11 +120,12 @@ class Player{
 
     moveRight(){
         
-        if (game.controller.right) {
-        
+        if (game.controller.right) {    
             game.player.x_velocity += 0.4;
             game.player.idling=false;
+
             if (game.player.jumping==false) {
+
                 game.player.animation.change(game.sprite_sheet.frame_sets[4], 7,4);
             }
         }
@@ -158,8 +163,10 @@ class Player{
     idle(){
 
         if (!game.controller.left && !game.controller.right && game.player.jumping==false) {
+
             game.player.idling = true;
-            if (game.controller.mousex > this.x+this.width/2+game.camera.offset[0] ) game.player.animation.change(game.sprite_sheet.frame_sets[0], 10, 0);
+
+            if (game.controller.mousex > this.x+this.width/2+game.camera.offset[0] ) game.player.animation.change(game.sprite_sheet.frame_sets[0], 10, 0);          
             else game.player.animation.change(game.sprite_sheet.frame_sets[1], 10, 1);
       
         }
@@ -203,9 +210,10 @@ class Player{
         //let dirX = Math.sin(direction);
         //let dirY = Math.cos(direction);
         let side;
-        if (game.player.animation.row == 0 || game.player.animation.row == 2 || game.player.animation.row == 4 
-            || game.player.animation.row == 6 || game.player.animation.row == 8 || game.player.animation.row == 10) { 
+        if (game.player.animation.row == 0 || game.player.animation.row == 2 || game.player.animation.row == 4 || game.player.animation.row == 6 || game.player.animation.row == 8 || game.player.animation.row == 10) { 
+
              side = "right";
+
         } else side = "left";
         
         if(side == "right") var b = new Bullet (this.x+this.width/2+30,this.y+this.height/2+5,side);
@@ -213,12 +221,19 @@ class Player{
         this.bullets.push(b);
 
         if (game.player.idling == true) {
+
             if (game.controller.mousex > this.x+this.width/2+game.camera.offset[0] ){
+
                 game.player.animation.change(game.sprite_sheet.frame_sets[10], 7, 10);
+
             } else  game.player.animation.change(game.sprite_sheet.frame_sets[11], 7, 11);
+
         } else if (game.player.idling == false){
+
             if (game.controller.right){
+
                 game.player.animation.change(game.sprite_sheet.frame_sets[8], 7, 8);
+
             } else  game.player.animation.change(game.sprite_sheet.frame_sets[9], 7, 9);    
         }
     }

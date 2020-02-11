@@ -18,9 +18,10 @@
                         <input type="text" id="player_name" name="player_name"> 
                     </div>
     
-                    <div class="form_div" id ="start_button">
-                        <button id="start_game" name="start_game" onclick="action('startGame');">Hraj</button>
-                     </div>
+                    <div class="form_div">
+                        <button id="start_button" name="start_game" onclick="action('startGame');">ZAČAŤ HRAŤ</button>
+                    </div>
+                    <p> Zle udaje. </p>
                 </div>
             </div>
             <img id="button2" src="images/button2.png" width="170" height="80" alt="submit">
@@ -28,10 +29,10 @@
                 <div class="slideDown">
                     <h1>OVLÁDANIE</h1>
                     <p>
-                        ovladanieovladanieovladanieovladanieovladanieovladanieovladanieovladanieovladanie
-                        ovladanieovladanieovladanieovladanieovladanieovladanieovladanieovladanieovladanie
-                        ovladanieovladanieovladanieovladanieovladanieovladanieovladanieovladanieovladanie
-                        ovladanieovladanieovladanieovladanieovladanieovladanieovladanieovladanieovladanie
+                        ovladanieovladanieovladanieovladanieovladanie
+                        ovladanieovladanieovladanieovladanieovladanie
+                        ovladanieovladanieovladanieovladanieovladanie
+                        ovladanieovladanieovladanieovladanieovladanie
                     </p>
                 </div>
             </div>
@@ -40,6 +41,7 @@
         <script type="text/javascript" src="js/Game.js"></script>
         <script type="text/javascript" src="js/World.js"></script>
         <script type="text/javascript" src="js/Player.js"></script>
+        <script type="text/javascript" src="js/Enemy.js"></script>
         <script type="text/javascript" src="js/Bullet.js"></script>
         <script type="text/javascript" src="js/Animation.js"></script>
         <script type="text/javascript" src="js/Sheets.js"></script>
@@ -49,7 +51,7 @@
 
     <script type="text/javascript">
         document.getElementById("button1").addEventListener("click", function () {
-            document.getElementById("wrapper").style.height = "170px";
+            document.getElementById("wrapper").style.height = "250px";
             document.getElementById("wrapper2").style.height = "0px";
         });
         document.getElementById("button2").addEventListener("click", function () {

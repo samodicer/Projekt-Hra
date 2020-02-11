@@ -29,4 +29,6 @@ class Bullet{
         } else return true;
     
     }
+
+    
 }
