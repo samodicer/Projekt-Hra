@@ -71,10 +71,19 @@ class World{
         game.context.font = '20px Courier New';
         game.context.fillStyle = "red";
         game.context.fillText(game.playername, 50, 50);  
-        game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 10, 60, 20, 20);
-        game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 30, 60, 20, 20);
-        game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 50, 60, 20, 20);
         game.context.drawImage(game.findImage("avatar"), 0, 0, 38, 44, 10, 10, 38, 44);
+
+       if(game.player.lives ==3){
+          game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 10, 60, 20, 20);
+          game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 30, 60, 20, 20);
+          game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 50, 60, 20, 20);
+        }else if(game.player.lives ==2){
+          game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 10, 60, 20, 20);
+          game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 30, 60, 20, 20);
+        }else if(game.player.lives ==1){
+          game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 10, 60, 20, 20);
+        }else game.context.fillText("Dead",13, 70);
+      
 
         
     }

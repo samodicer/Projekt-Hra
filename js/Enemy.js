@@ -5,10 +5,11 @@ class Enemy{
         this.y= y;
         this.x_velocity = x_velocity;
         this.y_velocity = y_velocity;
-        this.height= height;
+        this.height = height;
         this.width = width;
         this.old_x = old_x;
         this.old_y = old_y;
+        this.health = 100;
     }
 
     moveLeft(){
@@ -19,9 +20,9 @@ class Enemy{
         game.enemy.x_velocity += 0.4;
     }
 
-    EnemyBehavior(){
+    behavior(){
         var random = Math.random();
-        if(random > 0.5) this.moveLeft()
+        if(random > 0.55) this.moveLeft()
         else this.moveRight();
     }
 
@@ -50,8 +51,19 @@ class Enemy{
         }
     }
 
+    hit() {
+        for (var i=0 ; i < game.player.bullets.length ; i++){
+            if(game.player.bullets[i].x >= game.enemy.x && game.player.bullets[i].x <= game.enemy.x + game.enemy.width && game.player.bullets[i].y >= game.enemy.y && game.player.bullets[i].y <= game.enemy.y + game.enemy.height) {    
+                game.player.bullets.splice(i,1); 
+                if (game.enemy.health != 0) game.enemy.health-= 25;
+            }
+            //console.log(Math.round(game.player.bullets[i].x)+ "= bulletX") ;         
+            //console.log(Math.round(game.enemy.x)+ "= enemyX") ;   
+        }
+    }
+
     drawEnemy(){
-        game.context.fillStyle = "red";
+        game.context.fillStyle = "green";
         game.context.fillRect(game.camera.offset[0]+this.x,game.camera.offset[1]+this.y,this.width,this.height);
     }
 }

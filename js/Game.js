@@ -5,7 +5,7 @@ class Game{
         this.context = canvas.getContext("2d");
         this.world = new World();
         this.camera = new Camera();
-        this.player = new Player(100,500,0,0,100,130,false,false,true,100,500,new Animation());
+        this.player = new Player(100,500,0,0,100,100,false,false,true,100,500,new Animation());
         this.enemy = new Enemy(600,500,0,0,90,60,600,500);
         this.controller = new Controller();
         this.images = [];
@@ -74,10 +74,13 @@ class Game{
 
     loop(){
         game.player.checkShooting();
+
         game.player.moveLeft();
         game.player.moveRight();
         game.player.jump();
         game.player.idle();
+
+        game.player.animation.update();
         game.player.update();
 
         game.camera.update(game.player.x + (game.player.width/2), game.player.y + (game.player.height/2));
@@ -90,23 +93,27 @@ class Game{
         game.player.x_velocity *= 0.9;// friction
         game.player.y_velocity *= 0.9;// friction
 
-        game.enemy.y_velocity += 0.8;// gravity
-        game.enemy.old_x = game.enemy.x;
-        game.enemy.old_y = game.enemy.y;
-        game.enemy.x += game.enemy.x_velocity;
-        game.enemy.y += game.enemy.y_velocity;
-        game.enemy.x_velocity *= 0.9;// friction
-        game.enemy.y_velocity *= 0.9;// friction
 
-        game.player.animation.update();
 
         game.world.drawWorld();
-        game.enemy.drawEnemy();
         game.player.drawPlayer();
-        game.enemy.EnemyCollision();
-        game.enemy.EnemyBehavior()
         game.player.PlayerCollision();
         game.player.BulletCollision();
+
+        if(game.enemy.health != 0){
+            game.enemy.y_velocity += 0.8;// gravity
+            game.enemy.old_x = game.enemy.x;
+            game.enemy.old_y = game.enemy.y;
+            game.enemy.x += game.enemy.x_velocity;
+            game.enemy.y += game.enemy.y_velocity;
+            game.enemy.x_velocity *= 0.9;// friction
+            game.enemy.y_velocity *= 0.9;// friction
+            game.enemy.EnemyCollision();
+            game.enemy.behavior()  
+            game.enemy.hit()
+            game.enemy.drawEnemy();
+            game.player.hit();
+        } 
         
         window.requestAnimationFrame(game.loop);
 

@@ -14,6 +14,8 @@ class Player{
         this.old_y = old_y;
         this.animation = animation;
         this.bullets= [];
+        this.stunned= false;
+        this.lives = 3;
     }
 
    /* get bottom() { 
@@ -238,10 +240,23 @@ class Player{
         }
     }
 
+    hit(){
+        if(game.player.overlapsEnemy() && game.player.stunned == false){
+            game.player.lives -= 1;
+            game.player.stunned = true;
+            setTimeout(function(){ game.player.stunned = false; }, 3000);
+        }
+    }
 
+    overlapsEnemy(){
+        if (game.player.x <= game.enemy.x && game.enemy.x <= game.player.x + game.player.width-20 && game.player.y <= game.enemy.y+30 && game.player.y >= game.enemy.y-30) return true; 
+        if (game.player.x+20 <= game.enemy.x + game.enemy.width  && game.enemy.x + game.enemy.width <= game.player.x + game.player.width && game.player.y <= game.enemy.y+30 && game.player.y >= game.enemy.y-30) return true; 
+        if (game.enemy.x + game.enemy.width <  game.player.x && game.player.x+ + game.player.width   <  game.enemy.x + game.enemy.width && game.player.y <= game.enemy.y+30 && game.player.y >= game.enemy.y-30) return true; 
+        return false;   
+     }
 
     drawPlayer(){
-        game.context.drawImage(game.sprite_sheet.image, game.player.animation.frame * 100, game.player.animation.row * 100 , 100, 100, game.camera.offset[0] + game.player.x, game.camera.offset[1] + game.player.y, 100+20, 100+20);
+        game.context.drawImage(game.sprite_sheet.image, game.player.animation.frame * 100, game.player.animation.row * 100 , 100, 100, game.camera.offset[0] + game.player.x, game.camera.offset[1] + game.player.y, 100, 100+10);
         for (var i=0 ; i < this.bullets.length ; i++){
             this.bullets[i].drawBullet();
         }
