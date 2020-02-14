@@ -16,6 +16,8 @@ class Player{
         this.bullets= [];
         this.stunned= false;
         this.lives = 3;
+        this.alive = true;
+        this.frozen = false;
     }
 
    /* get bottom() { 
@@ -108,7 +110,7 @@ class Player{
 
     moveLeft(){
 
-        if (game.controller.left) {
+        if (game.controller.left && game.player.frozen == false) {
             game.player.x_velocity -= 0.4;
             game.player.idling=false;
 
@@ -122,7 +124,7 @@ class Player{
 
     moveRight(){
         
-        if (game.controller.right) {    
+        if (game.controller.right && game.player.frozen == false) {    
             game.player.x_velocity += 0.4;
             game.player.idling=false;
 
@@ -135,7 +137,7 @@ class Player{
 
     jump(){
 
-        if (game.controller.up && game.player.jumping == false) {
+        if (game.controller.up && game.player.jumping == false && game.player.frozen == false) {
 
             game.player.y_velocity -= 23;
             game.player.jumping = true;
@@ -164,13 +166,30 @@ class Player{
 
     idle(){
 
-        if (!game.controller.left && !game.controller.right && game.player.jumping==false) {
+        if (!game.controller.left && !game.controller.right && game.player.jumping==false && game.player.frozen == false) {
 
             game.player.idling = true;
 
             if (game.controller.mousex > this.x+this.width/2+game.camera.offset[0] ) game.player.animation.change(game.sprite_sheet.frame_sets[0], 10, 0);          
             else game.player.animation.change(game.sprite_sheet.frame_sets[1], 10, 1);
       
+        }
+    }
+
+    dead(){
+        if(game.player.lives <= 0){
+            game.player.frozen = true;
+            setTimeout(function(){ 
+                    game.player.alive = false; 
+                    }, 500);
+            if (game.player.old_x < game.player.x && game.player.idling == false)  {
+                game.player.animation.change(game.sprite_sheet.frame_sets[6], 4, 6);
+            } else if (game.player.old_x > game.player.x && game.player.idling == false) {
+                game.player.animation.change(game.sprite_sheet.frame_sets[7], 4, 7);
+            } else if (game.player.idling == true){
+                if (game.controller.mousex > this.x+this.width/2+game.camera.offset[0] ) game.player.animation.change(game.sprite_sheet.frame_sets[6], 4, 6);          
+                else game.player.animation.change(game.sprite_sheet.frame_sets[7], 4, 7);  
+            }
         }
     }
 
@@ -257,6 +276,8 @@ class Player{
 
     drawPlayer(){
         game.context.drawImage(game.sprite_sheet.image, game.player.animation.frame * 100, game.player.animation.row * 100 , 100, 100, game.camera.offset[0] + game.player.x, game.camera.offset[1] + game.player.y, 100, 100+10);
+        
+        
         for (var i=0 ; i < this.bullets.length ; i++){
             this.bullets[i].drawBullet();
         }

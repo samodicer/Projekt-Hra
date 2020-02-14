@@ -65,5 +65,27 @@ class Enemy{
     drawEnemy(){
         game.context.fillStyle = "green";
         game.context.fillRect(game.camera.offset[0]+this.x,game.camera.offset[1]+this.y,this.width,this.height);
+
+        if(game.enemy.health == 100){
+            game.context.fillStyle = "black";
+            game.context.fillRect(game.camera.offset[0]+this.x+15,game.camera.offset[1]+this.y-10,40,4);
+            game.context.fillStyle = "green";
+            game.context.fillRect(game.camera.offset[0]+this.x+16,game.camera.offset[1]+this.y-9,38,2);
+        }else if (game.enemy.health == 75){
+            game.context.fillStyle = "black";
+            game.context.fillRect(game.camera.offset[0]+this.x+15,game.camera.offset[1]+this.y-10,40,4);
+            game.context.fillStyle = "yellow";
+            game.context.fillRect(game.camera.offset[0]+this.x+16,game.camera.offset[1]+this.y-9,28,2);
+        }else if (game.enemy.health == 50){
+            game.context.fillStyle = "black";
+            game.context.fillRect(game.camera.offset[0]+this.x+15,game.camera.offset[1]+this.y-10,40,4);
+            game.context.fillStyle = "orange";
+            game.context.fillRect(game.camera.offset[0]+this.x+16,game.camera.offset[1]+this.y-9,18,2);
+        }else if (game.enemy.health == 25){
+            game.context.fillStyle = "black";
+            game.context.fillRect(game.camera.offset[0]+this.x+15,game.camera.offset[1]+this.y-10,40,4);
+            game.context.fillStyle = "red";
+            game.context.fillRect(game.camera.offset[0]+this.x+16,game.camera.offset[1]+this.y-9,8,2);
+        }
     }
 }

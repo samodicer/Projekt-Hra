@@ -6,7 +6,7 @@ class Game{
         this.world = new World();
         this.camera = new Camera();
         this.player = new Player(100,500,0,0,100,100,false,false,true,100,500,new Animation());
-        this.enemy = new Enemy(600,500,0,0,90,60,600,500);
+        this.enemy = new Enemy(600,500,0,0,90,70,600,500);
         this.controller = new Controller();
         this.images = [];
 
@@ -37,6 +37,7 @@ class Game{
             ["key","./images/key.png"],
             ["life","./images/life.png"],
             ["avatar","./images/avatar.png"],
+            ["avatar-dead","./images/avatar-dead.png"],
         ]
 
         for(let i = 0; i < images.length ; i++) {
@@ -68,37 +69,15 @@ class Game{
         this.sprite_sheet = new Sprite_sheet([[0,1,2,3,4,5,6,7,8,9] , [0,1,2,3,4,5,6,7,8,9] , [0,1,2,3,4,5,6,7,8,9],
                                               [0,1,2,3,4,5,6,7,8,9] , [0,1,2,3,4,5,6,7] , [0,1,2,3,4,5,6,7], 
                                               [0,1,2,3,4,5,6,7,8,9] , [0,1,2,3,4,5,6,7,8,9] , [0,1,2,3,4,5,6,7],
-                                              [0,1,2,3,4,5,6,7] , [0,1,2,3,4] , [0,1,2,3,4]] , this.findImage("player_sprite"),100);
+                                              [0,1,2,3,4,5,6,7] , [0,1,2,3,4] , [0,1,2,3,4] , [9]] , this.findImage("player_sprite"),100);
         this.tile_sheet = new Tile_sheet(this.findImage("tile_sheet"),50,50,3);    
     }
 
     loop(){
-        game.player.checkShooting();
 
-        game.player.moveLeft();
-        game.player.moveRight();
-        game.player.jump();
-        game.player.idle();
-
-        game.player.animation.update();
-        game.player.update();
 
         game.camera.update(game.player.x + (game.player.width/2), game.player.y + (game.player.height/2));
-        
-        game.player.y_velocity += 0.8;// gravity
-        game.player.old_x = game.player.x;
-        game.player.old_y = game.player.y;
-        game.player.x += game.player.x_velocity;
-        game.player.y += game.player.y_velocity;
-        game.player.x_velocity *= 0.9;// friction
-        game.player.y_velocity *= 0.9;// friction
-
-
-
         game.world.drawWorld();
-        game.player.drawPlayer();
-        game.player.PlayerCollision();
-        game.player.BulletCollision();
 
         if(game.enemy.health != 0){
             game.enemy.y_velocity += 0.8;// gravity
@@ -114,7 +93,39 @@ class Game{
             game.enemy.drawEnemy();
             game.player.hit();
         } 
-        
+
+        if(game.player.alive == true){
+            game.player.checkShooting();
+
+            game.player.moveLeft();
+            game.player.moveRight();
+            game.player.jump();
+            game.player.idle();
+    
+            game.player.animation.update();
+            game.player.update();
+    
+            game.player.y_velocity += 0.8;// gravity
+            game.player.old_x = game.player.x;
+            game.player.old_y = game.player.y;
+            game.player.x += game.player.x_velocity;
+            game.player.y += game.player.y_velocity;
+            game.player.x_velocity *= 0.9;// friction
+            game.player.y_velocity *= 0.9;// friction
+
+            
+            game.player.drawPlayer();
+            game.player.PlayerCollision();
+            game.player.BulletCollision();
+            game.player.dead();
+        } else {
+            game.context.fillText("Game Over!",game.canvas.width/2,game.canvas.height/2);
+        }
+
+
+
+
+
         window.requestAnimationFrame(game.loop);
 
     }
