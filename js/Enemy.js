@@ -1,6 +1,6 @@
 class Enemy{
 
-    constructor(x,y,x_velocity,y_velocity,height,width,old_x,old_y){
+    constructor(x,y,x_velocity,y_velocity,height,width,old_x,old_y,animation){
         this.x = x;
         this.y= y;
         this.x_velocity = x_velocity;
@@ -10,19 +10,23 @@ class Enemy{
         this.old_x = old_x;
         this.old_y = old_y;
         this.health = 100;
+        this.animation = animation;
     }
 
     moveLeft(){
         game.enemy.x_velocity -= 0.4;
+        game.enemy.animation.changeEnemyFrame(game.enemy_sprite_sheet.frame_sets[3], 10, 3);
     }
 
     moveRight(){
         game.enemy.x_velocity += 0.4;
+        game.enemy.animation.changeEnemyFrame(game.enemy_sprite_sheet.frame_sets[2], 10, 2);
+        console.log("ENEMY.count:" + game.enemy.animation.count);
     }
 
     behavior(){
         var random = Math.random();
-        if(random > 0.55) this.moveLeft()
+        if(random > 1) this.moveLeft()
         else this.moveRight();
     }
 
@@ -64,7 +68,7 @@ class Enemy{
 
     drawEnemy(){
         game.context.fillStyle = "green";
-        game.context.fillRect(game.camera.offset[0]+this.x,game.camera.offset[1]+this.y,this.width,this.height);
+        game.context.drawImage(game.enemy_sprite_sheet.image, game.enemy.animation.frame * 100, game.enemy.animation.row * 100 , 100, 100, game.camera.offset[0] + game.enemy.x, game.camera.offset[1] + game.enemy.y, 100, 100);
 
         if(game.enemy.health == 100){
             game.context.fillStyle = "black";

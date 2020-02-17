@@ -5,8 +5,8 @@ class Game{
         this.context = canvas.getContext("2d");
         this.world = new World();
         this.camera = new Camera();
-        this.player = new Player(100,500,0,0,100,100,false,false,true,100,500,new Animation());
-        this.enemy = new Enemy(600,500,0,0,90,70,600,500);
+        this.player = new Player(600,500,0,0,100,100,false,false,true,100,500,new Animation());
+        this.enemy = new Enemy(600,500,0,0,90,70,600,500,new Animation());
         this.controller = new Controller();
         this.images = [];
 
@@ -28,6 +28,7 @@ class Game{
     loadImages(){
         let images = [
             ["player_sprite","./images/player-sprite.png"],
+            ["enemy1_sprite","./images/enemy1-sprite.png"],
             ["tile_sheet","./images/tile_sheet.png"],
             ["table","./images/table.png"],
             ["plant","./images/plant.png"],
@@ -70,14 +71,19 @@ class Game{
                                               [0,1,2,3,4,5,6,7,8,9] , [0,1,2,3,4,5,6,7] , [0,1,2,3,4,5,6,7], 
                                               [0,1,2,3,4,5,6,7,8,9] , [0,1,2,3,4,5,6,7,8,9] , [0,1,2,3,4,5,6,7],
                                               [0,1,2,3,4,5,6,7] , [0,1,2,3,4] , [0,1,2,3,4] , [9]] , this.findImage("player_sprite"),100);
+        this.enemy_sprite_sheet = new Sprite_sheet([[0,1,2,3,4,5] , [0,1,2,3,4,5] , [0,1,2,3,4,5],
+                                                    [0,1,2,3,4,5] , [0,1,2,3,4,5] , [0,1,2,3,4,5], 
+                                                    [0,1,2,3,4,5] , [0,1,2,3,4,5]] , this.findImage("enemy1_sprite"),100);
+
         this.tile_sheet = new Tile_sheet(this.findImage("tile_sheet"),50,50,3);    
     }
 
     loop(){
 
-
         game.camera.update(game.player.x + (game.player.width/2), game.player.y + (game.player.height/2));
+
         game.world.drawWorld();
+
 
         if(game.enemy.health != 0){
             game.enemy.y_velocity += 0.8;// gravity
@@ -87,8 +93,9 @@ class Game{
             game.enemy.y += game.enemy.y_velocity;
             game.enemy.x_velocity *= 0.9;// friction
             game.enemy.y_velocity *= 0.9;// friction
-            game.enemy.EnemyCollision();
-            game.enemy.behavior()  
+            game.enemy.behavior();
+            game.enemy.animation.update();
+            game.enemy.EnemyCollision();  
             game.enemy.hit()
             game.enemy.drawEnemy();
             game.player.hit();
@@ -96,28 +103,23 @@ class Game{
 
         if(game.player.alive == true){
             game.player.checkShooting();
-
             game.player.moveLeft();
             game.player.moveRight();
             game.player.jump();
             game.player.idle();
-    
             game.player.animation.update();
-            game.player.update();
-    
+            game.player.deleteBullets();
             game.player.y_velocity += 0.8;// gravity
             game.player.old_x = game.player.x;
             game.player.old_y = game.player.y;
             game.player.x += game.player.x_velocity;
             game.player.y += game.player.y_velocity;
             game.player.x_velocity *= 0.9;// friction
-            game.player.y_velocity *= 0.9;// friction
-
-            
-            game.player.drawPlayer();
+            game.player.y_velocity *= 0.9;// friction        
             game.player.PlayerCollision();
             game.player.BulletCollision();
             game.player.dead();
+            game.player.drawPlayer();
         } else {
             game.context.fillText("Game Over!",game.canvas.width/2,game.canvas.height/2);
         }
