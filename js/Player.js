@@ -18,6 +18,8 @@ class Player{
         this.lives = 3;
         this.alive = true;
         this.frozen = false;
+        this.hitted = false;
+        this.hit_animation = new Animation();
     }
 
    /* get bottom() { 
@@ -110,7 +112,7 @@ class Player{
 
     moveLeft(){
 
-        if (game.controller.left && game.player.frozen == false) {
+        if (game.controller.left && game.player.frozen == false && game.player.alive == true) {
             game.player.x_velocity -= 0.4;
             game.player.idling=false;
 
@@ -124,7 +126,7 @@ class Player{
 
     moveRight(){
         
-        if (game.controller.right && game.player.frozen == false) {    
+        if (game.controller.right && game.player.frozen == false && game.player.alive == true) {    
             game.player.x_velocity += 0.4;
             game.player.idling=false;
 
@@ -137,7 +139,7 @@ class Player{
 
     jump(){
 
-        if (game.controller.up && game.player.jumping == false && game.player.frozen == false) {
+        if (game.controller.up && game.player.jumping == false && game.player.frozen == false && game.player.alive == true) {
 
             game.player.y_velocity -= 23;
             game.player.jumping = true;
@@ -166,7 +168,7 @@ class Player{
 
     idle(){
 
-        if (!game.controller.left && !game.controller.right && game.player.jumping==false && game.player.frozen == false) {
+        if (!game.controller.left && !game.controller.right && game.player.jumping==false && game.player.frozen == false && game.player.alive == true) {
 
             game.player.idling = true;
 
@@ -177,7 +179,7 @@ class Player{
     }
 
     dead(){
-        if(game.player.lives <= 0){
+        if(game.player.lives == 0){
             game.player.frozen = true;
             setTimeout(function(){ 
                     game.player.alive = false; 
@@ -237,19 +239,23 @@ class Player{
 
         } else side = "left";
         
-        if(side == "right") var b = new Bullet (this.x+this.width/2+30,this.y+this.height/2+5,side);
-        else var b = new Bullet (this.x+this.width/2-30,this.y+this.height/2+5,side);
-        this.bullets.push(b);
+        if (game.player.alive == true && game.player.stunned == false){
 
-        if (game.player.idling == true) {
+            if(side == "right") var b = new Bullet (this.x+this.width/2+30,this.y+this.height/2+5,side);
+            else var b = new Bullet (this.x+this.width/2-30,this.y+this.height/2+5,side);
+            this.bullets.push(b);
 
-            if (game.controller.mousex > this.x+this.width/2+game.camera.offset[0] ){
+        }
+
+        if (game.player.idling == true && game.player.frozen == false && game.player.alive == true && game.player.stunned == false) {
+
+            if (game.controller.mousex > this.x+this.width/2+game.camera.offset[0]  ){
 
                 game.player.animation.changePlayerFrame(game.sprite_sheet.frame_sets[10], 7, 10);
 
             } else  game.player.animation.changePlayerFrame(game.sprite_sheet.frame_sets[11], 7, 11);
 
-        } else if (game.player.idling == false){
+        } else if (game.player.idling == false && game.player.frozen == false && game.player.alive == true && game.player.stunned == false){
 
             if (game.controller.right){
 
@@ -260,9 +266,11 @@ class Player{
     }
 
     hit(){
-        if(game.player.overlapsEnemy() && game.player.stunned == false){
+        if(game.player.overlapsEnemy() && game.enemy.alive == true && game.player.stunned == false){
             game.player.lives -= 1;
             game.player.stunned = true;
+            game.player.hitted = true;
+            setTimeout(function(){ game.player.hitted = false; }, 500);
             setTimeout(function(){ game.player.stunned = false; }, 3000);
         }
     }
@@ -280,6 +288,11 @@ class Player{
         
         for (var i=0 ; i < this.bullets.length ; i++){
             this.bullets[i].drawBullet();
+        }
+
+        if(game.player.hitted == true){;
+            game.player.hit_animation.changeFrame(game.hit_sprite_sheet.frame_sets[0], 3, 0);
+            game.context.drawImage(game.hit_sprite_sheet.image, game.player.hit_animation.frame * 50, game.player.hit_animation.row * 50 , 50, 50, game.camera.offset[0] + game.player.x+30, game.camera.offset[1] + game.player.y+30, 50, 50);    
         }
 
     }

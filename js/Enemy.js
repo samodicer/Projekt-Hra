@@ -9,19 +9,26 @@ class Enemy{
         this.width = width;
         this.old_x = old_x;
         this.old_y = old_y;
-        this.health = 100;
+        this.lives = 4;
         this.animation = animation;
+        this.alive = true;
+        this.frozen = false;
+        this.hitted = false;
+        this.hit_animation = new Animation();
     }
 
     moveLeft(){
-        game.enemy.x_velocity -= 0.4;
-        game.enemy.animation.changeEnemyFrame(game.enemy_sprite_sheet.frame_sets[3], 10, 3);
+        if(game.enemy.alive == true && game.enemy.frozen == false) {
+            game.enemy.x_velocity -= 0.4;
+            game.enemy.animation.changeFrame(game.enemy_sprite_sheet.frame_sets[3], 10, 3);
+        }
     }
 
     moveRight(){
-        game.enemy.x_velocity += 0.4;
-        game.enemy.animation.changeEnemyFrame(game.enemy_sprite_sheet.frame_sets[2], 10, 2);
-        console.log("ENEMY.count:" + game.enemy.animation.count);
+        if(game.enemy.alive == true && game.enemy.frozen == false) {
+            game.enemy.x_velocity += 0.4;
+            game.enemy.animation.changeFrame(game.enemy_sprite_sheet.frame_sets[2], 10, 2);
+        }
     }
 
     behavior(){
@@ -58,38 +65,59 @@ class Enemy{
     hit() {
         for (var i=0 ; i < game.player.bullets.length ; i++){
             if(game.player.bullets[i].x >= game.enemy.x && game.player.bullets[i].x <= game.enemy.x + game.enemy.width && game.player.bullets[i].y >= game.enemy.y && game.player.bullets[i].y <= game.enemy.y + game.enemy.height) {    
+                game.enemy.hitted = true
+                setTimeout(function(){ 
+                    game.enemy.hitted = false; 
+                    }, 500);
                 game.player.bullets.splice(i,1); 
-                if (game.enemy.health != 0) game.enemy.health-= 25;
+                if (game.enemy.lives != 0) game.enemy.lives-= 1;
             }
-            //console.log(Math.round(game.player.bullets[i].x)+ "= bulletX") ;         
-            //console.log(Math.round(game.enemy.x)+ "= enemyX") ;   
+        }
+    }
+
+    dead(){
+        if(game.enemy.lives == 0){
+            game.enemy.frozen=true;
+            setTimeout(function(){ 
+                    game.enemy.alive = false; 
+                    }, 280);
+            if (game.enemy.old_x < game.enemy.x )  {
+                game.enemy.animation.changeFrame(game.enemy_sprite_sheet.frame_sets[6], 4, 6);
+            } else if (game.player.old_x > game.player.x ) {
+                game.enemy.animation.changeFrame(game.enemy_sprite_sheet.frame_sets[7], 4, 7);
+            } else  game.enemy.animation.changeFrame(game.enemy_sprite_sheet.frame_sets[7], 4, 7);
         }
     }
 
     drawEnemy(){
         game.context.fillStyle = "green";
-        game.context.drawImage(game.enemy_sprite_sheet.image, game.enemy.animation.frame * 100, game.enemy.animation.row * 100 , 100, 100, game.camera.offset[0] + game.enemy.x, game.camera.offset[1] + game.enemy.y, 100, 100);
+        game.context.drawImage(game.enemy_sprite_sheet.image, game.enemy.animation.frame * 100, game.enemy.animation.row * 100 , 100, 100, game.camera.offset[0] + game.enemy.x, game.camera.offset[1] + game.enemy.y, 100, 105);
 
-        if(game.enemy.health == 100){
+        if(game.enemy.lives == 4){
             game.context.fillStyle = "black";
             game.context.fillRect(game.camera.offset[0]+this.x+15,game.camera.offset[1]+this.y-10,40,4);
             game.context.fillStyle = "green";
             game.context.fillRect(game.camera.offset[0]+this.x+16,game.camera.offset[1]+this.y-9,38,2);
-        }else if (game.enemy.health == 75){
+        }else if (game.enemy.lives == 3){
             game.context.fillStyle = "black";
             game.context.fillRect(game.camera.offset[0]+this.x+15,game.camera.offset[1]+this.y-10,40,4);
             game.context.fillStyle = "yellow";
             game.context.fillRect(game.camera.offset[0]+this.x+16,game.camera.offset[1]+this.y-9,28,2);
-        }else if (game.enemy.health == 50){
+        }else if (game.enemy.lives == 2){
             game.context.fillStyle = "black";
             game.context.fillRect(game.camera.offset[0]+this.x+15,game.camera.offset[1]+this.y-10,40,4);
             game.context.fillStyle = "orange";
             game.context.fillRect(game.camera.offset[0]+this.x+16,game.camera.offset[1]+this.y-9,18,2);
-        }else if (game.enemy.health == 25){
+        }else if (game.enemy.lives == 1){
             game.context.fillStyle = "black";
             game.context.fillRect(game.camera.offset[0]+this.x+15,game.camera.offset[1]+this.y-10,40,4);
             game.context.fillStyle = "red";
             game.context.fillRect(game.camera.offset[0]+this.x+16,game.camera.offset[1]+this.y-9,8,2);
+        }
+
+        if(game.enemy.hitted == true){;
+            game.enemy.hit_animation.changeFrame(game.hit_sprite_sheet.frame_sets[0], 3, 0);
+            game.context.drawImage(game.hit_sprite_sheet.image, game.enemy.hit_animation.frame * 50, game.enemy.hit_animation.row * 50 , 50, 50, game.camera.offset[0] + game.enemy.x+30, game.camera.offset[1] + game.enemy.y+30, 50, 50);    
         }
     }
 }

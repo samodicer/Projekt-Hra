@@ -72,15 +72,15 @@ class Animation{
         }
     }
 
-    changeEnemyFrame(frame_set, delay , row){
-
-        this.count = 0;// Reset the count.
-        this.delay = delay;// Set the delay.
-        this.frame_index = 0;// Start at the first frame in the new frame set.
-        this.frame_set = frame_set;// Set the new frame set.
-        this.frame = this.frame_set[this.frame_index];// Set the new frame value.
-        this.row = row;
-
+    changeFrame(frame_set, delay , row){
+        if (this.frame_set != frame_set) {
+            this.count = 0;// Reset the count.
+            this.delay = delay;// Set the delay.
+            this.frame_index = 0;// Start at the first frame in the new frame set.
+            this.frame_set = frame_set;// Set the new frame set.
+            this.frame = this.frame_set[this.frame_index];// Set the new frame value.
+            this.row = row;
+        }
     }
 
     update(){
