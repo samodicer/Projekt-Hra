@@ -290,9 +290,14 @@ class Player{
             this.bullets[i].drawBullet();
         }
 
-        if(game.player.hitted == true){;
+        if(game.player.hitted == true){
             game.player.hit_animation.changeFrame(game.hit_sprite_sheet.frame_sets[0], 3, 0);
             game.context.drawImage(game.hit_sprite_sheet.image, game.player.hit_animation.frame * 50, game.player.hit_animation.row * 50 , 50, 50, game.camera.offset[0] + game.player.x+30, game.camera.offset[1] + game.player.y+30, 50, 50);    
+        }
+
+        if(game.player.stunned == true){
+            game.context.fillStyle = "#6da2f7";
+            game.context.fillText("stunned", game.camera.offset[0] +game.player.x+15,game.camera.offset[1] +game.player.y-15); 
         }
 
     }

@@ -19,30 +19,52 @@ class Enemy{
 
     moveLeft(){
         if(game.enemy.alive == true && game.enemy.frozen == false) {
-            game.enemy.x_velocity -= 0.4;
+            game.enemy.x_velocity -= 0.2;
             game.enemy.animation.changeFrame(game.enemy_sprite_sheet.frame_sets[3], 10, 3);
         }
     }
 
     moveRight(){
         if(game.enemy.alive == true && game.enemy.frozen == false) {
-            game.enemy.x_velocity += 0.4;
+            game.enemy.x_velocity += 0.2;
             game.enemy.animation.changeFrame(game.enemy_sprite_sheet.frame_sets[2], 10, 2);
         }
     }
 
+
+
     behavior(){
-        var random = Math.random();
-        if(random > 1) this.moveLeft()
-        else this.moveRight();
+        var enemy_tile_x = Math.floor((game.enemy.x + game.enemy.width * 0.5) / game.world.tile_size);
+        var enemy_tile_y = Math.floor((game.enemy.y + game.enemy.height* 0.5) / game.world.tile_size);
+        var check_left_index = game.world.map[(enemy_tile_y * game.world.columns + enemy_tile_x)-1];
+        var check_right_index = game.world.map[(enemy_tile_y * game.world.columns + enemy_tile_x)+1];
+
+        var rounded_playerx = Math.round(game.player.x);
+        var rounded_enemyx = Math.round(game.enemy.x);
+        if(rounded_playerx < rounded_enemyx+10 && rounded_playerx > rounded_enemyx-10){
+            if (game.enemy.old_x < game.enemy.x) game.enemy.animation.changeFrame(game.enemy_sprite_sheet.frame_sets[0], 10, 0);
+            else game.enemy.animation.changeFrame(game.enemy_sprite_sheet.frame_sets[1], 10, 1);
+        }else{
+            if(rounded_playerx < rounded_enemyx) {
+                if(check_left_index == 6) game.enemy.moveLeft();
+                else game.enemy.animation.changeFrame(game.enemy_sprite_sheet.frame_sets[1], 10, 1);
+            }else if(rounded_playerx > rounded_enemyx) {
+                if(check_right_index == 6) game.enemy.moveRight();
+                else game.enemy.animation.changeFrame(game.enemy_sprite_sheet.frame_sets[0], 10, 0);
+            }else if (rounded_playerx == rounded_enemyx){
+                if (game.enemy.old_x < game.enemy.x) game.enemy.animation.changeFrame(game.enemy_sprite_sheet.frame_sets[0], 10, 0);
+                else game.enemy.animation.changeFrame(game.enemy_sprite_sheet.frame_sets[1], 10, 1);
+            }
+        }
     }
+
+
 
     EnemyCollision(){
         var tile_x = Math.floor((game.enemy.x + game.enemy.width * 0.5) / game.world.tile_size);
         var tile_y = Math.floor((game.enemy.y + game.enemy.height) / game.world.tile_size);
         // get the value at the tile position in the map
         var value_at_index = game.world.map[tile_y * game.world.columns + tile_x];
-
         if (value_at_index != 5 || 6 ) {
 
             // simply call one of the routing functions in the collision object and pass
@@ -80,7 +102,7 @@ class Enemy{
             game.enemy.frozen=true;
             setTimeout(function(){ 
                     game.enemy.alive = false; 
-                    }, 280);
+                    }, 500);
             if (game.enemy.old_x < game.enemy.x )  {
                 game.enemy.animation.changeFrame(game.enemy_sprite_sheet.frame_sets[6], 4, 6);
             } else if (game.player.old_x > game.player.x ) {

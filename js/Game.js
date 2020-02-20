@@ -6,7 +6,7 @@ class Game{
         this.world = new World();
         this.camera = new Camera();
         this.player = new Player(100,500,0,0,100,100,false,false,true,100,500,new Animation());
-        this.enemy = new Enemy(600,500,0,0,90,70,600,500,new Animation());
+        this.enemy = new Enemy(100,100,0,0,90,70,600,500,new Animation());
         this.controller = new Controller();
         this.images = [];
 
@@ -83,8 +83,8 @@ class Game{
     }
 
     loop(){
-        console.log("alive-"+game.player.alive);
-        console.log("frozen-"+game.player.frozen);
+        //console.log("alive-"+game.player.alive);
+        //console.log("frozen-"+game.player.frozen);
         game.camera.update(game.player.x + (game.player.width/2), game.player.y + (game.player.height/2));
 
         game.world.drawWorld();
