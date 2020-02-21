@@ -181,9 +181,7 @@ class Player{
     dead(){
         if(game.player.lives == 0){
             game.player.frozen = true;
-            setTimeout(function(){ 
-                    game.player.alive = false; 
-                    }, 500);
+            setTimeout(function(){ game.player.alive = false; }, 5000);
             if (game.player.old_x < game.player.x && game.player.idling == false)  {
                 game.player.animation.changePlayerFrame(game.sprite_sheet.frame_sets[6], 4, 6);
             } else if (game.player.old_x > game.player.x && game.player.idling == false) {
@@ -266,11 +264,11 @@ class Player{
     }
 
     hit(){
-        if(game.player.overlapsEnemy() && game.enemy.alive == true && game.player.stunned == false){
+        if(game.player.overlapsEnemy() && game.enemy.alive == true && game.player.stunned == false && game.enemy.frozen == false && game.player.frozen == false){
             game.player.lives -= 1;
             game.player.stunned = true;
             game.player.hitted = true;
-            setTimeout(function(){ game.player.hitted = false; }, 500);
+            setTimeout(function(){ game.player.hitted = false; }, 300);
             setTimeout(function(){ game.player.stunned = false; }, 3000);
         }
     }

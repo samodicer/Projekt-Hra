@@ -6,7 +6,7 @@ class Game{
         this.world = new World();
         this.camera = new Camera();
         this.player = new Player(100,500,0,0,100,100,false,false,true,100,500,new Animation());
-        this.enemy = new Enemy(100,100,0,0,90,70,600,500,new Animation());
+        this.enemy = new Enemy(100,100,0,0,90,70,100,100,new Animation());
         this.controller = new Controller();
         this.images = [];
 
@@ -71,7 +71,7 @@ class Game{
         this.sprite_sheet = new Sprite_sheet([[0,1,2,3,4,5,6,7,8,9] , [0,1,2,3,4,5,6,7,8,9] , [0,1,2,3,4,5,6,7,8,9],
                                               [0,1,2,3,4,5,6,7,8,9] , [0,1,2,3,4,5,6,7] , [0,1,2,3,4,5,6,7], 
                                               [0,1,2,3,4,5,6,7,8,9] , [0,1,2,3,4,5,6,7,8,9] , [0,1,2,3,4,5,6,7],
-                                              [0,1,2,3,4,5,6,7] , [0,1,2,3,4] , [0,1,2,3,4] , [9]] , this.findImage("player_sprite"),100);
+                                              [0,1,2,3,4,5,6,7] , [0,1,2,3,4] , [0,1,2,3,4] ] , this.findImage("player_sprite"),100);
 
         this.enemy_sprite_sheet = new Sprite_sheet([[0,1,2,3,4,5] , [0,1,2,3,4,5] , [0,1,2,3,4,5],
                                                     [0,1,2,3,4,5] , [0,1,2,3,4,5] , [0,1,2,3,4,5], 
@@ -98,13 +98,14 @@ class Game{
             game.enemy.x_velocity *= 0.9;// friction
             game.enemy.y_velocity *= 0.9;// friction
             game.enemy.behavior();
-            game.enemy.animation.update();
+            game.enemy.animation.update(game.enemy);
             game.enemy.EnemyCollision();  
             game.enemy.hit()
             game.enemy.drawEnemy();
-            game.enemy.hit_animation.update();
+            game.enemy.hit_animation.updateHit();
             game.enemy.dead();
         } 
+
 
         if(game.player.alive == true){
             game.player.checkShooting();
@@ -112,7 +113,7 @@ class Game{
             game.player.moveRight();
             game.player.jump();
             game.player.idle();
-            game.player.animation.update();
+            game.player.animation.update(game.player);
             game.player.deleteBullets();
             game.player.y_velocity += 0.8;// gravity
             game.player.old_x = game.player.x;
@@ -126,7 +127,7 @@ class Game{
             game.player.hit();
             game.player.dead();
             game.player.drawPlayer();
-            game.player.hit_animation.update();
+            game.player.hit_animation.updateHit();
         } else {
             game.context.fillText("Game Over!",game.canvas.width/2,game.canvas.height/2);
         }

@@ -18,42 +18,44 @@ class Enemy{
     }
 
     moveLeft(){
-        if(game.enemy.alive == true && game.enemy.frozen == false) {
-            game.enemy.x_velocity -= 0.2;
-            game.enemy.animation.changeFrame(game.enemy_sprite_sheet.frame_sets[3], 10, 3);
+        if(this.alive == true && this.frozen == false) {
+            this.x_velocity -= 0.1;
+            this.animation.changeFrame(game.enemy_sprite_sheet.frame_sets[3], 10, 3);
         }
     }
 
     moveRight(){
-        if(game.enemy.alive == true && game.enemy.frozen == false) {
-            game.enemy.x_velocity += 0.2;
-            game.enemy.animation.changeFrame(game.enemy_sprite_sheet.frame_sets[2], 10, 2);
+        if(this.alive == true && this.frozen == false) {
+            this.x_velocity += 0.1;
+            this.animation.changeFrame(game.enemy_sprite_sheet.frame_sets[2], 10, 2);
         }
     }
 
 
 
     behavior(){
-        var enemy_tile_x = Math.floor((game.enemy.x + game.enemy.width * 0.5) / game.world.tile_size);
-        var enemy_tile_y = Math.floor((game.enemy.y + game.enemy.height* 0.5) / game.world.tile_size);
+        var enemy_tile_x = Math.floor((this.x + this.width * 0.5) / game.world.tile_size);
+        var enemy_tile_y = Math.floor((this.y + this.height* 0.5) / game.world.tile_size);
         var check_left_index = game.world.map[(enemy_tile_y * game.world.columns + enemy_tile_x)-1];
         var check_right_index = game.world.map[(enemy_tile_y * game.world.columns + enemy_tile_x)+1];
-
+        var check_left_down_index = game.world.map[(enemy_tile_y * game.world.columns + enemy_tile_x)-1 + game.world.columns];
+        var check_right_down_index= game.world.map[(enemy_tile_y * game.world.columns + enemy_tile_x)+1 + game.world.columns];
         var rounded_playerx = Math.round(game.player.x);
-        var rounded_enemyx = Math.round(game.enemy.x);
-        if(rounded_playerx < rounded_enemyx+10 && rounded_playerx > rounded_enemyx-10){
-            if (game.enemy.old_x < game.enemy.x) game.enemy.animation.changeFrame(game.enemy_sprite_sheet.frame_sets[0], 10, 0);
-            else game.enemy.animation.changeFrame(game.enemy_sprite_sheet.frame_sets[1], 10, 1);
+        var rounded_enemyx = Math.round(this.x);
+
+        if(rounded_playerx < rounded_enemyx+10 && rounded_playerx > rounded_enemyx-10 && this.frozen == false){
+            if (this.old_x < this.x) this.animation.changeFrame(game.enemy_sprite_sheet.frame_sets[0], 10, 0);
+            else this.animation.changeFrame(game.enemy_sprite_sheet.frame_sets[1], 10, 1);
         }else{
-            if(rounded_playerx < rounded_enemyx) {
-                if(check_left_index == 6) game.enemy.moveLeft();
-                else game.enemy.animation.changeFrame(game.enemy_sprite_sheet.frame_sets[1], 10, 1);
-            }else if(rounded_playerx > rounded_enemyx) {
-                if(check_right_index == 6) game.enemy.moveRight();
-                else game.enemy.animation.changeFrame(game.enemy_sprite_sheet.frame_sets[0], 10, 0);
-            }else if (rounded_playerx == rounded_enemyx){
-                if (game.enemy.old_x < game.enemy.x) game.enemy.animation.changeFrame(game.enemy_sprite_sheet.frame_sets[0], 10, 0);
-                else game.enemy.animation.changeFrame(game.enemy_sprite_sheet.frame_sets[1], 10, 1);
+            if(rounded_playerx < rounded_enemyx && this.frozen == false) {
+                if(check_left_index == 6 && check_left_down_index != 6) this.moveLeft();
+                else this.animation.changeFrame(game.enemy_sprite_sheet.frame_sets[1], 10, 1);
+            }else if(rounded_playerx > rounded_enemyx && this.frozen == false) {
+                if(check_right_index == 6 && check_right_down_index != 6) this.moveRight();
+                else this.animation.changeFrame(game.enemy_sprite_sheet.frame_sets[0], 10, 0);
+            }else if (rounded_playerx == rounded_enemyx && this.frozen == false){
+                if (this.old_x < this.x) this.animation.changeFrame(game.enemy_sprite_sheet.frame_sets[0], 10, 0);
+                else this.animation.changeFrame(game.enemy_sprite_sheet.frame_sets[1], 10, 1);
             }
         }
     }
@@ -61,85 +63,81 @@ class Enemy{
 
 
     EnemyCollision(){
-        var tile_x = Math.floor((game.enemy.x + game.enemy.width * 0.5) / game.world.tile_size);
-        var tile_y = Math.floor((game.enemy.y + game.enemy.height) / game.world.tile_size);
+        var tile_x = Math.floor((this.x + this.width * 0.5) / game.world.tile_size);
+        var tile_y = Math.floor((this.y + this.height) / game.world.tile_size);
         // get the value at the tile position in the map
         var value_at_index = game.world.map[tile_y * game.world.columns + tile_x];
         if (value_at_index != 5 || 6 ) {
 
             // simply call one of the routing functions in the collision object and pass
             // in values for the collision tile's location in grid/map space
-            game.world.collision(value_at_index,game.enemy, tile_y, tile_x);
+            game.world.collision(value_at_index,this, tile_y, tile_x);
     
         }
         
-        tile_x = Math.floor((game.enemy.x + game.enemy.width * 0.5) / game.world.tile_size);
-        tile_y = Math.floor((game.enemy.y + game.enemy.height) / game.world.tile_size);
+        tile_x = Math.floor((this.x + this.width * 0.5) / game.world.tile_size);
+        tile_y = Math.floor((this.y + this.height) / game.world.tile_size);
         value_at_index = game.world.map[tile_y * game.world.columns + tile_x];
   
         if (value_at_index != 5 || 6 ) {
   
-            game.world.collision(value_at_index,game.enemy, tile_y, tile_x);
+            game.world.collision(value_at_index,this, tile_y, tile_x);
   
         }
     }
 
     hit() {
         for (var i=0 ; i < game.player.bullets.length ; i++){
-            if(game.player.bullets[i].x >= game.enemy.x && game.player.bullets[i].x <= game.enemy.x + game.enemy.width && game.player.bullets[i].y >= game.enemy.y && game.player.bullets[i].y <= game.enemy.y + game.enemy.height) {    
-                game.enemy.hitted = true
-                setTimeout(function(){ 
-                    game.enemy.hitted = false; 
-                    }, 500);
+            if(game.player.bullets[i].x >= this.x && game.player.bullets[i].x <= this.x + this.width && game.player.bullets[i].y >= this.y && game.player.bullets[i].y <= this.y + this.height) {    
+                this.hitted = true
+                setTimeout(function(){ game.enemy.hitted = false; }, 300);
                 game.player.bullets.splice(i,1); 
-                if (game.enemy.lives != 0) game.enemy.lives-= 1;
+                if (this.lives != 0) this.lives-= 1;
             }
         }
     }
 
     dead(){
-        if(game.enemy.lives == 0){
-            game.enemy.frozen=true;
-            setTimeout(function(){ 
-                    game.enemy.alive = false; 
-                    }, 500);
-            if (game.enemy.old_x < game.enemy.x )  {
-                game.enemy.animation.changeFrame(game.enemy_sprite_sheet.frame_sets[6], 4, 6);
-            } else if (game.player.old_x > game.player.x ) {
-                game.enemy.animation.changeFrame(game.enemy_sprite_sheet.frame_sets[7], 4, 7);
-            } else  game.enemy.animation.changeFrame(game.enemy_sprite_sheet.frame_sets[7], 4, 7);
+        if(this.lives == 0){
+            this.frozen=true;
+            setTimeout(function(){ game.enemy.alive = false;}, 4000);
+            if (this.old_x < this.x )  {
+                this.animation.changeFrame(game.enemy_sprite_sheet.frame_sets[6], 4, 6);
+            } else if (this.old_x > this.x ) {
+                this.animation.changeFrame(game.enemy_sprite_sheet.frame_sets[7], 4, 7);
+            } else  this.animation.changeFrame(game.enemy_sprite_sheet.frame_sets[7], 4, 7);
         }
     }
 
     drawEnemy(){
         game.context.fillStyle = "green";
-        game.context.drawImage(game.enemy_sprite_sheet.image, game.enemy.animation.frame * 100, game.enemy.animation.row * 100 , 100, 100, game.camera.offset[0] + game.enemy.x, game.camera.offset[1] + game.enemy.y, 100, 105);
+        game.context.drawImage(game.enemy_sprite_sheet.image, this.animation.frame * 100, this.animation.row * 100 , 100, 100, game.camera.offset[0] + this.x-15, game.camera.offset[1] + this.y, 100, 105);
 
-        if(game.enemy.lives == 4){
+        if(this.lives == 4){
             game.context.fillStyle = "black";
             game.context.fillRect(game.camera.offset[0]+this.x+15,game.camera.offset[1]+this.y-10,40,4);
             game.context.fillStyle = "green";
             game.context.fillRect(game.camera.offset[0]+this.x+16,game.camera.offset[1]+this.y-9,38,2);
-        }else if (game.enemy.lives == 3){
+        }else if (this.lives == 3){
             game.context.fillStyle = "black";
             game.context.fillRect(game.camera.offset[0]+this.x+15,game.camera.offset[1]+this.y-10,40,4);
             game.context.fillStyle = "yellow";
             game.context.fillRect(game.camera.offset[0]+this.x+16,game.camera.offset[1]+this.y-9,28,2);
-        }else if (game.enemy.lives == 2){
+        }else if (this.lives == 2){
             game.context.fillStyle = "black";
             game.context.fillRect(game.camera.offset[0]+this.x+15,game.camera.offset[1]+this.y-10,40,4);
             game.context.fillStyle = "orange";
             game.context.fillRect(game.camera.offset[0]+this.x+16,game.camera.offset[1]+this.y-9,18,2);
-        }else if (game.enemy.lives == 1){
+        }else if (this.lives == 1){
             game.context.fillStyle = "black";
             game.context.fillRect(game.camera.offset[0]+this.x+15,game.camera.offset[1]+this.y-10,40,4);
             game.context.fillStyle = "red";
             game.context.fillRect(game.camera.offset[0]+this.x+16,game.camera.offset[1]+this.y-9,8,2);
         }
 
-        if(game.enemy.hitted == true){;
-            game.enemy.hit_animation.changeFrame(game.hit_sprite_sheet.frame_sets[0], 3, 0);
-            game.context.drawImage(game.hit_sprite_sheet.image, game.enemy.hit_animation.frame * 50, game.enemy.hit_animation.row * 50 , 50, 50, game.camera.offset[0] + game.enemy.x+30, game.camera.offset[1] + game.enemy.y+30, 50, 50);    
+        if(this.hitted == true){
+            this.hit_animation.changeFrame(game.hit_sprite_sheet.frame_sets[0], 3, 0);
+            game.context.drawImage(game.hit_sprite_sheet.image, this.hit_animation.frame * 50, this.hit_animation.row * 50 , 50, 50, game.camera.offset[0] + this.x, game.camera.offset[1] + this.y+30, 50, 50);    
         }
     }
 }
