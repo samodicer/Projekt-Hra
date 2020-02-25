@@ -87,12 +87,14 @@ class Enemy{
     }
 
     hit() {
-        for (var i=0 ; i < game.player.bullets.length ; i++){
-            if(game.player.bullets[i].x >= this.x && game.player.bullets[i].x <= this.x + this.width && game.player.bullets[i].y >= this.y && game.player.bullets[i].y <= this.y + this.height) {    
-                this.hitted = true
-                setTimeout(function(){ game.enemy.hitted = false; }, 300);
-                game.player.bullets.splice(i,1); 
-                if (this.lives != 0) this.lives-= 1;
+        if (this.frozen == false){
+            for (var i=0 ; i < game.player.bullets.length ; i++){
+                if(game.player.bullets[i].x >= this.x && game.player.bullets[i].x <= this.x + this.width && game.player.bullets[i].y >= this.y && game.player.bullets[i].y <= this.y + this.height) {    
+                    this.hitted = true
+                    setTimeout(() => { this.hitted = false }, 300);
+                    game.player.bullets.splice(i,1); 
+                    if (this.lives != 0) this.lives-= 1;
+                }
             }
         }
     }
@@ -100,7 +102,7 @@ class Enemy{
     dead(){
         if(this.lives == 0){
             this.frozen=true;
-            setTimeout(function(){ game.enemy.alive = false;}, 4000);
+            setTimeout(() => { this.alive = false }, 4000);
             if (this.old_x < this.x )  {
                 this.animation.changeFrame(game.enemy_sprite_sheet.frame_sets[6], 4, 6);
             } else if (this.old_x > this.x ) {

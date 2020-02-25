@@ -19,7 +19,9 @@ class Player{
         this.alive = true;
         this.frozen = false;
         this.hitted = false;
+        this.has_key = false;
         this.hit_animation = new Animation();
+        this.stunned_animation = new Animation();
     }
 
    /* get bottom() { 
@@ -49,8 +51,8 @@ class Player{
     }
 
     PlayerCollision(){
-        var tile_x = Math.floor((game.player.x + game.player.width * 0.5) / game.world.tile_size);
-        var tile_y = Math.floor((game.player.y + game.player.height) / game.world.tile_size);
+        var tile_x = Math.floor((this.x + this.width * 0.5) / game.world.tile_size);
+        var tile_y = Math.floor((this.y + this.height) / game.world.tile_size);
         // get the value at the tile position in the map
         var value_at_index = game.world.map[tile_y * game.world.columns + tile_x];
 
@@ -58,30 +60,30 @@ class Player{
 
             // simply call one of the routing functions in the collision object and pass
             // in values for the collision tile's location in grid/map space
-            game.world.collision(value_at_index,game.player, tile_y, tile_x);
+            game.world.collision(value_at_index,this, tile_y, tile_x);
     
         }
         
-        tile_x = Math.floor((game.player.x + game.player.width * 0.5) / game.world.tile_size);
-        tile_y = Math.floor((game.player.y + game.player.height) / game.world.tile_size);
+        tile_x = Math.floor((this.x + this.width * 0.5) / game.world.tile_size);
+        tile_y = Math.floor((this.y + this.height) / game.world.tile_size);
         value_at_index = game.world.map[tile_y * game.world.columns + tile_x];
   
         if (value_at_index != 5 || 6 ) {
   
-            game.world.collision(value_at_index,game.player, tile_y, tile_x);
+            game.world.collision(value_at_index,this, tile_y, tile_x);
   
         }   
         //console.log ( "tile_x: " + tile_x + "<br>tile_y: " + tile_y + "<br>map index: " + tile_y + " * " + game.world.columns + " + " + tile_x + " = " + String(tile_y * game.world.columns + tile_x) + "<br>tile value: " + game.world.map[tile_y * game.world.columns + tile_x] );
     }
 
     BulletCollision(){
-        if(game.player.shooting == true) {
+        if(this.shooting == true) {
 
             var to_delete ;
 
-            for (var i=0 ; i < game.player.bullets.length ; i++){
-                var tile_x = Math.floor((game.player.bullets[i].x ) / game.world.tile_size);
-                var tile_y = Math.floor((game.player.bullets[i].y) / game.world.tile_size);
+            for (var i=0 ; i < this.bullets.length ; i++){
+                var tile_x = Math.floor((this.bullets[i].x ) / game.world.tile_size);
+                var tile_y = Math.floor((this.bullets[i].y) / game.world.tile_size);
                 // get the value at the tile position in the map
                 var value_at_index = game.world.map[tile_y * game.world.columns + tile_x];
                 
@@ -91,7 +93,7 @@ class Player{
             }
 
             if (typeof to_delete !== 'undefined'){
-                game.player.bullets.splice(to_delete,1); 
+                this.bullets.splice(to_delete,1); 
 
             }
         
@@ -101,7 +103,7 @@ class Player{
     /*collision(object){
 
 
-        if ((game.player.top > object.bottom || game.player.right < object.left || game.player.bottom < object.top || game.player.left > object.right)) {
+        if ((this.top > object.bottom || this.right < object.left || this.bottom < object.top || this.left > object.right)) {
  
             return false;
       
@@ -112,13 +114,13 @@ class Player{
 
     moveLeft(){
 
-        if (game.controller.left && game.player.frozen == false && game.player.alive == true) {
-            game.player.x_velocity -= 0.4;
-            game.player.idling=false;
+        if (game.controller.left && this.frozen == false && this.alive == true) {
+            this.x_velocity -= 0.4;
+            this.idling=false;
 
-            if (game.player.jumping==false) {
+            if (this.jumping==false) {
 
-                game.player.animation.changePlayerFrame(game.sprite_sheet.frame_sets[5], 7,5);
+                this.animation.changePlayerFrame(game.sprite_sheet.frame_sets[5], 7,5);
             }
         
         }
@@ -126,41 +128,41 @@ class Player{
 
     moveRight(){
         
-        if (game.controller.right && game.player.frozen == false && game.player.alive == true) {    
-            game.player.x_velocity += 0.4;
-            game.player.idling=false;
+        if (game.controller.right && this.frozen == false && this.alive == true) {    
+            this.x_velocity += 0.4;
+            this.idling=false;
 
-            if (game.player.jumping==false) {
+            if (this.jumping==false) {
 
-                game.player.animation.changePlayerFrame(game.sprite_sheet.frame_sets[4], 7,4);
+                this.animation.changePlayerFrame(game.sprite_sheet.frame_sets[4], 7,4);
             }
         }
     }
 
     jump(){
 
-        if (game.controller.up && game.player.jumping == false && game.player.frozen == false && game.player.alive == true) {
+        if (game.controller.up && this.jumping == false && this.frozen == false && this.alive == true) {
 
-            game.player.y_velocity -= 23;
-            game.player.jumping = true;
+            this.y_velocity -= 23;
+            this.jumping = true;
 
-            if (game.player.old_x < game.player.x && game.player.idling==false) {
+            if (this.old_x < this.x && this.idling==false) {
 
-                game.player.animation.changePlayerFrame(game.sprite_sheet.frame_sets[2], 7, 2);
+                this.animation.changePlayerFrame(game.sprite_sheet.frame_sets[2], 7, 2);
 
-            }else if (game.player.idling==true ) {
+            }else if (this.idling==true ) {
 
-                if (game.controller.mousex > this.x+this.width/2+game.camera.offset[0] ) game.player.animation.changePlayerFrame(game.sprite_sheet.frame_sets[2], 7, 2);
-                else game.player.animation.changePlayerFrame(game.sprite_sheet.frame_sets[3], 7, 3);
+                if (game.controller.mousex > this.x+this.width/2+game.camera.offset[0] ) this.animation.changePlayerFrame(game.sprite_sheet.frame_sets[2], 7, 2);
+                else this.animation.changePlayerFrame(game.sprite_sheet.frame_sets[3], 7, 3);
 
-            }else if (game.player.old_x == game.player.x && game.player.idling==false){
+            }else if (this.old_x == this.x && this.idling==false){
 
-                if (game.controller.right) game.player.animation.changePlayerFrame(game.sprite_sheet.frame_sets[2], 7 , 2);
-                else game.player.animation.changePlayerFrame(game.sprite_sheet.frame_sets[3], 7, 3);
+                if (game.controller.right) this.animation.changePlayerFrame(game.sprite_sheet.frame_sets[2], 7 , 2);
+                else this.animation.changePlayerFrame(game.sprite_sheet.frame_sets[3], 7, 3);
 
-            }else if ((game.player.old_x > game.player.x && game.player.idling==false)) {
+            }else if ((this.old_x > this.x && this.idling==false)) {
 
-                game.player.animation.changePlayerFrame(game.sprite_sheet.frame_sets[3], 7, 3);
+                this.animation.changePlayerFrame(game.sprite_sheet.frame_sets[3], 7, 3);
 
             }
         }
@@ -168,27 +170,27 @@ class Player{
 
     idle(){
 
-        if (!game.controller.left && !game.controller.right && game.player.jumping==false && game.player.frozen == false && game.player.alive == true) {
+        if (!game.controller.left && !game.controller.right && this.jumping==false && this.frozen == false && this.alive == true) {
 
-            game.player.idling = true;
+            this.idling = true;
 
-            if (game.controller.mousex > this.x+this.width/2+game.camera.offset[0] ) game.player.animation.changePlayerFrame(game.sprite_sheet.frame_sets[0], 10, 0);          
-            else game.player.animation.changePlayerFrame(game.sprite_sheet.frame_sets[1], 10, 1);
+            if (game.controller.mousex > this.x+this.width/2+game.camera.offset[0] ) this.animation.changePlayerFrame(game.sprite_sheet.frame_sets[0], 10, 0);          
+            else this.animation.changePlayerFrame(game.sprite_sheet.frame_sets[1], 10, 1);
       
         }
     }
 
     dead(){
-        if(game.player.lives == 0){
-            game.player.frozen = true;
-            setTimeout(function(){ game.player.alive = false; }, 5000);
-            if (game.player.old_x < game.player.x && game.player.idling == false)  {
-                game.player.animation.changePlayerFrame(game.sprite_sheet.frame_sets[6], 4, 6);
-            } else if (game.player.old_x > game.player.x && game.player.idling == false) {
-                game.player.animation.changePlayerFrame(game.sprite_sheet.frame_sets[7], 4, 7);
-            } else if (game.player.idling == true){
-                if (game.controller.mousex > this.x+this.width/2+game.camera.offset[0] ) game.player.animation.changePlayerFrame(game.sprite_sheet.frame_sets[6], 4, 6);          
-                else game.player.animation.changePlayerFrame(game.sprite_sheet.frame_sets[7], 4, 7);  
+        if(this.lives == 0){
+            this.frozen = true;
+            setTimeout(() => { this.alive = false }, 4000);
+            if (this.old_x < this.x && this.idling == false)  {
+                this.animation.changePlayerFrame(game.sprite_sheet.frame_sets[6], 4, 6);
+            } else if (this.old_x > this.x && this.idling == false) {
+                this.animation.changePlayerFrame(game.sprite_sheet.frame_sets[7], 4, 7);
+            } else if (this.idling == true){
+                if (game.controller.mousex > this.x+this.width/2+game.camera.offset[0] ) this.animation.changePlayerFrame(game.sprite_sheet.frame_sets[6], 4, 6);          
+                else this.animation.changePlayerFrame(game.sprite_sheet.frame_sets[7], 4, 7);  
             }
         }
     }
@@ -196,27 +198,27 @@ class Player{
 
     offScreen(){
                 
-        if (game.player.x < 0) {
+        if (this.x < 0) {
 
-            game.player.x_velocity = 0;
-            game.player.old_x = game.player.x = 0;
+            this.x_velocity = 0;
+            this.old_x = this.x = 0;
     
-          } else if (game.player.x + game.player.width > game.context.canvas.width) {
+          } else if (this.x + this.width > game.context.canvas.width) {
     
-            game.player.x_velocity = 0;
-            game.player.old_x = game.player.x = game.context.canvas.width - game.player.width;
+            this.x_velocity = 0;
+            this.old_x = this.x = game.context.canvas.width - this.width;
     
           }
     
-          if (game.player.y < 0) {
+          if (this.y < 0) {
     
-            game.player.y_velocity = 0;
-            game.player.old_y = game.player.y = 0;
+            this.y_velocity = 0;
+            this.old_y = this.y = 0;
     
-          } else if (game.player.y + game.player.height > game.context.canvas.height) {
+          } else if (this.y + this.height > game.context.canvas.height) {
     
-            game.player.y_velocity = 0;
-            game.player.old_y = game.player.y = game.context.canvas.height - game.player.height;
+            this.y_velocity = 0;
+            this.old_y = this.y = game.context.canvas.height - this.height;
     
           }
     }
@@ -231,13 +233,13 @@ class Player{
         //let dirX = Math.sin(direction);
         //let dirY = Math.cos(direction);
         let side;
-        if (game.player.animation.row == 0 || game.player.animation.row == 2 || game.player.animation.row == 4 || game.player.animation.row == 6 || game.player.animation.row == 8 || game.player.animation.row == 10) { 
+        if (this.animation.row == 0 || this.animation.row == 2 || this.animation.row == 4 || this.animation.row == 6 || this.animation.row == 8 || this.animation.row == 10) { 
 
              side = "right";
 
         } else side = "left";
         
-        if (game.player.alive == true && game.player.stunned == false){
+        if (this.alive == true && this.stunned == false){
 
             if(side == "right") var b = new Bullet (this.x+this.width/2+30,this.y+this.height/2+5,side);
             else var b = new Bullet (this.x+this.width/2-30,this.y+this.height/2+5,side);
@@ -245,57 +247,71 @@ class Player{
 
         }
 
-        if (game.player.idling == true && game.player.frozen == false && game.player.alive == true && game.player.stunned == false) {
+        if (this.idling == true && this.frozen == false && this.alive == true && this.stunned == false) {
 
             if (game.controller.mousex > this.x+this.width/2+game.camera.offset[0]  ){
 
-                game.player.animation.changePlayerFrame(game.sprite_sheet.frame_sets[10], 7, 10);
+                this.animation.changePlayerFrame(game.sprite_sheet.frame_sets[10], 7, 10);
 
-            } else  game.player.animation.changePlayerFrame(game.sprite_sheet.frame_sets[11], 7, 11);
+            } else  this.animation.changePlayerFrame(game.sprite_sheet.frame_sets[11], 7, 11);
 
-        } else if (game.player.idling == false && game.player.frozen == false && game.player.alive == true && game.player.stunned == false){
+        } else if (this.idling == false && this.frozen == false && this.alive == true && this.stunned == false){
 
             if (game.controller.right){
 
-                game.player.animation.changePlayerFrame(game.sprite_sheet.frame_sets[8], 7, 8);
+                this.animation.changePlayerFrame(game.sprite_sheet.frame_sets[8], 7, 8);
 
-            } else  game.player.animation.changePlayerFrame(game.sprite_sheet.frame_sets[9], 7, 9);    
+            } else  this.animation.changePlayerFrame(game.sprite_sheet.frame_sets[9], 7, 9);    
         }
     }
 
-    hit(){
-        if(game.player.overlapsEnemy() && game.enemy.alive == true && game.player.stunned == false && game.enemy.frozen == false && game.player.frozen == false){
-            game.player.lives -= 1;
-            game.player.stunned = true;
-            game.player.hitted = true;
-            setTimeout(function(){ game.player.hitted = false; }, 300);
-            setTimeout(function(){ game.player.stunned = false; }, 3000);
+    hit(object){
+        if(this.overlapsObject(object) && object.alive == true && this.stunned == false && object.frozen == false && this.frozen == false){
+            this.lives -= 1;
+            this.stunned = true;
+            this.hitted = true;
+            setTimeout(() => { this.hitted = false }, 300);
+            setTimeout(() => { this.stunned = false }, 3000);
         }
     }
 
-    overlapsEnemy(){
-        if (game.player.x <= game.enemy.x && game.enemy.x <= game.player.x + game.player.width-20 && game.player.y <= game.enemy.y+30 && game.player.y >= game.enemy.y-30) return true; 
-        if (game.player.x+20 <= game.enemy.x + game.enemy.width  && game.enemy.x + game.enemy.width <= game.player.x + game.player.width && game.player.y <= game.enemy.y+30 && game.player.y >= game.enemy.y-30) return true; 
-        if (game.enemy.x + game.enemy.width <  game.player.x && game.player.x+ + game.player.width   <  game.enemy.x + game.enemy.width && game.player.y <= game.enemy.y+30 && game.player.y >= game.enemy.y-30) return true; 
-        return false;   
-     }
+    overlapsObject(object){
+        var player_tile_x = Math.floor((this.x + this.width * 0.5) / game.world.tile_size);
+        var player_tile_y = Math.floor((this.y + this.height) / game.world.tile_size);
+        var object_tile_x = Math.floor((object.x + object.width * 0.5) / game.world.tile_size);
+        var object_tile_y = Math.floor((object.y + object.height) / game.world.tile_size);
+        var player_check_index = (player_tile_y * game.world.columns + player_tile_x);
+        var object_check_index = (object_tile_y * game.world.columns + object_tile_x);
+        if (player_check_index == object_check_index){
+            return true;
+        } else return false;
 
+    }
+
+    findKey(object){
+        if (this.overlapsObject(object)){
+            this.has_key = true;
+            object.taken = true;
+        }
+    }
     drawPlayer(){
-        game.context.drawImage(game.sprite_sheet.image, game.player.animation.frame * 100, game.player.animation.row * 100 , 100, 100, game.camera.offset[0] + game.player.x, game.camera.offset[1] + game.player.y, 100, 100+10);
+
+        if(this.stunned == true && this.frozen == false){
+            this.stunned_animation.changeFrame(game.stunned_sprite_sheet.frame_sets[0], 3, 0);
+            game.context.drawImage(game.stunned_sprite_sheet.image, this.stunned_animation.frame * 50, this.stunned_animation.row * 50 , 50, 50, game.camera.offset[0] + this.x+40, game.camera.offset[1] + this.y-15, 20, 20);
+ 
+        }
+
+        game.context.drawImage(game.sprite_sheet.image, this.animation.frame * 100, this.animation.row * 100 , 100, 100, game.camera.offset[0] +this.x, game.camera.offset[1] + this.y, 100, 100+10);
         
         
         for (var i=0 ; i < this.bullets.length ; i++){
             this.bullets[i].drawBullet();
         }
 
-        if(game.player.hitted == true){
-            game.player.hit_animation.changeFrame(game.hit_sprite_sheet.frame_sets[0], 3, 0);
-            game.context.drawImage(game.hit_sprite_sheet.image, game.player.hit_animation.frame * 50, game.player.hit_animation.row * 50 , 50, 50, game.camera.offset[0] + game.player.x+30, game.camera.offset[1] + game.player.y+30, 50, 50);    
-        }
-
-        if(game.player.stunned == true){
-            game.context.fillStyle = "#6da2f7";
-            game.context.fillText("stunned", game.camera.offset[0] +game.player.x+15,game.camera.offset[1] +game.player.y-15); 
+        if(this.hitted == true){
+            this.hit_animation.changeFrame(game.hit_sprite_sheet.frame_sets[0], 3, 0);
+            game.context.drawImage(game.hit_sprite_sheet.image, this.hit_animation.frame * 50, this.hit_animation.row * 50 , 50, 50, game.camera.offset[0] + this.x+30, game.camera.offset[1] + this.y+30, 50, 50);    
         }
 
     }

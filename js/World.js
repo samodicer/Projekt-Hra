@@ -66,13 +66,12 @@ class World{
         game.context.drawImage(game.findImage("cardrepertory"), 0, 0, 50, 90, 1555+game.camera.offset[0],  612+game.camera.offset[1], 50, 90);
         game.context.drawImage(game.findImage("cardrepertory"), 0, 0, 50, 90, 1610+game.camera.offset[0],  612+game.camera.offset[1], 50, 90);
         game.context.drawImage(game.findImage("cardrepertory"), 0, 0, 50, 90, 1665+game.camera.offset[0],  612+game.camera.offset[1], 50, 90);
-        game.context.drawImage(game.findImage("key"), 0, 0, 32, 12, 1800+game.camera.offset[0],  680+game.camera.offset[1], 32, 12);
 
-        game.context.font = '20px Courier New';
+        game.context.font = '20px Trebuchet MS';
         game.context.fillStyle = "red";
         game.context.fillText(game.playername, 50, 50); 
         
-        if(game.player.alive){
+        if(game.player.frozen == false){
           game.context.drawImage(game.findImage("avatar"), 0, 0, 38, 44, 10, 10, 38, 44); 
         } else game.context.drawImage(game.findImage("avatar-dead"), 0, 0, 38, 44, 10, 10, 38, 44);
 
@@ -86,6 +85,10 @@ class World{
           game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 30, 60, 20, 20);
         }else if(game.player.lives ==1){
           game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 10, 60, 20, 20);
+        }
+
+        if(game.player.has_key == true){
+          game.context.drawImage(game.findImage("key"), 0, 0, game.key.width, game.key.height, 15, 90, game.key.width, game.key.height);  
         }
       
 

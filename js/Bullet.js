@@ -7,13 +7,7 @@ class Bullet{
     }
 
     drawBullet(){
-        game.context.beginPath();
-        game.context.fillStyle = "#070808";
-        game.context.arc(game.camera.offset[0] +this.x, game.camera.offset[1] +this.y, 2, 0, 2*Math.PI);
-        game.context.fill();
-        game.context.closePath();
-
-
+        game.context.drawImage(game.findImage("bullet"), 0, 0 , 100, 81, game.camera.offset[0] +this.x, game.camera.offset[1] +this.y, 10, 7);
     }
 
 

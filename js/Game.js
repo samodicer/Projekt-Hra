@@ -7,6 +7,8 @@ class Game{
         this.camera = new Camera();
         this.player = new Player(100,500,0,0,100,100,false,false,true,100,500,new Animation());
         this.enemy = new Enemy(100,100,0,0,90,70,100,100,new Animation());
+        this.enemy2 = new Enemy(600,500,0,0,90,70,600,500,new Animation());
+        this.key = new Key(1800,680,12,32);
         this.controller = new Controller();
         this.images = [];
 
@@ -30,7 +32,9 @@ class Game{
             ["player_sprite","./images/player-sprite.png"],
             ["enemy1_sprite","./images/enemy1-sprite.png"],
             ["hit_sprite","./images/hit-sprite.png"],
+            ["stunned_sprite","./images/stunned-sprite.png"],
             ["tile_sheet","./images/tile_sheet.png"],
+            ["bullet","./images/bullet.png"],
             ["table","./images/table.png"],
             ["plant","./images/plant.png"],
             ["trashcan","./images/trashcan.png"],
@@ -78,8 +82,19 @@ class Game{
                                                     [0,1,2,3,4,5] , [0,1,2,3,4,5]] , this.findImage("enemy1_sprite"),100);
 
         this.hit_sprite_sheet = new Sprite_sheet([[0,1,2,3,4,5,6,7,8,9]] , this.findImage("hit_sprite"),50);
+        this.stunned_sprite_sheet = new Sprite_sheet([[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]] , this.findImage("stunned_sprite"),50);
 
         this.tile_sheet = new Tile_sheet(this.findImage("tile_sheet"),50,50,3);    
+    }
+
+    physics(object){
+        object.y_velocity += 0.8;// gravity
+        object.old_x = object.x;
+        object.old_y = object.y;
+        object.x += object.x_velocity;
+        object.y += object.y_velocity;
+        object.x_velocity *= 0.9;// friction
+        object.y_velocity *= 0.9;// friction    
     }
 
     loop(){
@@ -89,23 +104,29 @@ class Game{
 
         game.world.drawWorld();
 
+        if(game.key.taken == false){
+            game.key.drawKey();    
+        }
         if(game.enemy.alive == true){
-            game.enemy.y_velocity += 0.8;// gravity
-            game.enemy.old_x = game.enemy.x;
-            game.enemy.old_y = game.enemy.y;
-            game.enemy.x += game.enemy.x_velocity;
-            game.enemy.y += game.enemy.y_velocity;
-            game.enemy.x_velocity *= 0.9;// friction
-            game.enemy.y_velocity *= 0.9;// friction
+            game.physics(game.enemy);
             game.enemy.behavior();
             game.enemy.animation.update(game.enemy);
             game.enemy.EnemyCollision();  
-            game.enemy.hit()
+            game.enemy.hit();
             game.enemy.drawEnemy();
-            game.enemy.hit_animation.updateHit();
+            game.enemy.hit_animation.updateHit(game.enemy,game.player);
             game.enemy.dead();
         } 
-
+        if(game.enemy2.alive == true){
+            game.physics(game.enemy2);
+            game.enemy2.behavior();
+            game.enemy2.animation.update(game.enemy2);
+            game.enemy2.EnemyCollision();  
+            game.enemy2.hit();
+            game.enemy2.drawEnemy();
+            game.enemy2.hit_animation.updateHit(game.enemy2,game.player);
+            game.enemy2.dead();
+        } 
 
         if(game.player.alive == true){
             game.player.checkShooting();
@@ -115,19 +136,16 @@ class Game{
             game.player.idle();
             game.player.animation.update(game.player);
             game.player.deleteBullets();
-            game.player.y_velocity += 0.8;// gravity
-            game.player.old_x = game.player.x;
-            game.player.old_y = game.player.y;
-            game.player.x += game.player.x_velocity;
-            game.player.y += game.player.y_velocity;
-            game.player.x_velocity *= 0.9;// friction
-            game.player.y_velocity *= 0.9;// friction        
+            game.physics(game.player);
             game.player.PlayerCollision();
             game.player.BulletCollision();
-            game.player.hit();
+            game.player.hit(game.enemy);
+            game.player.hit(game.enemy2);
             game.player.dead();
             game.player.drawPlayer();
-            game.player.hit_animation.updateHit();
+            game.player.hit_animation.updateHit(game.enemy,game.player);
+            game.player.stunned_animation.update(game.player);
+            game.player.findKey(game.key);
         } else {
             game.context.fillText("Game Over!",game.canvas.width/2,game.canvas.height/2);
         }
