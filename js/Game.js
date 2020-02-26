@@ -6,12 +6,16 @@ class Game{
         this.world = new World();
         this.camera = new Camera();
         this.player = new Player(100,500,0,0,100,100,false,false,true,100,500,new Animation());
-        this.enemy = new Enemy(100,100,0,0,90,70,100,100,new Animation());
-        this.enemy2 = new Enemy(600,500,0,0,90,70,600,500,new Animation());
-        this.key = new Key(1800,680,12,32);
+        this.key = new Key(1800,210,12,32);
         this.controller = new Controller();
+        this.enemies = [];
         this.images = [];
-
+        this.music = new Audio('./audio/music.wav');
+        this.shot = new Audio('./audio/shot.wav');
+        this.hit = new Audio('./audio/hit.mp3');
+        this.step = new Audio('./audio/step.wav');
+        this.jump = new Audio('./audio/jump.wav');
+        this.success = new Audio('./audio/success.wav');
     }
 
     start(){
@@ -23,8 +27,11 @@ class Game{
         window.addEventListener("keyup", game.controller.keyListener);
         game.canvas.addEventListener("click", game.controller.clickListener);
         game.canvas.addEventListener("mousemove", game.controller.mousemoveListener);
-        window.requestAnimationFrame(game.loop);// Start the game loop.
         this.playername= document.getElementById('player_name').value;
+        game.createEnemy(100,100,90,70);
+        game.createEnemy(600,500,90,70);
+        game.createEnemy(1100,200,90,70);
+        window.requestAnimationFrame(game.loop);// Start the game loop.
     }
 
     loadImages(){
@@ -87,6 +94,11 @@ class Game{
         this.tile_sheet = new Tile_sheet(this.findImage("tile_sheet"),50,50,3);    
     }
 
+    createEnemy(x,y,height,width){
+        this.enemy = new Enemy(x,y,0,0,height,width,x,y,new Animation());   
+        this.enemies.push(this.enemy);
+    }
+
     physics(object){
         object.y_velocity += 0.8;// gravity
         object.old_x = object.x;
@@ -97,9 +109,14 @@ class Game{
         object.y_velocity *= 0.9;// friction    
     }
 
+    playMusic() {
+        game.music.volume = 0.03;
+        game.music.play();    
+    }
+
     loop(){
-        //console.log("alive-"+game.player.alive);
-        //console.log("frozen-"+game.player.frozen);
+        game.playMusic();
+
         game.camera.update(game.player.x + (game.player.width/2), game.player.y + (game.player.height/2));
 
         game.world.drawWorld();
@@ -107,7 +124,24 @@ class Game{
         if(game.key.taken == false){
             game.key.drawKey();    
         }
-        if(game.enemy.alive == true){
+        
+        for (var i=0 ; i < game.enemies.length ; i++){
+            if (game.enemies[i].alive == true){
+                game.physics(game.enemies[i]);
+                game.enemies[i].behavior();
+                game.enemies[i].animation.update(game.enemies[i]);
+                game.enemies[i].EnemyCollision();  
+                game.enemies[i].hit();
+                game.enemies[i].drawEnemy();
+                game.enemies[i].hit_animation.updateHitEnemy(game.enemies[i]);
+                game.enemies[i].dead(i);
+                if(game.player.alive == true){
+                    game.player.hit(game.enemies[i]); 
+                }  
+            }else game.enemies.splice(i,1); 
+        }
+
+       /* if(game.enemy.alive == true){
             game.physics(game.enemy);
             game.enemy.behavior();
             game.enemy.animation.update(game.enemy);
@@ -126,7 +160,7 @@ class Game{
             game.enemy2.drawEnemy();
             game.enemy2.hit_animation.updateHit(game.enemy2,game.player);
             game.enemy2.dead();
-        } 
+        } */
 
         if(game.player.alive == true){
             game.player.checkShooting();
@@ -139,11 +173,9 @@ class Game{
             game.physics(game.player);
             game.player.PlayerCollision();
             game.player.BulletCollision();
-            game.player.hit(game.enemy);
-            game.player.hit(game.enemy2);
             game.player.dead();
             game.player.drawPlayer();
-            game.player.hit_animation.updateHit(game.enemy,game.player);
+            game.player.hit_animation.updateHitPlayer(game.player);
             game.player.stunned_animation.update(game.player);
             game.player.findKey(game.key);
         } else {

@@ -121,6 +121,9 @@ class Player{
             if (this.jumping==false) {
 
                 this.animation.changePlayerFrame(game.sprite_sheet.frame_sets[5], 7,5);
+                game.step.volume = 0.05;
+                game.step.play();
+
             }
         
         }
@@ -135,6 +138,9 @@ class Player{
             if (this.jumping==false) {
 
                 this.animation.changePlayerFrame(game.sprite_sheet.frame_sets[4], 7,4);
+                game.step.volume = 0.05;
+                game.step.play();
+
             }
         }
     }
@@ -145,6 +151,8 @@ class Player{
 
             this.y_velocity -= 23;
             this.jumping = true;
+            game.jump.volume = 0.04;
+            game.jump.play();
 
             if (this.old_x < this.x && this.idling==false) {
 
@@ -239,11 +247,14 @@ class Player{
 
         } else side = "left";
         
-        if (this.alive == true && this.stunned == false){
+        if (this.alive == true && this.stunned == false && this.frozen == false){
 
             if(side == "right") var b = new Bullet (this.x+this.width/2+30,this.y+this.height/2+5,side);
             else var b = new Bullet (this.x+this.width/2-30,this.y+this.height/2+5,side);
             this.bullets.push(b);
+            game.shot.volume = 0.05;
+            game.shot.load();
+            game.shot.play();  
 
         }
 
@@ -270,6 +281,8 @@ class Player{
             this.lives -= 1;
             this.stunned = true;
             this.hitted = true;
+            game.hit.volume = 0.1;
+            game.hit.play(); 
             setTimeout(() => { this.hitted = false }, 300);
             setTimeout(() => { this.stunned = false }, 3000);
         }
@@ -289,9 +302,11 @@ class Player{
     }
 
     findKey(object){
-        if (this.overlapsObject(object)){
+        if (this.overlapsObject(object) && object.taken == false){
             this.has_key = true;
             object.taken = true;
+            game.success.volume = 0.07;
+            game.success.play(); 
         }
     }
     drawPlayer(){

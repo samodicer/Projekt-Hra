@@ -93,16 +93,21 @@ class Enemy{
                     this.hitted = true
                     setTimeout(() => { this.hitted = false }, 300);
                     game.player.bullets.splice(i,1); 
+                    game.hit.volume = 0.1;
+                    game.hit.load();
+                    game.hit.play();
+
                     if (this.lives != 0) this.lives-= 1;
                 }
             }
         }
     }
 
-    dead(){
+    dead(index){
         if(this.lives == 0){
+            console.log(index);
             this.frozen=true;
-            setTimeout(() => { this.alive = false }, 4000);
+            setTimeout(() => { this.alive = false ;}, 4000);
             if (this.old_x < this.x )  {
                 this.animation.changeFrame(game.enemy_sprite_sheet.frame_sets[6], 4, 6);
             } else if (this.old_x > this.x ) {
