@@ -38,6 +38,7 @@ class Game{
         let images = [
             ["player_sprite","./images/player-sprite.png"],
             ["enemy1_sprite","./images/enemy1-sprite.png"],
+            ["assassin_sprite","./images/assassin-sprite.png"],
             ["hit_sprite","./images/hit-sprite.png"],
             ["stunned_sprite","./images/stunned-sprite.png"],
             ["tile_sheet","./images/tile_sheet.png"],
@@ -87,6 +88,9 @@ class Game{
         this.enemy_sprite_sheet = new Sprite_sheet([[0,1,2,3,4,5] , [0,1,2,3,4,5] , [0,1,2,3,4,5],
                                                     [0,1,2,3,4,5] , [0,1,2,3,4,5] , [0,1,2,3,4,5], 
                                                     [0,1,2,3,4,5] , [0,1,2,3,4,5]] , this.findImage("enemy1_sprite"),100);
+        this.assassin_sprite_sheet = new Sprite_sheet([[0,1,2,3,4,5,6,7] , [0,1,2,3,4,5,6,7] , [0,1,2,3,4,5,6,7,8,9,10,11],
+                                                       [0,1,2,3,4,5,6,7,8,9,10,11] , [0,1,2,3,4,5,6,7,8,9,10,11] , 
+                                                       [0,1,2,3,4,5,6,7,8,9,10,11]] , this.findImage("assassin_sprite"),200);
 
         this.hit_sprite_sheet = new Sprite_sheet([[0,1,2,3,4,5,6,7,8,9]] , this.findImage("hit_sprite"),50);
         this.stunned_sprite_sheet = new Sprite_sheet([[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]] , this.findImage("stunned_sprite"),50);
@@ -95,7 +99,7 @@ class Game{
     }
 
     createEnemy(x,y,height,width){
-        this.enemy = new Enemy(x,y,0,0,height,width,x,y,new Animation());   
+        this.enemy = new Ghost(x,y,0,0,height,width,x,y,new Animation());   
         this.enemies.push(this.enemy);
     }
 
@@ -126,7 +130,9 @@ class Game{
         }
         
         for (var i=0 ; i < game.enemies.length ; i++){
-            if (game.enemies[i].alive == true){
+            if (game.enemies[i].alive != true){
+                game.enemies.splice(i,1);     
+            }else {
                 game.physics(game.enemies[i]);
                 game.enemies[i].behavior();
                 game.enemies[i].animation.update(game.enemies[i]);
@@ -134,11 +140,11 @@ class Game{
                 game.enemies[i].hit();
                 game.enemies[i].drawEnemy();
                 game.enemies[i].hit_animation.updateHitEnemy(game.enemies[i]);
-                game.enemies[i].dead(i);
+                game.enemies[i].dead();
                 if(game.player.alive == true){
                     game.player.hit(game.enemies[i]); 
                 }  
-            }else game.enemies.splice(i,1); 
+            }
         }
 
        /* if(game.enemy.alive == true){
