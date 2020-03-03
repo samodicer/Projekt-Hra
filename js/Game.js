@@ -7,6 +7,7 @@ class Game{
         this.camera = new Camera();
         this.player = new Player(100,500,0,0,100,100,false,false,true,100,500,new Animation());
         this.key = new Key(1800,210,12,32);
+        this.door = new Door(1850,600,100,50);
         this.controller = new Controller();
         this.enemies = [];
         this.images = [];
@@ -16,6 +17,8 @@ class Game{
         this.step = new Audio('./audio/step.wav');
         this.jump = new Audio('./audio/jump.wav');
         this.success = new Audio('./audio/success.wav');
+        this.door_open = new Audio('./audio/door_open.wav');
+        this.e =new Assassin(2200,400,0,0,170,150,2200,400,new Animation());
     }
 
     start(){
@@ -31,6 +34,7 @@ class Game{
         game.createEnemy(100,100,90,70);
         game.createEnemy(600,500,90,70);
         game.createEnemy(1100,200,90,70);
+        this.enemies.push(this.e);
         window.requestAnimationFrame(game.loop);// Start the game loop.
     }
 
@@ -52,6 +56,8 @@ class Game{
             ["life","./images/life.png"],
             ["avatar","./images/avatar.png"],
             ["avatar-dead","./images/avatar-dead.png"],
+            ["green_light","./images/green_light.png"],
+            ["red_light","./images/red_light.png"],
         ]
 
         for(let i = 0; i < images.length ; i++) {
@@ -128,6 +134,9 @@ class Game{
         if(game.key.taken == false){
             game.key.drawKey();    
         }
+
+        game.door.openDoor(game.key,game.player);
+        game.door.drawDoor();
         
         for (var i=0 ; i < game.enemies.length ; i++){
             if (game.enemies[i].alive != true){
@@ -167,6 +176,7 @@ class Game{
             game.enemy2.hit_animation.updateHit(game.enemy2,game.player);
             game.enemy2.dead();
         } */
+
 
         if(game.player.alive == true){
             game.player.checkShooting();

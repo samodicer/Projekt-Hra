@@ -1,27 +1,27 @@
 class Assassin extends Enemy{
    constructor(x,y,x_velocity,y_velocity,height,width,old_x,old_y,animation){
         super(x,y,x_velocity,y_velocity,height,width,old_x,old_y,animation);
-        this.damage = 1;
+        this.damage = 0.5;
    } 
    
    moveLeft(){
     if(this.alive == true && this.frozen == false) {
-        this.x_velocity -= 0.1;
-        this.animation.changeFrame(game.assassin_sprite_sheet.frame_sets[3], 10, 3);
+        this.x_velocity -= 0.2;
+        this.animation.changeFrame(game.assassin_sprite_sheet.frame_sets[3], 5, 3);
     }
 }
 
     moveRight(){
         if(this.alive == true && this.frozen == false) {
-            this.x_velocity += 0.1;
-            this.animation.changeFrame(game.assassin_sprite_sheet.frame_sets[2], 10, 2);
+            this.x_velocity += 0.2;
+            this.animation.changeFrame(game.assassin_sprite_sheet.frame_sets[2], 5, 2);
         }
     }
 
 
     behavior(){
         var enemy_tile_x = Math.floor((this.x + this.width * 0.5) / game.world.tile_size);
-        var enemy_tile_y = Math.floor((this.y + this.height* 0.5) / game.world.tile_size);
+        var enemy_tile_y = Math.floor((this.y + this.height* 0.7) / game.world.tile_size);
         var check_left_index = game.world.map[(enemy_tile_y * game.world.columns + enemy_tile_x)-1];
         var check_right_index = game.world.map[(enemy_tile_y * game.world.columns + enemy_tile_x)+1];
         var check_left_down_index = game.world.map[(enemy_tile_y * game.world.columns + enemy_tile_x)-1 + game.world.columns];
@@ -34,10 +34,10 @@ class Assassin extends Enemy{
             else this.animation.changeFrame(game.assassin_sprite_sheet.frame_sets[1], 10, 1);
         }else{
             if(rounded_playerx < rounded_enemyx && this.frozen == false) {
-                if(check_left_index == 6 && check_left_down_index != 6) this.moveLeft();
+                if(check_left_index == 6 ) this.moveLeft();
                 else this.animation.changeFrame(game.assassin_sprite_sheet.frame_sets[1], 10, 1);
             }else if(rounded_playerx > rounded_enemyx && this.frozen == false) {
-                if(check_right_index == 6 && check_right_down_index != 6) this.moveRight();
+                if(check_right_index == 6 ) this.moveRight();
                 else this.animation.changeFrame(game.assassin_sprite_sheet.frame_sets[0], 10, 0);
             }else if (rounded_playerx == rounded_enemyx && this.frozen == false){
                 if (this.old_x < this.x) this.animation.changeFrame(game.assassin_sprite_sheet.frame_sets[0], 10, 0);
@@ -49,26 +49,26 @@ class Assassin extends Enemy{
         game.context.fillStyle = "green";
         game.context.drawImage(game.assassin_sprite_sheet.image, this.animation.frame * 200, this.animation.row * 200 , 200, 200, game.camera.offset[0] + this.x-15, game.camera.offset[1] + this.y, 200, 205);
 
-        if(this.lives == 4){
+        if(Math.round(this.lives) == 4){
             game.context.fillStyle = "black";
-            game.context.fillRect(game.camera.offset[0]+this.x+15,game.camera.offset[1]+this.y-10,40,4);
+            game.context.fillRect(game.camera.offset[0]+this.x+40,game.camera.offset[1]+this.y-1,40,4);
             game.context.fillStyle = "green";
-            game.context.fillRect(game.camera.offset[0]+this.x+16,game.camera.offset[1]+this.y-9,38,2);
-        }else if (this.lives == 3){
+            game.context.fillRect(game.camera.offset[0]+this.x+41,game.camera.offset[1]+this.y,38,2);
+        }else if (Math.round(this.lives) == 3){
             game.context.fillStyle = "black";
-            game.context.fillRect(game.camera.offset[0]+this.x+15,game.camera.offset[1]+this.y-10,40,4);
+            game.context.fillRect(game.camera.offset[0]+this.x+40,game.camera.offset[1]+this.y-1,40,4);
             game.context.fillStyle = "yellow";
-            game.context.fillRect(game.camera.offset[0]+this.x+16,game.camera.offset[1]+this.y-9,28,2);
-        }else if (this.lives == 2){
+            game.context.fillRect(game.camera.offset[0]+this.x+41,game.camera.offset[1]+this.y,28,2);
+        }else if (Math.round(this.lives) == 2){
             game.context.fillStyle = "black";
-            game.context.fillRect(game.camera.offset[0]+this.x+15,game.camera.offset[1]+this.y-10,40,4);
+            game.context.fillRect(game.camera.offset[0]+this.x+40,game.camera.offset[1]+this.y-1,40,4);
             game.context.fillStyle = "orange";
-            game.context.fillRect(game.camera.offset[0]+this.x+16,game.camera.offset[1]+this.y-9,18,2);
-        }else if (this.lives == 1){
+            game.context.fillRect(game.camera.offset[0]+this.x+41,game.camera.offset[1]+this.y,18,2);
+        }else if (Math.round(this.lives) == 1){
             game.context.fillStyle = "black";
-            game.context.fillRect(game.camera.offset[0]+this.x+15,game.camera.offset[1]+this.y-10,40,4);
+            game.context.fillRect(game.camera.offset[0]+this.x+40,game.camera.offset[1]+this.y-1,40,4);
             game.context.fillStyle = "red";
-            game.context.fillRect(game.camera.offset[0]+this.x+16,game.camera.offset[1]+this.y-9,8,2);
+            game.context.fillRect(game.camera.offset[0]+this.x+41,game.camera.offset[1]+this.y,8,2);
         }
 
         if(this.hitted == true){
