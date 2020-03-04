@@ -21,6 +21,11 @@ class Ghost extends Enemy{
         }
     }
 
+    idle() {
+        if (this.old_x < this.x) this.animation.changeFrame(game.enemy_sprite_sheet.frame_sets[0], 10, 0);
+        else this.animation.changeFrame(game.enemy_sprite_sheet.frame_sets[1], 10, 1);    
+    }
+
     behavior(){
         var enemy_tile_x = Math.floor((this.x + this.width * 0.5) / game.world.tile_size);
         var enemy_tile_y = Math.floor((this.y + this.height* 0.5) / game.world.tile_size);
@@ -32,18 +37,24 @@ class Ghost extends Enemy{
         var rounded_enemyx = Math.round(this.x);
 
         if(rounded_playerx < rounded_enemyx+10 && rounded_playerx > rounded_enemyx-10 && this.frozen == false){
-            if (this.old_x < this.x) this.animation.changeFrame(game.enemy_sprite_sheet.frame_sets[0], 10, 0);
-            else this.animation.changeFrame(game.enemy_sprite_sheet.frame_sets[1], 10, 1);
+
+            this.idle();
+
         }else{
             if(rounded_playerx < rounded_enemyx && this.frozen == false) {
+
                 if(check_left_index == 6 && check_left_down_index != 6) this.moveLeft();
-                else this.animation.changeFrame(game.enemy_sprite_sheet.frame_sets[1], 10, 1);
+                else this.idle();
+
             }else if(rounded_playerx > rounded_enemyx && this.frozen == false) {
+                
                 if(check_right_index == 6 && check_right_down_index != 6) this.moveRight();
-                else this.animation.changeFrame(game.enemy_sprite_sheet.frame_sets[0], 10, 0);
+                else this.idle();
+
             }else if (rounded_playerx == rounded_enemyx && this.frozen == false){
-                if (this.old_x < this.x) this.animation.changeFrame(game.enemy_sprite_sheet.frame_sets[0], 10, 0);
-                else this.animation.changeFrame(game.enemy_sprite_sheet.frame_sets[1], 10, 1);
+
+                this.idle();
+                
             }
         }
     }

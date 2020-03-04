@@ -59,15 +59,28 @@ class Enemy{
         }
     }
 
-    dead(){
+    dead(enemy){
         if(this.lives == 0){
             this.frozen=true;
             setTimeout(() => { this.alive = false ;}, 4000);
             if (this.old_x < this.x )  {
-                this.animation.changeFrame(game.enemy_sprite_sheet.frame_sets[6], 4, 6);
+                if (enemy instanceof Ghost){
+                    this.animation.changeFrame(game.enemy_sprite_sheet.frame_sets[6], 4, 6);    
+                }
+                if (enemy instanceof Assassin){
+                    this.animation.changeFrame(game.assassin_sprite_sheet.frame_sets[10], 4, 10);    
+                }
             } else if (this.old_x > this.x ) {
+                if (enemy instanceof Ghost){
+                    this.animation.changeFrame(game.enemy_sprite_sheet.frame_sets[7], 4, 7);    
+                }
+                if (enemy instanceof Assassin){
+                    this.animation.changeFrame(game.assassin_sprite_sheet.frame_sets[11], 4, 11);    
+                }
+            } else  {
                 this.animation.changeFrame(game.enemy_sprite_sheet.frame_sets[7], 4, 7);
-            } else  this.animation.changeFrame(game.enemy_sprite_sheet.frame_sets[7], 4, 7);
+                this.animation.changeFrame(game.assassin_sprite_sheet.frame_sets[11], 4, 11);   
+            }
         }
     }
 }

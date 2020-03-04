@@ -149,7 +149,7 @@ class Player{
 
         if (game.controller.up && this.jumping == false && this.frozen == false && this.alive == true) {
 
-            this.y_velocity -= 23;
+            this.y_velocity -= 27;
             this.jumping = true;
             game.jump.volume = 0.04;
             game.jump.play();
@@ -199,7 +199,7 @@ class Player{
             } else if (this.idling == true){
                 if (game.controller.mousex > this.x+this.width/2+game.camera.offset[0] ) this.animation.changePlayerFrame(game.sprite_sheet.frame_sets[6], 4, 6);          
                 else this.animation.changePlayerFrame(game.sprite_sheet.frame_sets[7], 4, 7);  
-            }
+            } else this.animation.changePlayerFrame(game.sprite_sheet.frame_sets[6], 4, 6); 
         }
     }
 
@@ -310,11 +310,9 @@ class Player{
         }
     }
     drawPlayer(){
-
         if(this.stunned == true && this.frozen == false){
             this.stunned_animation.changeFrame(game.stunned_sprite_sheet.frame_sets[0], 3, 0);
             game.context.drawImage(game.stunned_sprite_sheet.image, this.stunned_animation.frame * 50, this.stunned_animation.row * 50 , 50, 50, game.camera.offset[0] + this.x+40, game.camera.offset[1] + this.y-15, 20, 20);
- 
         }
 
         game.context.drawImage(game.sprite_sheet.image, this.animation.frame * 100, this.animation.row * 100 , 100, 100, game.camera.offset[0] +this.x, game.camera.offset[1] + this.y, 100, 100+10);

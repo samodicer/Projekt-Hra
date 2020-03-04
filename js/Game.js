@@ -5,7 +5,7 @@ class Game{
         this.context = canvas.getContext("2d");
         this.world = new World();
         this.camera = new Camera();
-        this.player = new Player(100,500,0,0,100,100,false,false,true,100,500,new Animation());
+        this.player = new Player(2500,500,0,0,100,100,false,false,true,100,500,new Animation());
         this.key = new Key(1800,210,12,32);
         this.door = new Door(1850,600,100,50);
         this.controller = new Controller();
@@ -18,7 +18,6 @@ class Game{
         this.jump = new Audio('./audio/jump.wav');
         this.success = new Audio('./audio/success.wav');
         this.door_open = new Audio('./audio/door_open.wav');
-        this.e =new Assassin(2200,400,0,0,170,150,2200,400,new Animation());
     }
 
     start(){
@@ -31,10 +30,10 @@ class Game{
         game.canvas.addEventListener("click", game.controller.clickListener);
         game.canvas.addEventListener("mousemove", game.controller.mousemoveListener);
         this.playername= document.getElementById('player_name').value;
-        game.createEnemy(100,100,90,70);
-        game.createEnemy(600,500,90,70);
-        game.createEnemy(1100,200,90,70);
-        this.enemies.push(this.e);
+        game.createEnemy("Ghost",100,100,90,70);
+        game.createEnemy("Ghost",600,500,90,70);
+        game.createEnemy("Ghost",1100,200,90,70);
+        game.createEnemy("Assassin",3200,100,170,150);
         window.requestAnimationFrame(game.loop);// Start the game loop.
     }
 
@@ -95,8 +94,10 @@ class Game{
                                                     [0,1,2,3,4,5] , [0,1,2,3,4,5] , [0,1,2,3,4,5], 
                                                     [0,1,2,3,4,5] , [0,1,2,3,4,5]] , this.findImage("enemy1_sprite"),100);
         this.assassin_sprite_sheet = new Sprite_sheet([[0,1,2,3,4,5,6,7] , [0,1,2,3,4,5,6,7] , [0,1,2,3,4,5,6,7,8,9,10,11],
-                                                       [0,1,2,3,4,5,6,7,8,9,10,11] , [0,1,2,3,4,5,6,7,8,9,10,11] , 
-                                                       [0,1,2,3,4,5,6,7,8,9,10,11]] , this.findImage("assassin_sprite"),200);
+                                                       [0,1,2,3,4,5,6,7,8,9,10,11] , [0,1,2,3,4,5,6,7] , 
+                                                       [0,1,2,3,4,5,6,7] , [0,1,2,3,4,5,6,7,8,9] , [0,1,2,3,4,5,6,7,8,9],
+                                                       [0,1,2,3,4,5,6,7,8,9,10,11] , [0,1,2,3,4,5,6,7,8,9,10,11] ,
+                                                       [0,1,2,3,4,5,6,7,8,9,10,11] , [0,1,2,3,4,5,6,7,8,9,10,11]] , this.findImage("assassin_sprite"),200);
 
         this.hit_sprite_sheet = new Sprite_sheet([[0,1,2,3,4,5,6,7,8,9]] , this.findImage("hit_sprite"),50);
         this.stunned_sprite_sheet = new Sprite_sheet([[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]] , this.findImage("stunned_sprite"),50);
@@ -104,8 +105,13 @@ class Game{
         this.tile_sheet = new Tile_sheet(this.findImage("tile_sheet"),50,50,3);    
     }
 
-    createEnemy(x,y,height,width){
-        this.enemy = new Ghost(x,y,0,0,height,width,x,y,new Animation());   
+    createEnemy(name,x,y,height,width){
+        if(name == "Ghost"){
+            this.enemy = new Ghost(x,y,0,0,height,width,x,y,new Animation());      
+        }
+        if(name == "Assassin"){
+            this.enemy = new Assassin(x,y,0,0,height,width,x,y,new Animation());      
+        }
         this.enemies.push(this.enemy);
     }
 
@@ -120,7 +126,7 @@ class Game{
     }
 
     playMusic() {
-        game.music.volume = 0.03;
+        game.music.volume = 0.00;
         game.music.play();    
     }
 
@@ -149,33 +155,12 @@ class Game{
                 game.enemies[i].hit();
                 game.enemies[i].drawEnemy();
                 game.enemies[i].hit_animation.updateHitEnemy(game.enemies[i]);
-                game.enemies[i].dead();
+                game.enemies[i].dead(game.enemies[i]);
                 if(game.player.alive == true){
                     game.player.hit(game.enemies[i]); 
                 }  
             }
         }
-
-       /* if(game.enemy.alive == true){
-            game.physics(game.enemy);
-            game.enemy.behavior();
-            game.enemy.animation.update(game.enemy);
-            game.enemy.EnemyCollision();  
-            game.enemy.hit();
-            game.enemy.drawEnemy();
-            game.enemy.hit_animation.updateHit(game.enemy,game.player);
-            game.enemy.dead();
-        } 
-        if(game.enemy2.alive == true){
-            game.physics(game.enemy2);
-            game.enemy2.behavior();
-            game.enemy2.animation.update(game.enemy2);
-            game.enemy2.EnemyCollision();  
-            game.enemy2.hit();
-            game.enemy2.drawEnemy();
-            game.enemy2.hit_animation.updateHit(game.enemy2,game.player);
-            game.enemy2.dead();
-        } */
 
 
         if(game.player.alive == true){
