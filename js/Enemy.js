@@ -9,13 +9,13 @@ class Enemy{
         this.width = width;
         this.old_x = old_x;
         this.old_y = old_y;
-        this.lives = 4;
         this.animation = animation;
         this.alive = true;
         this.frozen = false;
         this.hitted = false;
         this.hit_animation = new Animation();
         this.damage;
+        this.player_change_position = true;
     }
 
     EnemyCollision(){
@@ -39,6 +39,65 @@ class Enemy{
   
             game.world.collision(value_at_index,this, tile_y, tile_x);
   
+        }
+    }
+
+    attack(enemy,player){
+        if (enemy instanceof Ghost){
+            if(player.overlapsObject(enemy) && enemy.alive == true && player.stunned == false && enemy.frozen == false && player.frozen == false){
+                player.lives -= 1;
+                player.stunned = true;
+                player.hitted = true;
+                game.hit.volume = 0.1;
+                game.hit.play(); 
+                setTimeout(() => { player.hitted = false }, 300);
+                setTimeout(() => { player.stunned = false }, 3000);
+            }  
+        }  
+
+        if (enemy instanceof Assassin){
+            var enemy_tile_x = Math.floor((enemy.x + enemy.width * 0.5) / game.world.tile_size);
+            var enemy_tile_y = Math.floor((enemy.y + enemy.height) / game.world.tile_size);
+            var player_tile_x = Math.floor((player.x + enemy.width * 0.5) / game.world.tile_size);
+            var player_tile_y = Math.floor((player.y + enemy.height * 0.5) / game.world.tile_size);
+            var check_player_index = (player_tile_y * game.world.columns + player_tile_x);
+            var check_enemy_left_index = (enemy_tile_y * game.world.columns + enemy_tile_x)-1;
+            var check_enemy_right_index = (enemy_tile_y * game.world.columns + enemy_tile_x)+2;
+            var random_hit = Math.random();
+
+            if(random_hit > 0.95 && enemy.alive == true && enemy.frozen == false && player.frozen == false && player.alive == true && player.stunned == false){
+
+                if(check_player_index == check_enemy_left_index && this.player_change_position == true ){
+                    //enemy.x_velocity = 0;
+                    enemy.attacking = true;
+                    player.lives -= 1;
+                    player.stunned = true;
+                    player.hitted = true;
+                    game.hit.volume = 0.1;
+                    game.hit.play(); 
+                    setTimeout(() => { player.hitted = false }, 300);
+                    setTimeout(() => { player.stunned = false }, 3000);
+                    setTimeout(() => { enemy.attacking  = false ; this.player_change_position = false }, 800);
+                }
+                if(check_player_index == check_enemy_right_index && this.player_change_position == true) {
+                    this.player_change_position = false;
+                    //enemy.x_velocity = 0;
+                    enemy.attacking = true;
+                    player.lives -= 1;
+                    player.stunned = true;
+                    player.hitted = true;
+                    game.hit.volume = 0.1;
+                    game.hit.play(); 
+                    setTimeout(() => { player.hitted = false }, 300);
+                    setTimeout(() => { player.stunned = false }, 3000);
+                    setTimeout(() => { enemy.attacking  = false , this.player_change_position = false}, 800);
+                }
+                if(check_player_index != check_enemy_right_index || check_player_index != check_enemy_left_index) {
+                    this.player_change_position = true;
+                }
+            }
+
+
         }
     }
 

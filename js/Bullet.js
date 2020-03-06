@@ -6,10 +6,14 @@ class Bullet{
         this.side = side;
     }
 
-    drawBullet(){
-        game.context.drawImage(game.findImage("bullet"), 0, 0 , 100, 81, game.camera.offset[0] +this.x, game.camera.offset[1] +this.y, 10, 7);
+    drawBullet(object){
+        if(object instanceof Player){
+            game.context.drawImage(game.findImage("bullet"), 0, 0 , 100, 81, game.camera.offset[0] +this.x, game.camera.offset[1] +this.y, 10, 7);
+        } 
+        if (object instanceof Assassin){
+            game.context.drawImage(game.findImage("bullet_assassin"), 0, 0 , 100, 81, game.camera.offset[0] +this.x, game.camera.offset[1] +this.y, 20, 15);
+        }
     }
-
 
     updateBullet(){
 

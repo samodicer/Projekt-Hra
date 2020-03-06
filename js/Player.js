@@ -204,33 +204,6 @@ class Player{
     }
 
 
-    offScreen(){
-                
-        if (this.x < 0) {
-
-            this.x_velocity = 0;
-            this.old_x = this.x = 0;
-    
-          } else if (this.x + this.width > game.context.canvas.width) {
-    
-            this.x_velocity = 0;
-            this.old_x = this.x = game.context.canvas.width - this.width;
-    
-          }
-    
-          if (this.y < 0) {
-    
-            this.y_velocity = 0;
-            this.old_y = this.y = 0;
-    
-          } else if (this.y + this.height > game.context.canvas.height) {
-    
-            this.y_velocity = 0;
-            this.old_y = this.y = game.context.canvas.height - this.height;
-    
-          }
-    }
-
     shoot(){
 
         //var rect = game.canvas.getBoundingClientRect();
@@ -276,17 +249,6 @@ class Player{
         }
     }
 
-    hit(object){
-        if(this.overlapsObject(object) && object.alive == true && this.stunned == false && object.frozen == false && this.frozen == false){
-            this.lives -= 1;
-            this.stunned = true;
-            this.hitted = true;
-            game.hit.volume = 0.1;
-            game.hit.play(); 
-            setTimeout(() => { this.hitted = false }, 300);
-            setTimeout(() => { this.stunned = false }, 3000);
-        }
-    }
 
     overlapsObject(object){
         var player_tile_x = Math.floor((this.x + this.width * 0.5) / game.world.tile_size);
@@ -309,6 +271,7 @@ class Player{
             game.success.play(); 
         }
     }
+
     drawPlayer(){
         if(this.stunned == true && this.frozen == false){
             this.stunned_animation.changeFrame(game.stunned_sprite_sheet.frame_sets[0], 3, 0);
@@ -319,7 +282,7 @@ class Player{
         
         
         for (var i=0 ; i < this.bullets.length ; i++){
-            this.bullets[i].drawBullet();
+            this.bullets[i].drawBullet(this);
         }
 
         if(this.hitted == true){

@@ -4,6 +4,7 @@ class Ghost extends Enemy{
 
         super(x,y,x_velocity,y_velocity,height,width,old_x,old_y,animation);
         this.damage = 1;
+        this.lives = 4;
 
     }
 
@@ -59,6 +60,7 @@ class Ghost extends Enemy{
         }
     }
 
+    
 
     drawEnemy(){
         game.context.fillStyle = "green";

@@ -6,35 +6,36 @@ class Game{
         this.world = new World();
         this.camera = new Camera();
         this.player = new Player(2500,500,0,0,100,100,false,false,true,100,500,new Animation());
-        this.key = new Key(1800,210,12,32);
+        this.key = new Key(1800,210,12,32,"gold");
+        this.key = new Key(3600,210,12,32,"green");
         this.door = new Door(1850,600,100,50);
         this.controller = new Controller();
         this.enemies = [];
         this.images = [];
-        this.music = new Audio('./audio/music.wav');
-        this.shot = new Audio('./audio/shot.wav');
-        this.hit = new Audio('./audio/hit.mp3');
-        this.step = new Audio('./audio/step.wav');
-        this.jump = new Audio('./audio/jump.wav');
-        this.success = new Audio('./audio/success.wav');
-        this.door_open = new Audio('./audio/door_open.wav');
     }
 
     start(){
+        // načítanie obrázkov,audia
         game.loadImages();
         game.loadSprites();
+        game.loadAudio();
+        // skrytie menu a zobrazenie canvasu
         document.getElementById('menu').style.display="none";
         document.getElementById('canvas').style.display="block";
+        // pridanie listenerov
         window.addEventListener("keydown", game.controller.keyListener);
         window.addEventListener("keyup", game.controller.keyListener);
         game.canvas.addEventListener("click", game.controller.clickListener);
         game.canvas.addEventListener("mousemove", game.controller.mousemoveListener);
+        // uloženie prezývky hráča 
         this.playername= document.getElementById('player_name').value;
+        // vytvorenie nepriateľov
         game.createEnemy("Ghost",100,100,90,70);
         game.createEnemy("Ghost",600,500,90,70);
         game.createEnemy("Ghost",1100,200,90,70);
         game.createEnemy("Assassin",3200,100,170,150);
-        window.requestAnimationFrame(game.loop);// Start the game loop.
+        // spustenie hernej slučky
+        window.requestAnimationFrame(game.loop);
     }
 
     loadImages(){
@@ -46,12 +47,14 @@ class Game{
             ["stunned_sprite","./images/stunned-sprite.png"],
             ["tile_sheet","./images/tile_sheet.png"],
             ["bullet","./images/bullet.png"],
+            ["bullet_assassin","./images/assassin-bullet.png"],
             ["table","./images/table.png"],
             ["plant","./images/plant.png"],
             ["trashcan","./images/trashcan.png"],
             ["window","./images/window.png"],
             ["cardrepertory","./images/cardrepertory.png"],
-            ["key","./images/key.png"],
+            ["gold_key","./images/gold-key.png"],
+            ["green_key","./images/green-key.png"],
             ["life","./images/life.png"],
             ["avatar","./images/avatar.png"],
             ["avatar-dead","./images/avatar-dead.png"],
@@ -93,16 +96,28 @@ class Game{
         this.enemy_sprite_sheet = new Sprite_sheet([[0,1,2,3,4,5] , [0,1,2,3,4,5] , [0,1,2,3,4,5],
                                                     [0,1,2,3,4,5] , [0,1,2,3,4,5] , [0,1,2,3,4,5], 
                                                     [0,1,2,3,4,5] , [0,1,2,3,4,5]] , this.findImage("enemy1_sprite"),100);
+
         this.assassin_sprite_sheet = new Sprite_sheet([[0,1,2,3,4,5,6,7] , [0,1,2,3,4,5,6,7] , [0,1,2,3,4,5,6,7,8,9,10,11],
-                                                       [0,1,2,3,4,5,6,7,8,9,10,11] , [0,1,2,3,4,5,6,7] , 
-                                                       [0,1,2,3,4,5,6,7] , [0,1,2,3,4,5,6,7,8,9] , [0,1,2,3,4,5,6,7,8,9],
-                                                       [0,1,2,3,4,5,6,7,8,9,10,11] , [0,1,2,3,4,5,6,7,8,9,10,11] ,
-                                                       [0,1,2,3,4,5,6,7,8,9,10,11] , [0,1,2,3,4,5,6,7,8,9,10,11]] , this.findImage("assassin_sprite"),200);
+                                                       [0,1,2,3,4,5,6,7,8,9,10,11] , [0,1,2,3,4,5,6,7] , [0,1,2,3,4,5,6,7] ,
+                                                       [0,1,2,3,4,5,6,7,8,9] , [0,1,2,3,4,5,6,7,8,9],[0,1,2,3,4,5,6,7,8,9,10,11] , 
+                                                       [0,1,2,3,4,5,6,7,8,9,10,11] , [0,1,2,3,4,5,6,7,8,9,10,11] , [0,1,2,3,4,5,6,7,8,9,10,11]] , this.findImage("assassin_sprite"),200);
 
         this.hit_sprite_sheet = new Sprite_sheet([[0,1,2,3,4,5,6,7,8,9]] , this.findImage("hit_sprite"),50);
+
         this.stunned_sprite_sheet = new Sprite_sheet([[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]] , this.findImage("stunned_sprite"),50);
 
         this.tile_sheet = new Tile_sheet(this.findImage("tile_sheet"),50,50,3);    
+    }
+
+    loadAudio(){
+        this.music = new Audio('./audio/music.wav');
+        this.shot = new Audio('./audio/shot.wav');
+        this.assassin_shot = new Audio('./audio/assassin_shot.wav');  
+        this.hit = new Audio('./audio/hit.mp3');
+        this.step = new Audio('./audio/step.wav');
+        this.jump = new Audio('./audio/jump.wav');
+        this.success = new Audio('./audio/success.wav');
+        this.door_open = new Audio('./audio/door_open.wav');    
     }
 
     createEnemy(name,x,y,height,width){
@@ -131,6 +146,8 @@ class Game{
     }
 
     loop(){
+        //console.log("x "+game.player.x);
+        //console.log("y "+game.player.y);
         game.playMusic();
 
         game.camera.update(game.player.x + (game.player.width/2), game.player.y + (game.player.height/2));
@@ -156,9 +173,7 @@ class Game{
                 game.enemies[i].drawEnemy();
                 game.enemies[i].hit_animation.updateHitEnemy(game.enemies[i]);
                 game.enemies[i].dead(game.enemies[i]);
-                if(game.player.alive == true){
-                    game.player.hit(game.enemies[i]); 
-                }  
+                game.enemies[i].attack(game.enemies[i],game.player);
             }
         }
 
