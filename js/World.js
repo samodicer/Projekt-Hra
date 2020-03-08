@@ -92,8 +92,11 @@ class World{
           game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 10, 60, 20, 20);
         }
 
-        if(game.player.has_key == true){
-          game.context.drawImage(game.findImage("gold_key"), 0, 0, game.key.width, game.key.height, 15, 90, game.key.width, game.key.height);  
+        if(game.player.has_gold_key == true){
+          game.context.drawImage(game.findImage("gold_key"), 0, 0, game.gold_key.width, game.gold_key.height, 15, 90, game.gold_key.width, game.gold_key.height);  
+        }
+        if(game.player.has_green_key == true){
+          game.context.drawImage(game.findImage("green_key"), 0, 0, game.gold_key.width, game.gold_key.height, 15, 90, game.gold_key.width, game.gold_key.height);  
         }
       
 

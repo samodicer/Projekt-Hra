@@ -19,23 +19,11 @@ class Player{
         this.alive = true;
         this.frozen = false;
         this.hitted = false;
-        this.has_key = false;
+        this.has_gold_key = false;
+        this.has_green_key = false;
         this.hit_animation = new Animation();
         this.stunned_animation = new Animation();
     }
-
-   /* get bottom() { 
-        return this.y + this.height;
-    }
-    get left() { 
-        return this.x;
-    }
-    get right() { 
-        return this.x + this.width;
-    }
-    get top() { 
-        return this.y;
-    }*/
 
     deleteBullets(){
         for (var i=0 ; i < this.bullets.length ; i++){
@@ -100,17 +88,6 @@ class Player{
         }
     }
 
-    /*collision(object){
-
-
-        if ((this.top > object.bottom || this.right < object.left || this.bottom < object.top || this.left > object.right)) {
- 
-            return false;
-      
-        }
-      
-        else return true;
-    }*/
 
     moveLeft(){
 
@@ -206,13 +183,6 @@ class Player{
 
     shoot(){
 
-        //var rect = game.canvas.getBoundingClientRect();
-       // var posX = this.x+this.width/2+game.camera.offset[0] - (game.controller.xtarget+6 - rect.left);//+6 -> pricitavam polovicu velkosti crosshairu
-        //var posY = this.y+this.height/2+game.camera.offset[1] - (game.controller.ytarget+6 - rect.top);
-
-        //let direction = Math.atan2(posX,posY);
-        //let dirX = Math.sin(direction);
-        //let dirY = Math.cos(direction);
         let side;
         if (this.animation.row == 0 || this.animation.row == 2 || this.animation.row == 4 || this.animation.row == 6 || this.animation.row == 8 || this.animation.row == 10) { 
 
@@ -265,7 +235,12 @@ class Player{
 
     findKey(object){
         if (this.overlapsObject(object) && object.taken == false){
-            this.has_key = true;
+            if(object.color == "gold"){
+                this.has_gold_key = true;
+            }
+            if(object.color == "green"){
+                this.has_green_key = true;
+            }
             object.taken = true;
             game.success.volume = 0.07;
             game.success.play(); 

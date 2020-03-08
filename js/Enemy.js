@@ -102,7 +102,7 @@ class Enemy{
     }
 
     hit() {
-        if (this.frozen == false){
+        if (this.frozen == false && game.player.shooting == true){
             for (var i=0 ; i < game.player.bullets.length ; i++){
                 if(game.player.bullets[i].x >= this.x && game.player.bullets[i].x <= this.x + this.width && game.player.bullets[i].y >= this.y && game.player.bullets[i].y <= this.y + this.height) {    
                     this.hitted = true

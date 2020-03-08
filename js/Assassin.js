@@ -68,6 +68,7 @@ class Assassin extends Enemy{
         this.checkShooting();
         this.BulletCollision();
         this.deleteBullets();
+        this.bulletDamage();
         var enemy_tile_x = Math.floor((this.x + this.width * 0.5) / game.world.tile_size);
         var enemy_tile_y = Math.floor((this.y + this.height* 0.7) / game.world.tile_size);
         var check_left_index = game.world.map[(enemy_tile_y * game.world.columns + enemy_tile_x)-1];
@@ -110,14 +111,11 @@ class Assassin extends Enemy{
 
             if(random_jump > 0.8 && game.player.shooting == true &&  this.shooting_animation == false) {
                 this.jump();   
-            }
-            
-            let distance = Math.round(game.player.x - this.x)
-            console.log(distance);
+            }          
 
             if(this.shooting == false && random_shoot > 0.8 && random_jump > 0.9 && this.idling == false && this.jumping ==false &&  this.shooting_animation == false ){
-;
-                if ( ( distance > 120 && distance  < -120 ) || ( distance < 400 && distance > -400 ) ){
+                var distance = Math.round(game.player.x - this.x);
+                if ( ( distance > 120 && distance  < -120 ) || ( distance < 380 && distance > -310 ) ){
                     this.shoot();   
                 }
             } 
@@ -152,6 +150,7 @@ class Assassin extends Enemy{
 
         }
     }
+
     shoot(){
         let side;
         if (this.animation.row == 0 || this.animation.row == 2 || this.animation.row == 4 || this.animation.row == 6 || this.animation.row == 8 || this.animation.row == 10) { 
@@ -160,7 +159,7 @@ class Assassin extends Enemy{
 
         } else side = "left";
         
-        if (this.alive == true && this.frozen == false && this.attacking == false){
+        if (this.alive == true && this.frozen == false && this.attacking == false && game.player.frozen == false && game.player.alive == true){
 
             if(side == "right") var b = new Bullet (this.x+this.width/2+40,this.y+this.height/3+20,side);
             else var b = new Bullet (this.x+this.width/2-40,this.y+this.height/3+20,side);
@@ -189,6 +188,23 @@ class Assassin extends Enemy{
 
             }
 
+        }
+    }
+
+    bulletDamage(){
+        if (game.player.frozen == false && this.shooting == true){
+            for (var i=0 ; i < this.bullets.length ; i++){
+                if(this.bullets[i].x >= game.player.x && this.bullets[i].x <= game.player.x + game.player.width && this.bullets[i].y >= game.player.y && this.bullets[i].y <= game.player.y + game.player.height) {    
+                    game.player.hitted = true
+                    setTimeout(() => { game.player.hitted = false }, 300);
+                    this.bullets.splice(i,1); 
+                    game.hit.volume = 0.1;
+                    game.hit.load();
+                    game.hit.play();
+
+                    if (game.player.lives != 0) game.player.lives-= 1;
+                }
+            }
         }
     }
 

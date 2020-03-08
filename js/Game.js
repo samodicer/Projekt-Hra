@@ -6,11 +6,12 @@ class Game{
         this.world = new World();
         this.camera = new Camera();
         this.player = new Player(2500,500,0,0,100,100,false,false,true,100,500,new Animation());
-        this.key = new Key(1800,210,12,32,"gold");
-        this.key = new Key(3600,210,12,32,"green");
+        this.gold_key = new Key(1800,210,12,32,"gold");
+        this.green_key = new Key(3600,210,12,32,"green");
         this.door = new Door(1850,600,100,50);
         this.controller = new Controller();
         this.enemies = [];
+        this.barbs = [];
         this.images = [];
     }
 
@@ -34,6 +35,11 @@ class Game{
         game.createEnemy("Ghost",600,500,90,70);
         game.createEnemy("Ghost",1100,200,90,70);
         game.createEnemy("Assassin",3200,100,170,150);
+        //vytvorenie prekážok
+        game.createBarbs("ground",3100,200,50,97,1);
+        game.createBarbs("ceiling",3230,50,50,97,1);
+        game.createBarbs("ground",700,650,50,97,1);
+        game.createBarbs("ceiling",1400,500,50,97,1);
         // spustenie hernej slučky
         window.requestAnimationFrame(game.loop);
     }
@@ -60,14 +66,16 @@ class Game{
             ["avatar-dead","./images/avatar-dead.png"],
             ["green_light","./images/green_light.png"],
             ["red_light","./images/red_light.png"],
+            ["barbs_ground","./images/barbs-ground.png"],
+            ["barbs_ceiling","./images/barbs-ceiling.png"]
         ]
 
         for(let i = 0; i < images.length ; i++) {
-			let img = new Image();
-			let imgName = images[i][0];
-			img.src = images[i][1];
-			var imgArray = [imgName, img];
-			this.images.push(imgArray);
+			let image = new Image();
+			let imageName = images[i][0];
+			image.src = images[i][1];
+			var iamgesArray = [imageName, image];
+			this.images.push(iamgesArray);
 
         }
 
@@ -130,6 +138,11 @@ class Game{
         this.enemies.push(this.enemy);
     }
 
+    createBarbs(type,x,y,height,width,damage){
+        this.barb = new Barbs(x,y,height,width,damage,type);
+        this.barbs.push(this.barb);
+    }
+
     physics(object){
         object.y_velocity += 0.8;// gravity
         object.old_x = object.x;
@@ -146,20 +159,29 @@ class Game{
     }
 
     loop(){
-        //console.log("x "+game.player.x);
-        //console.log("y "+game.player.y);
+        console.log("x "+game.player.x);
+        console.log("y "+game.player.y);
         game.playMusic();
 
         game.camera.update(game.player.x + (game.player.width/2), game.player.y + (game.player.height/2));
 
         game.world.drawWorld();
 
-        if(game.key.taken == false){
-            game.key.drawKey();    
+        if(game.gold_key.taken == false){
+            game.gold_key.drawKey();    
         }
 
-        game.door.openDoor(game.key,game.player);
+        if(game.green_key.taken == false){
+            game.green_key.drawKey();    
+        }
+
+        game.door.openDoor(game.gold_key,game.player);
         game.door.drawDoor();
+
+        for (var i=0 ; i < game.barbs.length ; i++){
+            game.barbs[i].drawBarbs();
+            game.barbs[i].hit(game.barbs[i]);
+        }
         
         for (var i=0 ; i < game.enemies.length ; i++){
             if (game.enemies[i].alive != true){
@@ -193,7 +215,8 @@ class Game{
             game.player.drawPlayer();
             game.player.hit_animation.updateHitPlayer(game.player);
             game.player.stunned_animation.update(game.player);
-            game.player.findKey(game.key);
+            game.player.findKey(game.gold_key);
+            game.player.findKey(game.green_key);
         } else {
             game.context.fillText("Game Over!",game.canvas.width/2,game.canvas.height/2);
         }
