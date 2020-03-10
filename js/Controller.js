@@ -14,16 +14,28 @@ class Controller{
 
         switch(event.keyCode) {
     
-          case 65 :// left key
+          case 65 :// A
             game.controller.left = answer;
           break;
 
-          case  87:// up key
+          case  87:// W
             game.controller.up = answer;
           break;
 
-          case  68:// right key
+          case  68:// S
             game.controller.right = answer;
+          break;
+
+          case  37:// left arrow
+          game.controller.left = answer;
+          break;
+
+          case  38:// up arrow
+          game.controller.up = answer;
+          break;
+
+          case  39:// right arrow
+          game.controller.right = answer;
           break;
         }
     }

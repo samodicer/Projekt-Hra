@@ -5,14 +5,15 @@ class Game{
         this.context = canvas.getContext("2d");
         this.world = new World();
         this.camera = new Camera();
-        this.player = new Player(2500,500,0,0,100,100,false,false,true,100,500,new Animation());
+        this.player = new Player(100,500,0,0,100,100,false,false,true,100,500,new Animation());
         this.gold_key = new Key(1800,210,12,32,"gold");
-        this.green_key = new Key(3600,210,12,32,"green");
+        this.green_key = new Key(4100,210,12,32,"green");
         this.door = new Door(1850,600,100,50);
         this.controller = new Controller();
         this.enemies = [];
-        this.barbs = [];
+        this.obstacles = [];
         this.images = [];
+        this.points = [];
     }
 
     start(){
@@ -36,10 +37,19 @@ class Game{
         game.createEnemy("Ghost",1100,200,90,70);
         game.createEnemy("Assassin",3200,100,170,150);
         //vytvorenie prekážok
-        game.createBarbs("ground",3100,200,50,97,1);
-        game.createBarbs("ceiling",3230,50,50,97,1);
-        game.createBarbs("ground",700,650,50,97,1);
-        game.createBarbs("ceiling",1400,500,50,97,1);
+        game.createObstacles("default",3100,200,50,97,1,"ground","",0);
+        game.createObstacles("default",3230,50,50,97,1,"ceiling","",0);
+        game.createObstacles("default",700,650,50,97,1,"ground","",0);
+        game.createObstacles("default",1400,500,50,97,1,"ceiling","",0);
+        game.createObstacles("default",2300,50,50,97,1,"ceiling","",0);
+        game.createObstacles("moving",3450,200,50,97,1,"ground","l",0);
+        game.createObstacles("moving",3550,50,50,97,1,"ceiling","r",0);
+        game.createObstacles("disappearing",2450,200,50,97,1,"ground","",1100);
+        game.createObstacles("disappearing",2550,50,50,97,1,"ceiling","",1100);
+        game.createObstacles("disappearing",2776,100,50,97,1,"ground","",2000);
+        game.createObstacles("disappearing",3875,150,50,97,1,"ceiling","",2000);
+        // vytvorenie bodov
+        game.createPoints();
         // spustenie hernej slučky
         window.requestAnimationFrame(game.loop);
     }
@@ -62,12 +72,13 @@ class Game{
             ["gold_key","./images/gold-key.png"],
             ["green_key","./images/green-key.png"],
             ["life","./images/life.png"],
+            ["point","./images/point.png"],
             ["avatar","./images/avatar.png"],
             ["avatar-dead","./images/avatar-dead.png"],
             ["green_light","./images/green_light.png"],
             ["red_light","./images/red_light.png"],
-            ["barbs_ground","./images/barbs-ground.png"],
-            ["barbs_ceiling","./images/barbs-ceiling.png"]
+            ["obstacle_ground","./images/obstacle-ground.png"],
+            ["obstacle_ceiling","./images/obstacle-ceiling.png"]
         ]
 
         for(let i = 0; i < images.length ; i++) {
@@ -125,7 +136,8 @@ class Game{
         this.step = new Audio('./audio/step.wav');
         this.jump = new Audio('./audio/jump.wav');
         this.success = new Audio('./audio/success.wav');
-        this.door_open = new Audio('./audio/door_open.wav');    
+        this.door_open = new Audio('./audio/door_open.wav');   
+        this.point = new Audio('./audio/point.wav');  
     }
 
     createEnemy(name,x,y,height,width){
@@ -138,9 +150,33 @@ class Game{
         this.enemies.push(this.enemy);
     }
 
-    createBarbs(type,x,y,height,width,damage){
-        this.barb = new Barbs(x,y,height,width,damage,type);
-        this.barbs.push(this.barb);
+    createObstacles(type,x,y,height,width,damage,position,direction,time){
+        if(type == "default"){
+            this.obstacle = new Obstacle(x,y,height,width,damage,position);    
+        }
+        if(type == "moving"){
+            this.obstacle = new MovingObstacle(x,y,height,width,damage,position,direction);
+        }
+        if(type == "disappearing"){
+            this.obstacle = new DisappearingObstacle(x,y,height,width,damage,position,time);
+        }
+        this.obstacles.push(this.obstacle);
+    }
+
+    createPoints(){
+        for (var i =0 ; i< game.world.map.length ; i++){
+            if( game.world.map[i] == 2 ){
+                if (game.world.map[i-game.world.columns] == 6){
+                    var random = Math.random();
+                    var y = (Math.trunc((i / game.world.columns)) * game.world.tile_size)-15 ;
+                    var x = Math.round((i % game.world.columns) * game.world.tile_size+15);
+                    if(random >0.6){
+                        this.p = new Point(x,y,12,12);
+                        this.points.push(this.p); 
+                    }
+                }
+            }
+        }
     }
 
     physics(object){
@@ -154,13 +190,57 @@ class Game{
     }
 
     playMusic() {
-        game.music.volume = 0.00;
+        game.music.volume = 0.03;
         game.music.play();    
     }
 
+    drawGUI(){
+        game.context.font = '20px Trebuchet MS';
+        game.context.fillStyle = "red";
+        game.context.fillText(game.playername, 50, 50); 
+        game.context.fillStyle = "green";
+        game.context.fillText(game.player.points+ " / " + game.points.length, 680, 50); 
+
+        game.context.drawImage(game.findImage("point"), 0, 0, 12, 12, 658,  35, 18, 18);
+        
+        if(game.player.frozen == false){
+          game.context.drawImage(game.findImage("avatar"), 0, 0, 38, 44, 10, 10, 38, 44); 
+        } else game.context.drawImage(game.findImage("avatar-dead"), 0, 0, 38, 44, 10, 10, 38, 44);
+
+        if(game.player.lives ==5){
+          game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 10, 60, 20, 20);
+          game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 30, 60, 20, 20);
+          game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 50, 60, 20, 20);  
+          game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 70, 60, 20, 20);
+          game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 90, 60, 20, 20);
+        }else if(game.player.lives ==4){
+          game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 10, 60, 20, 20);
+          game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 30, 60, 20, 20);
+          game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 50, 60, 20, 20);
+          game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 70, 60, 20, 20);
+        }else if(game.player.lives ==3){
+          game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 10, 60, 20, 20);
+          game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 30, 60, 20, 20);
+          game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 50, 60, 20, 20);
+        }else if(game.player.lives ==2){
+          game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 10, 60, 20, 20);
+          game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 30, 60, 20, 20);
+        }else if(game.player.lives ==1){
+          game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 10, 60, 20, 20);
+        }
+
+        if(game.player.has_gold_key == true){
+          game.context.drawImage(game.findImage("gold_key"), 0, 0, game.gold_key.width, game.gold_key.height, 15, 90, game.gold_key.width, game.gold_key.height);  
+        }
+        if(game.player.has_green_key == true){
+          game.context.drawImage(game.findImage("green_key"), 0, 0, game.gold_key.width, game.gold_key.height, 15, 90, game.gold_key.width, game.gold_key.height);  
+        }
+    }
+
     loop(){
-        console.log("x "+game.player.x);
-        console.log("y "+game.player.y);
+        //console.log("x "+game.player.x);
+        //console.log("y "+game.player.y);
+
         game.playMusic();
 
         game.camera.update(game.player.x + (game.player.width/2), game.player.y + (game.player.height/2));
@@ -178,9 +258,22 @@ class Game{
         game.door.openDoor(game.gold_key,game.player);
         game.door.drawDoor();
 
-        for (var i=0 ; i < game.barbs.length ; i++){
-            game.barbs[i].drawBarbs();
-            game.barbs[i].hit(game.barbs[i]);
+        for (var i=0 ; i < game.obstacles.length ; i++){
+            game.obstacles[i].drawObstacles(game.obstacles[i]);
+            game.obstacles[i].hit(game.obstacles[i]);
+            if (game.obstacles[i] instanceof MovingObstacle){
+                game.obstacles[i].update();    
+            }
+            if (game.obstacles[i] instanceof DisappearingObstacle){
+                game.obstacles[i].visibility();    
+            }
+        }
+
+        for (var i=0 ; i < game.points.length ; i++){
+            if(game.points[i].taken == false || game.points[i].showText == true){
+                game.points[i].drawPoint();
+                game.points[i].collectPoint();
+            }
         }
         
         for (var i=0 ; i < game.enemies.length ; i++){
@@ -221,9 +314,7 @@ class Game{
             game.context.fillText("Game Over!",game.canvas.width/2,game.canvas.height/2);
         }
 
-
-
-
+        game.drawGUI();
 
         window.requestAnimationFrame(game.loop);
 

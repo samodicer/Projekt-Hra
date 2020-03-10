@@ -1,7 +1,7 @@
 class Assassin extends Enemy{
    constructor(x,y,x_velocity,y_velocity,height,width,old_x,old_y,animation){
         super(x,y,x_velocity,y_velocity,height,width,old_x,old_y,animation);
-        this.damage = 0.5;
+        this.damage = 0.25;
         this.lives = 4;
         this.jumping = false;
         this.idling = false;
@@ -249,22 +249,22 @@ class Assassin extends Enemy{
         game.context.fillStyle = "green";
         game.context.drawImage(game.assassin_sprite_sheet.image, this.animation.frame * 200, this.animation.row * 200 , 200, 200, game.camera.offset[0] + this.x-15, game.camera.offset[1] + this.y-3, 200, 205);
 
-        if(Math.round(this.lives) == 4){
+        if(this.lives > 3.0){
             game.context.fillStyle = "black";
             game.context.fillRect(game.camera.offset[0]+this.x+this.width/2,game.camera.offset[1]+this.y-1,40,4);
             game.context.fillStyle = "green";
             game.context.fillRect(game.camera.offset[0]+(this.x+this.width/2)+1,game.camera.offset[1]+this.y,38,2);
-        }else if (Math.round(this.lives) == 3){
+        }else if (this.lives > 2.0){
             game.context.fillStyle = "black";
             game.context.fillRect(game.camera.offset[0]+this.x+this.width/2,game.camera.offset[1]+this.y-1,40,4);
             game.context.fillStyle = "yellow";
             game.context.fillRect(game.camera.offset[0]+(this.x+this.width/2)+1,game.camera.offset[1]+this.y,28,2);
-        }else if (Math.round(this.lives) == 2){
+        }else if (this.lives > 1.0){
             game.context.fillStyle = "black";
             game.context.fillRect(game.camera.offset[0]+this.x+this.width/2,game.camera.offset[1]+this.y-1,40,4);
             game.context.fillStyle = "orange";
             game.context.fillRect(game.camera.offset[0]+(this.x+this.width/2)+1,game.camera.offset[1]+this.y,18,2);
-        }else if (Math.round(this.lives) == 1){
+        }else if (this.lives > 0){
             game.context.fillStyle = "black";
             game.context.fillRect(game.camera.offset[0]+this.x+this.width/2,game.camera.offset[1]+this.y-1,40,4);
             game.context.fillStyle = "red";

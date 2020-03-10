@@ -15,12 +15,13 @@ class Player{
         this.animation = animation;
         this.bullets= [];
         this.stunned= false;
-        this.lives = 3;
+        this.lives = 5;
         this.alive = true;
         this.frozen = false;
         this.hitted = false;
         this.has_gold_key = false;
         this.has_green_key = false;
+        this.points = 0;
         this.hit_animation = new Animation();
         this.stunned_animation = new Animation();
     }

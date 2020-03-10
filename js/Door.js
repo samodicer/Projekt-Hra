@@ -8,6 +8,26 @@ class Door {
         this.count = height;
     }
 
+    openDoor(key,player){
+        var door_tile_x = Math.floor((this.x + this.width * 0.5) / game.world.tile_size);
+        var door_tile_y = Math.floor((this.y + this.height* 0.5) / game.world.tile_size);
+        var door_left_index = (door_tile_y * game.world.columns + door_tile_x)-1;
+        var door_index = (door_tile_y * game.world.columns + door_tile_x);
+        var player_tile_x = Math.floor((player.x + player.width * 0.5) / game.world.tile_size);
+        var player_tile_y = Math.floor((player.y + player.height) / game.world.tile_size);
+        var player_check_index = (player_tile_y * game.world.columns + player_tile_x);
+        if (key.taken == true && player_check_index == door_left_index){
+            if(player.has_gold_key == true) {
+                game.door_open.volume = 0.1;  
+                game.door_open.play();
+                this.open = true;
+                player.has_gold_key = false;
+                game.world.map[door_index] = 6;
+                game.world.map[door_index - game.world.columns] = 6;
+            }
+        }
+    }
+
     drawDoor(){        
         if(this.open == false){
             game.context.fillStyle = "#545454";
@@ -21,26 +41,6 @@ class Door {
                 this.count--;
             }
         }  
-    }
-
-    openDoor(key,player){
-        var door_tile_x = Math.floor((this.x + this.width * 0.5) / game.world.tile_size);
-        var door_tile_y = Math.floor((this.y + this.height* 0.5) / game.world.tile_size);
-        var door_left_index = (door_tile_y * game.world.columns + door_tile_x)-1;
-        var door_index = (door_tile_y * game.world.columns + door_tile_x);
-        var player_tile_x = Math.floor((player.x + player.width * 0.5) / game.world.tile_size);
-        var player_tile_y = Math.floor((player.y + player.height) / game.world.tile_size);
-        var player_check_index = (player_tile_y * game.world.columns + player_tile_x);
-        if (key.taken == true && player_check_index == door_left_index){
-            if(player.has_key == true) {
-                game.door_open.volume = 0.1;  
-                game.door_open.play();
-            }
-            this.open = true;
-            player.has_key = false;
-            game.world.map[door_index] = 6;
-            game.world.map[door_index - game.world.columns] = 6;
-        }
     }
 
 }

@@ -15,7 +15,7 @@
                 <div class="slideDown">
                     <div class="form_div" id ="name_form">
                         <label for="player_name"><b>ZADAJ PREZÝVKU:</b></label> <br/> 
-                        <input type="text" id="player_name" name="player_name"> 
+                        <input type="text" id="player_name" name="player_name" maxlength="15"> 
                     </div>
     
                     <div class="form_div">
@@ -51,17 +51,28 @@
         <script type="text/javascript" src="js/Ghost.js"></script>
         <script type="text/javascript" src="js/Assassin.js"></script>
         <script type="text/javascript" src="js/Door.js"></script>
-        <script type="text/javascript" src="js/Barbs.js"></script>
+        <script type="text/javascript" src="js/Obstacle.js"></script>
+        <script type="text/javascript" src="js/MovingObstacle.js"></script>
+        <script type="text/javascript" src="js/DisappearingObstacle.js"></script>
+        <script type="text/javascript" src="js/Point.js"></script>
     </div>
 
     <script type="text/javascript">
         document.getElementById("button1").addEventListener("click", function () {
-            document.getElementById("wrapper").style.height = "250px";
-            document.getElementById("wrapper2").style.height = "0px";
+            if(document.getElementById("wrapper").style.height == "250px"){
+                document.getElementById("wrapper").style.height = "0px";
+            }else{
+                document.getElementById("wrapper").style.height = "250px";
+                document.getElementById("wrapper2").style.height = "0px";
+            }
         });
         document.getElementById("button2").addEventListener("click", function () {
-            document.getElementById("wrapper2").style.height = "250px";
-            document.getElementById("wrapper").style.height = "0px";
+            if(document.getElementById("wrapper2").style.height == "250px"){
+                document.getElementById("wrapper2").style.height = "0px";
+            }else{
+                document.getElementById("wrapper2").style.height = "250px";
+                document.getElementById("wrapper").style.height = "0px";
+            }
         });
 
         var game = new Game();
