@@ -114,8 +114,13 @@ class Assassin extends Enemy{
             }          
 
             if(this.shooting == false && random_shoot > 0.8 && random_jump > 0.9 && this.idling == false && this.jumping ==false &&  this.shooting_animation == false ){
-                var distance = Math.round(game.player.x - this.x);
-                if ( ( distance > 120 && distance  < -120 ) || ( distance < 380 && distance > -310 ) ){
+                let distance;
+                if(Math.round(game.player.x) > Math.round(this.x)){
+                    distance = game.player.x - this.x;
+                } else if (Math.round(game.player.x) < Math.round(this.x)) {
+                    distance = this.x - game.player.x;
+                } else distance = 0;
+                if ( distance > 200 &&  distance < 400){
                     this.shoot();   
                 }
             } 
@@ -124,11 +129,11 @@ class Assassin extends Enemy{
 
                 if (this.old_x < this.x ) {
 
-                    this.x_velocity += 0.3;
+                    this.x_velocity += 0.2;
 
                 }else if ( this.old_x > this.x) {
 
-                    this.x_velocity -= 0.3;
+                    this.x_velocity -= 0.2;
 
                 }
             }
@@ -281,9 +286,8 @@ class Assassin extends Enemy{
         }
         
         if(this.attacking == true){
-            if (this.old_x < this.x) this.animation.changeFrame(game.assassin_sprite_sheet.frame_sets[6], 5, 6);
-            if (this.old_x > this.x) this.animation.changeFrame(game.assassin_sprite_sheet.frame_sets[7], 5, 7);
-            if (this.old_x == this.x) this.animation.changeFrame(game.assassin_sprite_sheet.frame_sets[7], 5, 7);
+            if (this.animation.row == 2 || this.animation.row == 6) this.animation.changeFrame(game.assassin_sprite_sheet.frame_sets[6], 5, 6);
+            if (this.animation.row == 3 || this.animation.row == 7) this.animation.changeFrame(game.assassin_sprite_sheet.frame_sets[7], 5, 7);
         }
     }
 }

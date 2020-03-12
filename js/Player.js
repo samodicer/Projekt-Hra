@@ -21,6 +21,7 @@ class Player{
         this.hitted = false;
         this.has_gold_key = false;
         this.has_green_key = false;
+        this.has_red_key = false;
         this.points = 0;
         this.hit_animation = new Animation();
         this.stunned_animation = new Animation();
@@ -175,9 +176,9 @@ class Player{
             } else if (this.old_x > this.x && this.idling == false) {
                 this.animation.changePlayerFrame(game.sprite_sheet.frame_sets[7], 4, 7);
             } else if (this.idling == true){
-                if (game.controller.mousex > this.x+this.width/2+game.camera.offset[0] ) this.animation.changePlayerFrame(game.sprite_sheet.frame_sets[6], 4, 6);          
+                if (this.animation.row == 0 || this.animation.row == 6 ) this.animation.changePlayerFrame(game.sprite_sheet.frame_sets[6], 4, 6);          
                 else this.animation.changePlayerFrame(game.sprite_sheet.frame_sets[7], 4, 7);  
-            } else this.animation.changePlayerFrame(game.sprite_sheet.frame_sets[6], 4, 6); 
+            }  
         }
     }
 
@@ -241,6 +242,9 @@ class Player{
             }
             if(object.color == "green"){
                 this.has_green_key = true;
+            }
+            if(object.color == "red"){
+                this.has_red_key = true;
             }
             object.taken = true;
             game.success.volume = 0.07;

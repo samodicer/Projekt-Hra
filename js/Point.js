@@ -23,10 +23,10 @@ class Point {
 
     drawPoint(){
         if(this.taken == false){   
-            game.context.fillStyle = "#25cc51"; 
             game.context.drawImage(game.findImage("point"), 0, 0, 12, 12, this.x+game.camera.offset[0],  this.y+game.camera.offset[1], 12, 12);
         }
         if (this.taken == true && this.showText == true){
+            game.context.fillStyle = "#25cc51";
             this.count++;
             game.context.fillText("+1",this.x+game.camera.offset[0],this.y+game.camera.offset[1]-this.count);
         } else this.count = 0; 

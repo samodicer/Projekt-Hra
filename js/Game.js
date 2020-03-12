@@ -8,7 +8,13 @@ class Game{
         this.player = new Player(100,500,0,0,100,100,false,false,true,100,500,new Animation());
         this.gold_key = new Key(1800,210,12,32,"gold");
         this.green_key = new Key(4100,210,12,32,"green");
+        this.red_key = new Key(4330,160,12,32,"red");
         this.door = new Door(1850,600,100,50);
+        this.door2 = new Door(4150,600,100,50);
+        this.door3 = new Door(4950,600,100,50);
+        this.life1 = new Life(960,210,15,15);
+        this.life2 = new Life(3000,400,15,15);
+        this.life3 = new Life(4920,300,15,15);
         this.controller = new Controller();
         this.enemies = [];
         this.obstacles = [];
@@ -35,6 +41,7 @@ class Game{
         game.createEnemy("Ghost",100,100,90,70);
         game.createEnemy("Ghost",600,500,90,70);
         game.createEnemy("Ghost",1100,200,90,70);
+        game.createEnemy("Ghost",4700,150,90,70);
         game.createEnemy("Assassin",3200,100,170,150);
         //vytvorenie prekážok
         game.createObstacles("default",3100,200,50,97,1,"ground","",0);
@@ -42,8 +49,15 @@ class Game{
         game.createObstacles("default",700,650,50,97,1,"ground","",0);
         game.createObstacles("default",1400,500,50,97,1,"ceiling","",0);
         game.createObstacles("default",2300,50,50,97,1,"ceiling","",0);
+        game.createObstacles("default",4450,650,50,97,1,"ground","",0);
+        game.createObstacles("default",4550,650,50,97,1,"ground","",0);
+        game.createObstacles("default",4650,650,50,97,1,"ground","",0);
+        game.createObstacles("default",4750,650,50,97,1,"ground","",0);
+        game.createObstacles("disappearing",4350,650,50,97,1,"ground","",2500);
         game.createObstacles("moving",3450,200,50,97,1,"ground","l",0);
         game.createObstacles("moving",3550,50,50,97,1,"ceiling","r",0);
+        game.createObstacles("moving",4500,300,50,97,1,"ceiling","r",0);
+        game.createObstacles("moving",4650,200,50,97,1,"ground","l",0);
         game.createObstacles("disappearing",2450,200,50,97,1,"ground","",1100);
         game.createObstacles("disappearing",2550,50,50,97,1,"ceiling","",1100);
         game.createObstacles("disappearing",2776,100,50,97,1,"ground","",2000);
@@ -71,6 +85,7 @@ class Game{
             ["cardrepertory","./images/cardrepertory.png"],
             ["gold_key","./images/gold-key.png"],
             ["green_key","./images/green-key.png"],
+            ["red_key","./images/red-key.png"],
             ["life","./images/life.png"],
             ["point","./images/point.png"],
             ["avatar","./images/avatar.png"],
@@ -235,6 +250,9 @@ class Game{
         if(game.player.has_green_key == true){
           game.context.drawImage(game.findImage("green_key"), 0, 0, game.gold_key.width, game.gold_key.height, 15, 90, game.gold_key.width, game.gold_key.height);  
         }
+        if(game.player.has_red_key == true){
+            game.context.drawImage(game.findImage("red_key"), 0, 0, game.gold_key.width, game.gold_key.height, 15, 90, game.gold_key.width, game.gold_key.height);  
+          }
     }
 
     loop(){
@@ -255,8 +273,26 @@ class Game{
             game.green_key.drawKey();    
         }
 
+        if(game.red_key.taken == false){
+            game.red_key.drawKey();    
+        }
+
         game.door.openDoor(game.gold_key,game.player);
         game.door.drawDoor();
+
+        game.door2.openDoor(game.green_key,game.player);
+        game.door2.drawDoor();
+
+        
+        game.door3.openDoor(game.red_key,game.player);
+        game.door3.drawDoor();
+
+        game.life1.drawLife();
+        game.life1.collectLife();
+        game.life2.drawLife();
+        game.life2.collectLife();
+        game.life3.drawLife();
+        game.life3.collectLife();
 
         for (var i=0 ; i < game.obstacles.length ; i++){
             game.obstacles[i].drawObstacles(game.obstacles[i]);
@@ -310,6 +346,7 @@ class Game{
             game.player.stunned_animation.update(game.player);
             game.player.findKey(game.gold_key);
             game.player.findKey(game.green_key);
+            game.player.findKey(game.red_key);
         } else {
             game.context.fillText("Game Over!",game.canvas.width/2,game.canvas.height/2);
         }
