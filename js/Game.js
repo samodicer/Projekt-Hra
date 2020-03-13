@@ -20,16 +20,126 @@ class Game{
         this.obstacles = [];
         this.images = [];
         this.points = [];
+        this.count =0;
+    }
+
+    introStory(){
+        // skrytie menu a zobrazenie canvasu
+        document.getElementById('menu').style.display="none";
+        document.getElementById('canvas').style.display="block";
+
+        game.context.font = '20px Trebuchet MS';
+        game.context.fillStyle = "black";
+        game.intro.volume= 0.2;
+        game.intro.play();
+        var story1 = setInterval(() => { 
+
+            game.context.clearRect(0, 0, canvas.width, canvas.height);
+            this.count+=0.5;
+            game.context.drawImage(this.findImage("story_bg"), 0, 0 , 760 , 480 , 0 , 0 , 760 , 480);
+            game.context.drawImage(this.findImage("story1_human"), 0, 0 , 192 , 256 , 0+this.count , 0 , 192, 256);
+            game.context.drawImage(this.findImage("story1_robot"), 0, 0 , 192 , 256 , 575-this.count , 0 , 192, 256);
+            game.context.fillText("Vitaj v roku 2077. Vo svete vyspelých technológií.", 170, 300); 
+            game.context.fillText("Roboti sú už bežnou súčasťou každodenného života.", 160, 325); 
+            game.context.fillText("Využívajú sa hlavne ako pomocníci v domácnostiach.", 160, 350); 
+
+            if(Math.round(this.count) == 200){
+                clearInterval(story1);
+                this.count=0;
+                var story2 = setInterval(() => { 
+                    game.context.clearRect(0, 0, canvas.width, canvas.height);
+                    this.count+=0.1;
+                    game.context.drawImage(this.findImage("story_bg"), 0, 0 , 760 , 480 , 0 , 0 , 760 , 480);
+                    game.context.drawImage(this.findImage("story2_assassin"), 0, 0 , 700 , 706 , -100+this.count , 0+this.count , 600+this.count, 606+this.count);
+                    game.context.drawImage(this.findImage("story2_ghost"), 0, 0 , 150 , 220 , 500+this.count , 330-this.count , 150, 223);
+                    game.context.fillText("Avšak náš technologický pokrok", 400, 200);
+                    game.context.fillText("má aj svoju temnú stránku.", 400, 225);
+                    game.context.fillText("Na tajnej základni začali", 400, 250);
+                    game.context.fillText("testovať robtov na armádne účely.", 400, 275);
+                    if(Math.round(this.count) == 20){
+                        clearInterval(story2);
+                        this.count=0;
+                        var story3 = setInterval(() => { 
+                            game.context.clearRect(0, 0, canvas.width, canvas.height);
+                            this.count+=0.1;
+                            game.context.drawImage(this.findImage("story_bg"), 0, 0 , 760 , 480 , 0 , 0 , 760 , 480);
+                            game.context.drawImage(this.findImage("story3_assassin"), 0, 0 , 700 , 706 , -80+this.count , 20+this.count , 620+this.count, 626+this.count);
+                            game.context.drawImage(this.findImage("story3_ghost"), 0, 0 , 150 , 220 , 520+this.count , 310-this.count , 150, 223);
+                            game.context.fillText("Všetky tieto stroje", 450, 100);
+                            game.context.fillText("riadi centrálny počítač", 450, 125);
+                            game.context.fillText("ktorý bol napadnutý", 450, 150);
+                            game.context.fillText("vírusom a zmenil robotov", 450, 175);
+                            game.context.fillText("na nebezpečných protivníkov.", 450, 200);
+                            if(Math.round(this.count) == 20){
+                                clearInterval(story3);
+                                this.count=0;
+                                var story4 = setInterval(() => { 
+                                    game.context.clearRect(0, 0, canvas.width, canvas.height);
+                                    this.count+=0.1;
+                                    game.context.drawImage(this.findImage("story_bg"), 0, 0 , 760 , 480 , 0 , 0 , 760 , 480);
+                                    game.context.drawImage(this.findImage("story4_robot"), 0, 0 , 567 , 556 , -100+this.count , 0+this.count/2 , 567, 556);
+                                    game.context.fillText("Posledná nádej sa vkladá do bojového robota", 310, 300);
+                                    game.context.fillText("najnovšej technológie. Bol vyrobený iba jeden", 310, 325);
+                                    game.context.fillText("za účelom chrániť ľudstvo.", 310, 350);
+                                    if(Math.round(this.count) == 20){
+                                        clearInterval(story4);
+                                        this.count=0;
+                                        var story5 = setInterval(() => { 
+                                            game.context.clearRect(0, 0, canvas.width, canvas.height);
+                                            this.count+=0.1;
+                                            game.context.drawImage(this.findImage("story_bg"), 0, 0 , 760 , 480 , 0 , 0 , 760 , 480);
+                                            game.context.drawImage(this.findImage("story5_centralpc"), 0, 0 , 294 , 287 , 235 , 230-this.count , 294 , 287);
+                                            game.context.fillText("Úlohou je nájsť a zničiť", 270, 100);
+                                            game.context.fillText("centrálny počítač napadnutý vírusom.", 220, 125);
+                                            if(Math.round(this.count) == 20){
+                                                clearInterval(story5);
+                                                this.count=0;
+                                                game.intro.pause();
+                                                this.start();
+                                            }
+                                        }, 50);
+                                    }
+                                }, 50); 
+                            }
+                        }, 50); 
+                    }
+                }, 50); 
+
+            }
+         }, 20);
+
+
+       /*setTimeout(() => { 
+            game.context.clearRect(0, 0, canvas.width, canvas.height);
+            game.context.drawImage(this.findImage("story_bg"), 0, 0 , 760 , 480 , 0 , 0 , 760 , 480);
+            game.context.drawImage(this.findImage("story2_assassin"), 0, 0 , 700 , 706 , -100 , 0 , 600, 606);
+            game.context.drawImage(this.findImage("story2_ghost"), 0, 0 , 150 , 220 , 500 , 300 , 150, 223);
+        }, 5000);
+        setTimeout(() => { 
+            game.context.drawImage(this.findImage("story_bg"), 0, 0 , 760 , 480 , 0 , 0 , 760 , 480);
+            game.context.drawImage(this.findImage("story3_assassin"), 0, 0 , 700 , 706 , -100 , 0 , 600, 606);
+            game.context.drawImage(this.findImage("story3_ghost"), 0, 0 , 150 , 220 , 500 , 300 , 150, 223);
+        }, 10000);
+        setTimeout(() => { 
+            game.context.drawImage(this.findImage("story_bg"), 0, 0 , 760 , 480 , 0 , 0 , 760 , 480);
+            game.context.drawImage(this.findImage("story4_robot"), 0, 0 , 567 , 556 , -100 , 0 , 567, 556);
+        }, 15000);
+        setTimeout(() => { 
+            game.context.drawImage(this.findImage("story_bg"), 0, 0 , 760 , 480 , 0 , 0 , 760 , 480);
+            game.context.drawImage(this.findImage("story5_centralpc"), 0, 0 , 294 , 287 , 250 , 100 , 294 , 287);
+        }, 20000);*/
+
+        //setTimeout(() => { this.start()}, 28000);
     }
 
     start(){
-        // načítanie obrázkov,audia
+       /* // načítanie obrázkov,audia
         game.loadImages();
         game.loadSprites();
         game.loadAudio();
         // skrytie menu a zobrazenie canvasu
         document.getElementById('menu').style.display="none";
-        document.getElementById('canvas').style.display="block";
+        document.getElementById('canvas').style.display="block";*/
         // pridanie listenerov
         window.addEventListener("keydown", game.controller.keyListener);
         window.addEventListener("keyup", game.controller.keyListener);
@@ -93,7 +203,17 @@ class Game{
             ["green_light","./images/green_light.png"],
             ["red_light","./images/red_light.png"],
             ["obstacle_ground","./images/obstacle-ground.png"],
-            ["obstacle_ceiling","./images/obstacle-ceiling.png"]
+            ["obstacle_ceiling","./images/obstacle-ceiling.png"],
+            ["centralpc","./images/centralpc.png"],
+            ["story1_human","./images/story/story1-human.png"],
+            ["story1_robot","./images/story/story1-robot.png"],
+            ["story2_assassin","./images/story/story2-assassin.png"],
+            ["story2_ghost","./images/story/story2-ghost.png"],
+            ["story3_assassin","./images/story/story3-assassin.png"],
+            ["story3_ghost","./images/story/story3-ghost.png"],
+            ["story4_robot","./images/story/story4-robot.png"],
+            ["story5_centralpc","./images/story/story5-centralpc.png"],
+            ["story_bg","./images/story/story-bg.png"],
         ]
 
         for(let i = 0; i < images.length ; i++) {
@@ -153,7 +273,9 @@ class Game{
         this.success = new Audio('./audio/success.wav');
         this.door_open = new Audio('./audio/door_open.wav');   
         this.point = new Audio('./audio/point.wav');  
+        this.intro = new Audio('./audio/intro-story.wav');  
     }
+
 
     createEnemy(name,x,y,height,width){
         if(name == "Ghost"){

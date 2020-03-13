@@ -27,13 +27,21 @@
             <img id="button2" src="images/button2.png" width="170" height="80" alt="submit">
             <div id="wrapper2">
                 <div class="slideDown">
-                    <h1>OVLÁDANIE</h1>
-                    <p>
-                        ovladanieovladanieovladanieovladanieovladanie
-                        ovladanieovladanieovladanieovladanieovladanie
-                        ovladanieovladanieovladanieovladanieovladanie
-                        ovladanieovladanieovladanieovladanieovladanie
-                    </p>
+                    <h2>OVLÁDANIE</h2>
+                        <table id="table1" align="center" >
+                            <tr>
+                              <td><div class="letter"> W </div></td><td>Skok</td>
+                            </tr>
+                            <tr>
+                              <td><div class="letter"> A </div></td><td>Pohyb doľava</td>
+                            </tr>
+                            <tr>
+                                <td><div class="letter"> D </div></td><td>Pohyb doprava</td>
+                            </tr>
+                            <tr>
+                                <td><div class="letter"> LEFT CLICK </div></td><td>Streľba</td>
+                            </tr>
+                        </table>
                 </div>
             </div>
         </div>
@@ -60,30 +68,34 @@
 
     <script type="text/javascript">
         document.getElementById("button1").addEventListener("click", function () {
-            if(document.getElementById("wrapper").style.height == "250px"){
+            if(document.getElementById("wrapper").style.height == "270px"){
                 document.getElementById("wrapper").style.height = "0px";
             }else{
-                document.getElementById("wrapper").style.height = "250px";
+                document.getElementById("wrapper").style.height = "270px";
                 document.getElementById("wrapper2").style.height = "0px";
             }
         });
         document.getElementById("button2").addEventListener("click", function () {
-            if(document.getElementById("wrapper2").style.height == "250px"){
+            if(document.getElementById("wrapper2").style.height == "270px"){
                 document.getElementById("wrapper2").style.height = "0px";
             }else{
-                document.getElementById("wrapper2").style.height = "250px";
+                document.getElementById("wrapper2").style.height = "270px";
                 document.getElementById("wrapper").style.height = "0px";
             }
         });
 
         var game = new Game();
-
+        // načítanie obrázkov,audia
+        game.loadImages();
+        game.loadSprites();
+        game.loadAudio(); 
+        
         function action(action,element) {
 				
             switch(action) {
                     
                 case "startGame":
-                    game.start();
+                    game.introStory();
                     break;
     
             }
