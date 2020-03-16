@@ -41,9 +41,10 @@ class Controller{
     }
 
     clickListener = function(event) {
-        game.controller.xtarget = event.x;
-        game.controller.ytarget = event.y;
-        game.player.shoot();
+        const rect = canvas.getBoundingClientRect();
+        game.controller.xtarget = event.clientX - rect.left;
+        game.controller.ytarget = event.clientY - rect.top;
+        if(!game.story) game.player.shoot();
     }
 
     mousemoveListener = function(event) {

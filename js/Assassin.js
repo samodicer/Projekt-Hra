@@ -67,7 +67,7 @@ class Assassin extends Enemy{
     behavior(){
         this.checkShooting();
         this.BulletCollision();
-        this.deleteBullets();
+        this.updateBullets();
         this.bulletDamage();
         var enemy_tile_x = Math.floor((this.x + this.width * 0.5) / game.world.tile_size);
         var enemy_tile_y = Math.floor((this.y + this.height* 0.7) / game.world.tile_size);
@@ -109,7 +109,7 @@ class Assassin extends Enemy{
                 }
             }
 
-            if(random_jump > 0.8 && game.player.shooting == true &&  this.shooting_animation == false) {
+            if(random_jump > 0.98 && game.player.shooting == true &&  this.shooting_animation == false) {
                 this.jump();   
             }          
 
@@ -237,11 +237,9 @@ class Assassin extends Enemy{
         }
     }
 
-    deleteBullets(){
+    updateBullets(){
         for (var i=0 ; i < this.bullets.length ; i++){
-            if(!this.bullets[i].updateBullet()){
-                this.bullets.splice(i,1);
-            }
+            this.bullets[i].updateBullet();
         }
     }
 

@@ -13,6 +13,10 @@ class Bullet{
         if (object instanceof Assassin){
             game.context.drawImage(game.findImage("bullet_assassin"), 0, 0 , 100, 81, game.camera.offset[0] +this.x, game.camera.offset[1] +this.y, 20, 15);
         }
+        if (object instanceof Attacker){
+            game.context.fillStyle = "red";
+            game.context.fillRect(game.camera.offset[0]+this.x,game.camera.offset[1]+this.y,5, 3);;
+        }
     }
 
     updateBullet(){
@@ -20,11 +24,6 @@ class Bullet{
         if (this.side == "right") {
             this.x =  this.x + this.speed;
         } else  this.x =  this.x - this.speed;
-        
-
-        if(game.camera.offset[0] +this.x < 0 || game.camera.offset[0] +this.x > game.canvas.width || game.camera.offset[1] +this.y < 0 || game.camera.offset[1] +this.y > game.canvas.height){
-            return false
-        } else return true;
     
     }
 

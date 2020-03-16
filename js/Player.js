@@ -27,11 +27,9 @@ class Player{
         this.stunned_animation = new Animation();
     }
 
-    deleteBullets(){
+    updateBullets(){
         for (var i=0 ; i < this.bullets.length ; i++){
-            if(!this.bullets[i].updateBullet()){
-                this.bullets.splice(i,1);
-            }
+            this.bullets[i].updateBullet();
         }
     }
 

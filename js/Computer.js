@@ -1,0 +1,40 @@
+class Computer {
+    constructor(x,y,height,width){
+        this.x=x;
+        this.y=y;
+        this.height = height;
+        this.width = width;
+        this.destroyed= false;
+        this.lives = 20;
+        this.explosion = false;
+        this.animation = new Animation();
+    }
+
+    hit() {
+        for (var i=0 ; i < game.player.bullets.length ; i++){
+            if(game.player.bullets[i].x >= this.x && game.player.bullets[i].x <= this.x + this.width && game.player.bullets[i].y >= this.y && game.player.bullets[i].y <= this.y + this.height) {    
+                game.player.bullets.splice(i,1); 
+                game.hit.volume = 0.1;
+                game.hit.load();
+                game.hit.play();
+
+                if (this.lives != 0) this.lives-= 1;
+                else {
+                    this.explosion = true;
+                    this.animation.changeFrame(game.explosion_sprite_sheet.frame_sets[0], 7, 0);
+                    setTimeout(() => { this.destroyed = true }, 800);
+                } 
+            }
+        }
+
+    }
+
+    drawComputer(){  
+        if (this.explosion == true){
+            game.context.drawImage(game.explosion_sprite_sheet.image, this.animation.frame * 55, this.animation.row * 52 , 55, 52, game.camera.offset[0] + this.x+50, game.camera.offset[1] + this.y+50, 75, 72);
+        } else game.context.drawImage(game.findImage("centralpc"), 0, 0, 170, 166, this.x+game.camera.offset[0],  this.y+game.camera.offset[1], 170, 166);
+
+    }
+
+    
+}

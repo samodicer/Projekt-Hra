@@ -129,6 +129,9 @@ class Enemy{
                 if (enemy instanceof Assassin){
                     this.animation.changeFrame(game.assassin_sprite_sheet.frame_sets[10], 4, 10);    
                 }
+                if (enemy instanceof Attacker){
+                    enemy.dead_animation = true;     
+                }
             } else if (this.old_x > this.x ) {
                 if (enemy instanceof Ghost){
                     this.animation.changeFrame(game.enemy_sprite_sheet.frame_sets[7], 4, 7);    
@@ -136,9 +139,13 @@ class Enemy{
                 if (enemy instanceof Assassin){
                     this.animation.changeFrame(game.assassin_sprite_sheet.frame_sets[11], 4, 11);    
                 }
+                if (enemy instanceof Attacker){
+                    enemy.dead_animation = true;     
+                }
             } else  {
                 this.animation.changeFrame(game.enemy_sprite_sheet.frame_sets[7], 4, 7);
-                this.animation.changeFrame(game.assassin_sprite_sheet.frame_sets[11], 4, 11);   
+                this.animation.changeFrame(game.assassin_sprite_sheet.frame_sets[11], 4, 11);  
+                enemy.dead_animation = true;  
             }
         }
     }
