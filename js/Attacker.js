@@ -13,7 +13,7 @@ class Attacker extends Enemy{
         this.shooting = false;
         this.delay=0;
     }
-
+    
     moveLeft(){
         if(this.alive == true && this.frozen == false) {
             this.x_velocity -= 0.2;
@@ -81,7 +81,6 @@ class Attacker extends Enemy{
     }
 
     shoot(){
-        console.log(this.bullets);
         this.delay++;
         if (this.alive == true && this.frozen == false && game.player.frozen == false && game.player.alive == true && this.delay > 50){
             var b = new Bullet (this.x+this.width/2+20,this.y+this.height-25,"right");

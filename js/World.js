@@ -55,6 +55,8 @@ class World{
         game.context.drawImage(game.findImage("plant"), 0, 0, 50, 80, 250+game.camera.offset[0],  278+game.camera.offset[1], 50, 80);
         game.context.drawImage(game.findImage("plant"), 0, 0, 50, 80, 1000+game.camera.offset[0],  178+game.camera.offset[1], 50, 80);
         game.context.drawImage(game.findImage("plant"), 0, 0, 50, 80, 2500+game.camera.offset[0],  628+game.camera.offset[1], 50, 80);
+        game.context.drawImage(game.findImage("plant"), 0, 0, 50, 80, 6000+game.camera.offset[0],  128+game.camera.offset[1], 50, 80);
+        game.context.drawImage(game.findImage("plant"), 0, 0, 50, 80, 5275+game.camera.offset[0],  578+game.camera.offset[1], 50, 80);
         game.context.drawImage(game.findImage("trashcan"), 0, 0, 40, 50, 52+game.camera.offset[0],  300+game.camera.offset[1], 40, 50);
         game.context.drawImage(game.findImage("trashcan"), 0, 0, 40, 50, 1450+game.camera.offset[0],  650+game.camera.offset[1], 40, 50);
         game.context.drawImage(game.findImage("trashcan"), 0, 0, 40, 50, 2050+game.camera.offset[0],  300+game.camera.offset[1], 40, 50);
@@ -65,13 +67,17 @@ class World{
         game.context.drawImage(game.findImage("window"), 0, 0, 100, 50, 1280+game.camera.offset[0],  80+game.camera.offset[1], 100, 50);
         game.context.drawImage(game.findImage("window"), 0, 0, 100, 50, 2070+game.camera.offset[0],  180+game.camera.offset[1], 100, 50);
         game.context.drawImage(game.findImage("window"), 0, 0, 100, 50, 2625+game.camera.offset[0],  320+game.camera.offset[1], 100, 50);
+        game.context.drawImage(game.findImage("window"), 0, 0, 100, 50, 5525+game.camera.offset[0],  290+game.camera.offset[1], 100, 50);
+        game.context.drawImage(game.findImage("window"), 0, 0, 100, 50, 4480+game.camera.offset[0],  370+game.camera.offset[1], 100, 50);
         game.context.drawImage(game.findImage("cardrepertory"), 0, 0, 50, 90, 330+game.camera.offset[0],  260+game.camera.offset[1], 50, 90);
         game.context.drawImage(game.findImage("cardrepertory"), 0, 0, 50, 90, 390+game.camera.offset[0],  260+game.camera.offset[1], 50, 90);
         game.context.drawImage(game.findImage("cardrepertory"), 0, 0, 50, 90, 1500+game.camera.offset[0],  612+game.camera.offset[1], 50, 90);
         game.context.drawImage(game.findImage("cardrepertory"), 0, 0, 50, 90, 1555+game.camera.offset[0],  612+game.camera.offset[1], 50, 90);
         game.context.drawImage(game.findImage("cardrepertory"), 0, 0, 50, 90, 1610+game.camera.offset[0],  612+game.camera.offset[1], 50, 90);
         game.context.drawImage(game.findImage("cardrepertory"), 0, 0, 50, 90, 1665+game.camera.offset[0],  612+game.camera.offset[1], 50, 90);
-        
+        game.context.drawImage(game.findImage("cardrepertory"), 0, 0, 50, 90, 5200+game.camera.offset[0],  310+game.camera.offset[1], 50, 90);
+        game.context.drawImage(game.findImage("cardrepertory"), 0, 0, 50, 90, 5250+game.camera.offset[0],  310+game.camera.offset[1], 50, 90);
+        game.context.drawImage(game.findImage("cardrepertory"), 0, 0, 50, 90, 5300+game.camera.offset[0],  310+game.camera.offset[1], 50, 90);
     }
 
     collision(value_at_index,object,row,column){

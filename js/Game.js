@@ -5,18 +5,28 @@ class Game{
         this.context = canvas.getContext("2d");
         this.world = new World();
         this.camera = new Camera();
-        this.player = new Player(6000,50,0,0,100,100,false,false,true,100,500,new Animation());
+        this.player = new Player(5750,500,0,0,100,100,false,false,true,100,500,new Animation());
         this.gold_key = new Key(1800,210,12,32,"gold");
         this.green_key = new Key(4100,210,12,32,"green");
         this.red_key = new Key(4330,160,12,32,"red");
         this.door = new Door(1850,600,100,50);
         this.door2 = new Door(4150,600,100,50);
         this.door3 = new Door(4950,600,100,50);
+        this.infobox1= new Infobox (1);
+        this.infobox2= new Infobox (2);
+        this.infobox3= new Infobox (3);
+        this.infobox4= new Infobox (4);
+        this.infobox5= new Infobox (5);
+        this.infobox6= new Infobox (6);
         this.life1 = new Life(960,210,15,15);
         this.life2 = new Life(3000,400,15,15);
         this.life3 = new Life(4920,300,15,15);
-        this.button1= new Button (640,430,40,100,"Preskočiť");
+        this.button1= new Button (640,430,40,100,"Preskočiť",1);
+        this.button2= new Button (500,140,30,30,"x",2);
+        this.button3= new Button (550,90,30,30,"x",2);
         this.computer= new Computer (6050,34,166,170);
+        this.window1 = new Window(1,200,300);
+        this.window2 = new Window(2,300,400);
         this.controller = new Controller();
         this.enemies = [];
         this.obstacles = [];
@@ -24,6 +34,7 @@ class Game{
         this.points = [];
         this.count =0;
         this.story=true;
+        this.ended = false;
     }
 
     introStory(){
@@ -157,9 +168,10 @@ class Game{
         game.createEnemy("Ghost",600,500,90,70);
         game.createEnemy("Ghost",1100,200,90,70);
         game.createEnemy("Ghost",4700,150,90,70);
-        game.createEnemy("Ghost",5400,550,90,70);
+        game.createEnemy("Ghost",5100,550,90,70);
         game.createEnemy("Assassin",3200,100,170,150);
-        game.createEnemy("Attacker",4800,300,100,80);
+        game.createEnemy("Ghost",4800,300,90,70);
+        game.createEnemy("Attacker",5700,500,100,80);
         game.createEnemy("Attacker",5700,400,100,80);
         game.createEnemy("Attacker",5100,200,100,80);
         //vytvorenie prekážok
@@ -172,15 +184,18 @@ class Game{
         game.createObstacles("default",4550,650,50,97,1,"ground","",0);
         game.createObstacles("default",4650,650,50,97,1,"ground","",0);
         game.createObstacles("default",4750,650,50,97,1,"ground","",0);
+        game.createObstacles("default",5100,0,50,97,1,"ceiling","",0);
         game.createObstacles("disappearing",4350,650,50,97,1,"ground","",2500);
         game.createObstacles("moving",3450,200,50,97,1,"ground","l",0);
         game.createObstacles("moving",3550,50,50,97,1,"ceiling","r",0);
         game.createObstacles("moving",4500,300,50,97,1,"ceiling","r",0);
         game.createObstacles("moving",4650,200,50,97,1,"ground","l",0);
+        game.createObstacles("moving",5550,150,50,97,1,"ground","l",0);
         game.createObstacles("disappearing",2450,200,50,97,1,"ground","",1100);
         game.createObstacles("disappearing",2550,50,50,97,1,"ceiling","",1100);
         game.createObstacles("disappearing",2776,100,50,97,1,"ground","",2000);
         game.createObstacles("disappearing",3875,150,50,97,1,"ceiling","",2000);
+        game.createObstacles("disappearing",5500,0,50,97,1,"ceiling","",1200);
         // vytvorenie bodov
         game.createPoints();
         // spustenie hernej slučky
@@ -215,6 +230,7 @@ class Game{
             ["obstacle_ground","./images/obstacle-ground.png"],
             ["obstacle_ceiling","./images/obstacle-ceiling.png"],
             ["centralpc","./images/centralpc.png"],
+            ["centralpc_destroyed","./images/centralpc-destroyed.png"],
             ["story1_human","./images/story/story1-human.png"],
             ["story1_robot","./images/story/story1-robot.png"],
             ["story2_assassin","./images/story/story2-assassin.png"],
@@ -224,7 +240,15 @@ class Game{
             ["story4_robot","./images/story/story4-robot.png"],
             ["story5_centralpc","./images/story/story5-centralpc.png"],
             ["story_bg","./images/story/story-bg.png"],
-            ["explosion_sprite","./images/explosion-sprite.png"]
+            ["explosion_sprite","./images/explosion-sprite.png"],
+            ["star","./images/star.png"],
+            ["star_empty","./images/star-empty.png"],
+            ["infobox1","./images/infobox1.png"],
+            ["infobox2","./images/infobox2.png"],
+            ["infobox3","./images/infobox3.png"],
+            ["infobox4","./images/infobox4.png"],
+            ["infobox5","./images/infobox5.png"],
+            ["infobox6","./images/infobox6.png"]
         ]
 
         for(let i = 0; i < images.length ; i++) {
@@ -394,8 +418,8 @@ class Game{
     }
 
     loop(){
-        //console.log("x "+game.player.x);
-        //console.log("y "+game.player.y);
+        console.log("x "+game.player.x);
+        console.log("y "+game.player.y);
 
         game.playMusic();
 
@@ -414,11 +438,11 @@ class Game{
         if(game.red_key.taken == false){
             game.red_key.drawKey();    
         }
-        if(game.computer.destroyed == false){
-            game.computer.drawComputer();
-            game.computer.hit();
-            game.computer.animation.updateExplosion();   
-        }
+
+        game.computer.drawComputer();
+        game.computer.hit();
+        game.computer.animation.updateExplosion();   
+
 
         game.door.openDoor(game.gold_key,game.player);
         game.door.drawDoor();
@@ -490,10 +514,30 @@ class Game{
             game.player.findKey(game.green_key);
             game.player.findKey(game.red_key);
         } else {
-            game.context.fillText("Game Over!",game.canvas.width/2,game.canvas.height/2);
+            game.window1.drawWindow();
+            game.button2.click();
         }
 
+        game.infobox1.update();
+        game.infobox1.drawInfobox();
+        game.infobox2.update();
+        game.infobox2.drawInfobox();
+        game.infobox3.update();
+        game.infobox3.drawInfobox();
+        game.infobox4.update();
+        game.infobox4.drawInfobox();
+        game.infobox5.update();
+        game.infobox5.drawInfobox();
+        game.infobox6.update();
+        game.infobox6.drawInfobox();
+
         game.drawGUI();
+
+        if(game.ended == true) {
+            game.player.frozen = true;
+            game.window2.drawWindow();
+            game.button3.click();
+        }
 
         window.requestAnimationFrame(game.loop);
 

@@ -15,7 +15,7 @@ class Bullet{
         }
         if (object instanceof Attacker){
             game.context.fillStyle = "red";
-            game.context.fillRect(game.camera.offset[0]+this.x,game.camera.offset[1]+this.y,5, 3);;
+            game.context.fillRect(game.camera.offset[0]+this.x,game.camera.offset[1]+this.y,5, 4);;
         }
     }
 

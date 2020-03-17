@@ -18,11 +18,13 @@ class Computer {
                 game.hit.load();
                 game.hit.play();
 
-                if (this.lives != 0) this.lives-= 1;
-                else {
+                if (this.destroyed == false && this.lives > 0) this.lives-= 1;
+                else if (this.destroyed == false){
                     this.explosion = true;
                     this.animation.changeFrame(game.explosion_sprite_sheet.frame_sets[0], 7, 0);
-                    setTimeout(() => { this.destroyed = true }, 800);
+                    this.destroyed = true ;
+                    setTimeout(() => { this.explosion = false }, 600);
+                    setTimeout(() => { game.ended = true }, 2000);
                 } 
             }
         }
@@ -30,10 +32,13 @@ class Computer {
     }
 
     drawComputer(){  
+        if(this.destroyed == true){
+            game.context.drawImage(game.findImage("centralpc_destroyed"), 0, 0, 170, 166, this.x+game.camera.offset[0],  this.y+game.camera.offset[1], 170, 166);
+        } else game.context.drawImage(game.findImage("centralpc"), 0, 0, 170, 166, this.x+game.camera.offset[0],  this.y+game.camera.offset[1], 170, 166);
+        
         if (this.explosion == true){
             game.context.drawImage(game.explosion_sprite_sheet.image, this.animation.frame * 55, this.animation.row * 52 , 55, 52, game.camera.offset[0] + this.x+50, game.camera.offset[1] + this.y+50, 75, 72);
-        } else game.context.drawImage(game.findImage("centralpc"), 0, 0, 170, 166, this.x+game.camera.offset[0],  this.y+game.camera.offset[1], 170, 166);
-
+        } 
     }
 
     
