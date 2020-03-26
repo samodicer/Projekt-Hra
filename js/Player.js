@@ -1,8 +1,11 @@
 class Player{
 
-    constructor(x,y,x_velocity,y_velocity,height,width,jumping,shooting,idling,old_x,old_y,animation){
+    constructor(x,y,x_velocity,y_velocity,height,width,jumping,shooting,idling,old_x,old_y){
+
         this.x = x;
         this.y= y;
+        this.old_x = old_x;
+        this.old_y = old_y;
         this.x_velocity = x_velocity;
         this.y_velocity = y_velocity;
         this.height= height;
@@ -10,35 +13,41 @@ class Player{
         this.jumping = jumping;
         this.shooting = shooting;
         this.idling= idling;
-        this.old_x = old_x;
-        this.old_y = old_y;
-        this.animation = animation;
         this.bullets= [];
-        this.stunned= false;
         this.lives = 5;
+        this.points = 0;
+        this.stunned= false;
         this.alive = true;
         this.frozen = false;
         this.hitted = false;
         this.has_gold_key = false;
         this.has_green_key = false;
         this.has_red_key = false;
-        this.points = 0;
+        this.animation = new Animation();
         this.hit_animation = new Animation();
         this.stunned_animation = new Animation();
+        
     }
 
     updateBullets(){
+
         for (var i=0 ; i < this.bullets.length ; i++){
+
             this.bullets[i].updateBullet();
+            
         }
+
     }
 
     checkShooting(){
+
         if (this.bullets.length == 0) this.shooting = false;
         else this.shooting = true;
+
     }
 
-    PlayerCollision(){
+    playerCollision(){
+
         var tile_x = Math.floor((this.x + this.width * 0.5) / game.world.tile_size);
         var tile_y = Math.floor((this.y + this.height) / game.world.tile_size);
         // get the value at the tile position in the map
@@ -64,23 +73,29 @@ class Player{
         //console.log ( "tile_x: " + tile_x + "<br>tile_y: " + tile_y + "<br>map index: " + tile_y + " * " + game.world.columns + " + " + tile_x + " = " + String(tile_y * game.world.columns + tile_x) + "<br>tile value: " + game.world.map[tile_y * game.world.columns + tile_x] );
     }
 
-    BulletCollision(){
+    bulletCollision(){
+
         if(this.shooting == true) {
 
             var to_delete ;
 
             for (var i=0 ; i < this.bullets.length ; i++){
+
                 var tile_x = Math.floor((this.bullets[i].x ) / game.world.tile_size);
                 var tile_y = Math.floor((this.bullets[i].y) / game.world.tile_size);
                 // get the value at the tile position in the map
                 var value_at_index = game.world.map[tile_y * game.world.columns + tile_x];
                 
                 if (value_at_index != 6 ) {
+
                     to_delete = i;
-                }                
+
+                } 
+
             }
 
             if (typeof to_delete !== 'undefined'){
+
                 this.bullets.splice(to_delete,1); 
 
             }
@@ -92,6 +107,7 @@ class Player{
     moveLeft(){
 
         if (game.controller.left && this.frozen == false && this.alive == true) {
+
             this.x_velocity -= 0.4;
             this.idling=false;
 
@@ -109,6 +125,7 @@ class Player{
     moveRight(){
         
         if (game.controller.right && this.frozen == false && this.alive == true) {    
+
             this.x_velocity += 0.4;
             this.idling=false;
 
@@ -166,16 +183,25 @@ class Player{
     }
 
     dead(){
+
         if(this.lives == 0){
+
             this.frozen = true;
             setTimeout(() => { this.alive = false }, 4000);
+
             if (this.old_x < this.x && this.idling == false)  {
+
                 this.animation.changePlayerFrame(game.sprite_sheet.frame_sets[6], 4, 6);
+
             } else if (this.old_x > this.x && this.idling == false) {
+
                 this.animation.changePlayerFrame(game.sprite_sheet.frame_sets[7], 4, 7);
+
             } else if (this.idling == true){
+
                 if (this.animation.row == 0 || this.animation.row == 6 ) this.animation.changePlayerFrame(game.sprite_sheet.frame_sets[6], 4, 6);          
                 else this.animation.changePlayerFrame(game.sprite_sheet.frame_sets[7], 4, 7);  
+
             }  
         }
     }
@@ -184,6 +210,7 @@ class Player{
     shoot(){
 
         let side;
+
         if (this.animation.row == 0 || this.animation.row == 2 || this.animation.row == 4 || this.animation.row == 6 || this.animation.row == 8 || this.animation.row == 10) { 
 
              side = "right";
@@ -194,6 +221,7 @@ class Player{
 
             if(side == "right") var b = new Bullet (this.x+this.width/2+30,this.y+this.height/2+5,side);
             else var b = new Bullet (this.x+this.width/2-30,this.y+this.height/2+5,side);
+
             this.bullets.push(b);
             game.shot.volume = 0.05;
             game.shot.load();
@@ -215,57 +243,79 @@ class Player{
 
                 this.animation.changePlayerFrame(game.sprite_sheet.frame_sets[8], 7, 8);
 
-            } else  this.animation.changePlayerFrame(game.sprite_sheet.frame_sets[9], 7, 9);    
+            } else  this.animation.changePlayerFrame(game.sprite_sheet.frame_sets[9], 7, 9);  
+
         }
     }
 
 
     overlapsObject(object){
+
         var player_tile_x = Math.floor((this.x + this.width * 0.5) / game.world.tile_size);
         var player_tile_y = Math.floor((this.y + this.height) / game.world.tile_size);
         var object_tile_x = Math.floor((object.x + object.width * 0.5) / game.world.tile_size);
         var object_tile_y = Math.floor((object.y + object.height) / game.world.tile_size);
         var player_check_index = (player_tile_y * game.world.columns + player_tile_x);
         var object_check_index = (object_tile_y * game.world.columns + object_tile_x);
+
         if (player_check_index == object_check_index){
+
             return true;
+
         } else return false;
 
     }
 
     findKey(object){
+
         if (this.overlapsObject(object) && object.taken == false){
+
             if(object.color == "gold"){
+
                 this.has_gold_key = true;
+
             }
             if(object.color == "green"){
+
                 this.has_green_key = true;
+
             }
             if(object.color == "red"){
+
                 this.has_red_key = true;
+
             }
+
             object.taken = true;
             game.success.volume = 0.07;
             game.success.play(); 
+
         }
     }
 
     drawPlayer(){
+
         if(this.stunned == true && this.frozen == false){
+
             this.stunned_animation.changeFrame(game.stunned_sprite_sheet.frame_sets[0], 3, 0);
             game.context.drawImage(game.stunned_sprite_sheet.image, this.stunned_animation.frame * 50, this.stunned_animation.row * 50 , 50, 50, game.camera.offset[0] + this.x+40, game.camera.offset[1] + this.y-15, 20, 20);
+        
         }
 
         game.context.drawImage(game.sprite_sheet.image, this.animation.frame * 100, this.animation.row * 100 , 100, 100, game.camera.offset[0] +this.x, game.camera.offset[1] + this.y, 100, 100+10);
         
         
         for (var i=0 ; i < this.bullets.length ; i++){
+
             this.bullets[i].drawBullet(this);
+
         }
 
         if(this.hitted == true){
+
             this.hit_animation.changeFrame(game.hit_sprite_sheet.frame_sets[0], 3, 0);
             game.context.drawImage(game.hit_sprite_sheet.image, this.hit_animation.frame * 50, this.hit_animation.row * 50 , 50, 50, game.camera.offset[0] + this.x+30, game.camera.offset[1] + this.y+30, 50, 50);    
+        
         }
 
     }

@@ -85,7 +85,7 @@ canvas{
     background: #f8e728;
     border-radius: 15px;
     width:50%;
-    padding:30px;
+    padding:20px;
     display: block;
     margin-left: auto;
     margin-right: auto;
@@ -129,4 +129,9 @@ input[type=text]:focus {
     padding-right: 0;
     font-weight: bold;
     text-align: left;
+}
+
+#answer {
+    color: #ce0f1f; 
+    font-weight: bold;
 }

@@ -1,15 +1,19 @@
 class Controller{
+
     constructor(){
+
         this.left= false;
         this.right = false;
         this.up = false;
         this.xtarget=0;
         this.ytarget=0;
         this.mousex = 500;
+
     }
 
 
     keyListener = function(event) {
+
         var answer = (event.type == "keydown")?true:false;
 
         switch(event.keyCode) {
@@ -41,15 +45,19 @@ class Controller{
     }
 
     clickListener = function(event) {
+
         const rect = canvas.getBoundingClientRect();
         game.controller.xtarget = event.clientX - rect.left;
         game.controller.ytarget = event.clientY - rect.top;
         if(!game.story) game.player.shoot();
+
     }
 
     mousemoveListener = function(event) {
+
         var rect = game.canvas.getBoundingClientRect();
         game.controller.mousex = event.clientX - rect.left;
+        
     }
 
 

@@ -1,5 +1,7 @@
 class World{
+
     constructor(){
+
         this.columns = 126;
         this.rows = 16;
         this.tile_size = 50;
@@ -20,23 +22,18 @@ class World{
                     1,6,6,6,4,5,5,5,1,0,6,6,6,6,6,6,6,6,6,6,6,4,5,5,5,1,0,6,6,6,6,6,6,6,6,6,6,4,6,6,6,6,6,6,6,6,4,5,5,1,6,6,6,6,6,6,6,4,5,5,5,1,5,1,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,4,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,4,6,6,6,6,6,3,0,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,4,4,
                     8,2,2,2,7,5,5,5,8,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,7,
                     5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5]
+    
     }
 
     drawWorld(){
+
         game.context.fillStyle = "#C7C7C7";
         game.context.fillRect(0, 0, game.camera.screen[0], game.camera.screen[1]);
-        
-        /*for (let index = game.world.map.length - 1; index > -1; -- index) {
-            game.context.fillStyle = (game.world.map[index] > 0)?("#0099" + game.world.map[index] + "f"):"#303840";
-            game.context.fillRect((index % game.world.columns) * game.world.tile_size, Math.floor(index / game.world.columns) * game.world.tile_size, game.world.tile_size, game.world.tile_size);
-        }*/
 
+        for(var y = game.camera.startTile[1]; y < game.camera.endTile[1]; ++y){
 
+            for(var x = game.camera.startTile[0]; x < game.camera.endTile[0]; ++x){
 
-        for(var y = game.camera.startTile[1]; y < game.camera.endTile[1]; ++y)
-        {
-            for(var x = game.camera.startTile[0]; x < game.camera.endTile[0]; ++x)
-            {
               var value = game.world.map[((y*game.world.columns)+x)];
               /* This is the x and y location at which to cut the tile image out of the
               tile_sheet.image. */
@@ -48,8 +45,10 @@ class World{
               var destination_y = Math.floor(((y*game.world.columns)+x) / game.world.columns) * game.tile_sheet.tile_height;
     
               game.context.drawImage(game.tile_sheet.image, source_x, source_y, game.tile_sheet.tile_width, game.tile_sheet.tile_height,game.camera.offset[0]+destination_x, game.camera.offset[1]+destination_y, game.tile_sheet.tile_width, game.tile_sheet.tile_height);   
+            
             }
         }
+
         game.context.drawImage(game.findImage("table"), 0, 0, 150, 100, 100+game.camera.offset[0],  250+game.camera.offset[1], 150, 100);
         game.context.drawImage(game.findImage("table"), 0, 0, 150, 100, 2600+game.camera.offset[0],  600+game.camera.offset[1], 150, 100);
         game.context.drawImage(game.findImage("plant"), 0, 0, 50, 80, 250+game.camera.offset[0],  278+game.camera.offset[1], 50, 80);
@@ -78,36 +77,45 @@ class World{
         game.context.drawImage(game.findImage("cardrepertory"), 0, 0, 50, 90, 5200+game.camera.offset[0],  310+game.camera.offset[1], 50, 90);
         game.context.drawImage(game.findImage("cardrepertory"), 0, 0, 50, 90, 5250+game.camera.offset[0],  310+game.camera.offset[1], 50, 90);
         game.context.drawImage(game.findImage("cardrepertory"), 0, 0, 50, 90, 5300+game.camera.offset[0],  310+game.camera.offset[1], 50, 90);
+
     }
 
     collision(value_at_index,object,row,column){
 
-        switch(value_at_index){   
+        switch(value_at_index){  
+
             case 0 :   
                     if (this.topCollision(object, row)) { return; }// if no top collision
                     this.rightCollision(object, column);           // try right side collision
-                    break;    
+                    break;  
+
             case 1 :    
                     this.rightCollision(object, column);
                     break;      
+
             case 2 :  
                     this.topCollision(object, row);              
                     break;     
+
             case 3 :
                     if (this.topCollision(object, row)) { return; }
                     this.leftCollision(object, column);       
                     break;
+
             case 4 :
                     this.leftCollision(object, column);             
-                    break;   
+                    break;  
+
             case 7 :
                     if (this.topCollision(object, row)) { return; }
                     this.leftCollision(object, column);       
-                    break;              
+                    break;  
+
             case 8 :
                     if (this.topCollision(object, row)) { return; }
                     this.rightCollision(object, column);           
                     break;  
+                    
         }
 
     }

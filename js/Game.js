@@ -1,43 +1,48 @@
 
 class Game{
+    
     constructor(){
+
         this.canvas = document.querySelector("canvas");
         this.context = canvas.getContext("2d");
+        this.controller = new Controller();
         this.world = new World();
         this.camera = new Camera();
-        this.player = new Player(5750,500,0,0,100,100,false,false,true,100,500,new Animation());
+        this.player = new Player(100,500,0,0,100,100,false,false,true,100,500);
         this.gold_key = new Key(1800,210,12,32,"gold");
         this.green_key = new Key(4100,210,12,32,"green");
         this.red_key = new Key(4330,160,12,32,"red");
-        this.door = new Door(1850,600,100,50);
+        this.door1 = new Door(1850,600,100,50);
         this.door2 = new Door(4150,600,100,50);
         this.door3 = new Door(4950,600,100,50);
-        this.infobox1= new Infobox (1);
-        this.infobox2= new Infobox (2);
-        this.infobox3= new Infobox (3);
-        this.infobox4= new Infobox (4);
-        this.infobox5= new Infobox (5);
-        this.infobox6= new Infobox (6);
+        this.bubble1 = new Bubble(1);
+        this.bubble2 = new Bubble(2);
+        this.bubble3 = new Bubble(3);
+        this.bubble4 = new Bubble(4);
+        this.bubble5 = new Bubble(5);
+        this.bubble6 = new Bubble(6);
         this.life1 = new Life(960,210,15,15);
         this.life2 = new Life(3000,400,15,15);
         this.life3 = new Life(4920,300,15,15);
-        this.button1= new Button (640,430,40,100,"Preskočiť",1);
-        this.button2= new Button (500,140,30,30,"x",2);
-        this.button3= new Button (550,90,30,30,"x",2);
+        this.button1 = new Button(640,430,40,100,"Preskočiť",1);
+        this.button2 = new Button(500,140,30,30,"x",2);
+        this.button3 = new Button(550,90,30,30,"x",2);
         this.computer= new Computer (6050,34,166,170);
         this.window1 = new Window(1,200,300);
         this.window2 = new Window(2,300,400);
-        this.controller = new Controller();
         this.enemies = [];
         this.obstacles = [];
         this.images = [];
         this.points = [];
-        this.count =0;
-        this.story=true;
+        this.count = 0;
+        this.story = true;
         this.ended = false;
+
     }
 
+    // odstartuje uvodny pribeh
     introStory(){
+
         // skrytie menu a zobrazenie canvasu
         document.getElementById('menu').style.display="none";
         document.getElementById('canvas').style.display="block";
@@ -46,15 +51,19 @@ class Game{
         window.addEventListener("keyup", game.controller.keyListener);
         game.canvas.addEventListener("click", game.controller.clickListener);
         game.canvas.addEventListener("mousemove", game.controller.mousemoveListener);
-
-        game.context.font = '20px Trebuchet MS';
+        // spustenie hudby
         game.intro.volume= 0.2;
         game.intro.play();
-
+        
         var story1 = setInterval(() => { 
+            // vycisti canvas
             game.context.clearRect(0, 0, canvas.width, canvas.height);
+
             this.count+=0.5;
+            // nastavenie pisma
+            game.context.font = '20px Trebuchet MS';
             game.context.fillStyle = "black";
+            // vykreslenie obrazkov , textu a tlacidla
             game.context.drawImage(this.findImage("story_bg"), 0, 0 , 760 , 480 , 0 , 0 , 760 , 480);
             game.context.drawImage(this.findImage("story1_human"), 0, 0 , 192 , 256 , 0+this.count , 0 , 192, 256);
             game.context.drawImage(this.findImage("story1_robot"), 0, 0 , 192 , 256 , 575-this.count , 0 , 192, 256);
@@ -63,6 +72,8 @@ class Game{
             game.context.fillText("Využívajú sa hlavne ako pomocníci v domácnostiach.", 160, 350); 
             game.button1.drawButton();
             game.button1.click();
+
+            // ak pribeh skonci zmaze interval
             if(game.story == false) clearInterval(story1);
 
             if(Math.round(this.count) == 200){
@@ -71,9 +82,11 @@ class Game{
                 this.count=0;
 
                 var story2 = setInterval(() => { 
+                    // vycisti canvas
                     game.context.clearRect(0, 0, canvas.width, canvas.height);
-                    this.count+=0.1;
                     game.context.fillStyle = "black";
+                    this.count+=0.1;
+                    // vykreslenie obrazkov , textu a tlacidla
                     game.context.drawImage(this.findImage("story_bg"), 0, 0 , 760 , 480 , 0 , 0 , 760 , 480);
                     game.context.drawImage(this.findImage("story2_assassin"), 0, 0 , 700 , 706 , -100+this.count , 0+this.count , 600+this.count, 606+this.count);
                     game.context.drawImage(this.findImage("story2_ghost"), 0, 0 , 150 , 220 , 500+this.count , 330-this.count , 150, 223);
@@ -83,6 +96,7 @@ class Game{
                     game.context.fillText("testovať robtov na armádne účely.", 400, 275);
                     game.button1.drawButton();
                     game.button1.click();
+
                     if(game.story == false) clearInterval(story2);
 
                     if(Math.round(this.count) == 20){
@@ -91,9 +105,11 @@ class Game{
                         this.count=0;
 
                         var story3 = setInterval(() => { 
+                            // vycisti canvas
                             game.context.clearRect(0, 0, canvas.width, canvas.height);
-                            this.count+=0.1;
                             game.context.fillStyle = "black";
+                            this.count+=0.1;
+                            // vykreslenie obrazkov , textu a tlacidla
                             game.context.drawImage(this.findImage("story_bg"), 0, 0 , 760 , 480 , 0 , 0 , 760 , 480);
                             game.context.drawImage(this.findImage("story3_assassin"), 0, 0 , 700 , 706 , -80+this.count , 20+this.count , 620+this.count, 626+this.count);
                             game.context.drawImage(this.findImage("story3_ghost"), 0, 0 , 150 , 220 , 520+this.count , 310-this.count , 150, 223);
@@ -104,6 +120,7 @@ class Game{
                             game.context.fillText("na nebezpečných protivníkov.", 450, 200);
                             game.button1.drawButton();
                             game.button1.click();
+
                             if(game.story == false) clearInterval(story3);
 
                             if(Math.round(this.count) == 20){
@@ -112,9 +129,11 @@ class Game{
                                 this.count=0;
 
                                 var story4 = setInterval(() => { 
+                                    // vycisti canvas
                                     game.context.clearRect(0, 0, canvas.width, canvas.height);
-                                    this.count+=0.1;
                                     game.context.fillStyle = "black";
+                                    this.count+=0.1;
+                                    // vykreslenie obrazkov , textu a tlacidla
                                     game.context.drawImage(this.findImage("story_bg"), 0, 0 , 760 , 480 , 0 , 0 , 760 , 480);
                                     game.context.drawImage(this.findImage("story4_robot"), 0, 0 , 567 , 556 , -100+this.count , 0+this.count/2 , 567, 556);
                                     game.context.fillText("Posledná nádej sa vkladá do bojového robota", 310, 300);
@@ -122,6 +141,7 @@ class Game{
                                     game.context.fillText("za účelom chrániť ľudstvo.", 310, 350);
                                     game.button1.drawButton();
                                     game.button1.click();
+
                                     if(game.story == false) clearInterval(story4);
 
                                     if(Math.round(this.count) == 20){
@@ -130,23 +150,30 @@ class Game{
                                         this.count=0;
 
                                         var story5 = setInterval(() => { 
+                                            // vycisti canvas
                                             game.context.clearRect(0, 0, canvas.width, canvas.height);
-                                            this.count+=0.1;
                                             game.context.fillStyle = "black";
+                                            this.count+=0.1;
+                                            // vykreslenie obrazkov , textu a tlacidla
                                             game.context.drawImage(this.findImage("story_bg"), 0, 0 , 760 , 480 , 0 , 0 , 760 , 480);
                                             game.context.drawImage(this.findImage("story5_centralpc"), 0, 0 , 294 , 287 , 235 , 230-this.count , 294 , 287);
                                             game.context.fillText("Úlohou je nájsť a zničiť", 270, 100);
                                             game.context.fillText("centrálny počítač napadnutý vírusom.", 220, 125);
                                             game.button1.drawButton();
                                             game.button1.click();
+
                                             if(game.story == false) clearInterval(story5);
 
                                             if(Math.round(this.count) == 20){
+
                                                 clearInterval(story5);
                                                 this.count=0;
                                                 this.story=false;
+                                                // zastavit hudbu 
                                                 game.intro.pause();
+                                                // volanie metody start
                                                 this.start();
+
                                             }
                                         }, 50);
                                     }
@@ -161,6 +188,7 @@ class Game{
     }
 
     start(){
+
         // uloženie prezývky hráča 
         this.playername= document.getElementById('player_name').value;
         // vytvorenie nepriateľov
@@ -174,7 +202,7 @@ class Game{
         game.createEnemy("Attacker",5700,500,100,80);
         game.createEnemy("Attacker",5700,400,100,80);
         game.createEnemy("Attacker",5100,200,100,80);
-        //vytvorenie prekážok
+        // vytvorenie prekážok
         game.createObstacles("default",3100,200,50,97,1,"ground","",0);
         game.createObstacles("default",3230,50,50,97,1,"ceiling","",0);
         game.createObstacles("default",700,650,50,97,1,"ground","",0);
@@ -200,9 +228,12 @@ class Game{
         game.createPoints();
         // spustenie hernej slučky
         window.requestAnimationFrame(game.loop);
+
     }
 
+    // vytvorenie pola obrazkov 
     loadImages(){
+
         let images = [
             ["player_sprite","./images/player-sprite.png"],
             ["enemy1_sprite","./images/enemy1-sprite.png"],
@@ -243,14 +274,14 @@ class Game{
             ["explosion_sprite","./images/explosion-sprite.png"],
             ["star","./images/star.png"],
             ["star_empty","./images/star-empty.png"],
-            ["infobox1","./images/infobox1.png"],
-            ["infobox2","./images/infobox2.png"],
-            ["infobox3","./images/infobox3.png"],
-            ["infobox4","./images/infobox4.png"],
-            ["infobox5","./images/infobox5.png"],
-            ["infobox6","./images/infobox6.png"]
+            ["bubble1","./images/bubble1.png"],
+            ["bubble2","./images/bubble2.png"],
+            ["bubble3","./images/bubble3.png"],
+            ["bubble4","./images/bubble4.png"],
+            ["bubble5","./images/bubble5.png"],
+            ["bubble6","./images/bubble6.png"]
         ]
-
+        
         for(let i = 0; i < images.length ; i++) {
 			let image = new Image();
 			let imageName = images[i][0];
@@ -259,13 +290,11 @@ class Game{
 			this.images.push(iamgesArray);
 
         }
-
-
     }
 
+    // vrati obrazok podla nazvu z pola images
     findImage(name) {
 
-		// vrati obrazok (typ Image) podla nazvu z pola images
 		for(let i = 0; i < this.images.length; i++) {
 			
 			if(this.images[i][0] == name){
@@ -275,8 +304,10 @@ class Game{
 		}
 
     }
-    
+
+    // nacita vsetky sprite sheety
     loadSprites(){
+
         this.sprite_sheet = new Sprite_sheet([[0,1,2,3,4,5,6,7,8,9] , [0,1,2,3,4,5,6,7,8,9] , [0,1,2,3,4,5,6,7,8,9],
                                               [0,1,2,3,4,5,6,7,8,9] , [0,1,2,3,4,5,6,7] , [0,1,2,3,4,5,6,7], 
                                               [0,1,2,3,4,5,6,7,8,9] , [0,1,2,3,4,5,6,7,8,9] , [0,1,2,3,4,5,6,7],
@@ -300,7 +331,9 @@ class Game{
         this.tile_sheet = new Tile_sheet(this.findImage("tile_sheet"),50,50,3);    
     }
 
+    // nacita audio
     loadAudio(){
+
         this.music = new Audio('./audio/music.wav');
         this.shot = new Audio('./audio/shot.wav');
         this.assassin_shot = new Audio('./audio/assassin_shot.wav');  
@@ -311,10 +344,12 @@ class Game{
         this.door_open = new Audio('./audio/door_open.wav');   
         this.point = new Audio('./audio/point.wav');  
         this.intro = new Audio('./audio/intro-story.wav');  
+        
     }
 
-
+    // vytvori nepriatela podla zadanych parametrov
     createEnemy(name,x,y,height,width){
+
         if(name == "Ghost"){
             this.enemy = new Ghost(x,y,0,0,height,width,x,y,new Animation());      
         }
@@ -327,7 +362,9 @@ class Game{
         this.enemies.push(this.enemy);
     }
 
+    // vytvori prekazky podla zadanych parametrov
     createObstacles(type,x,y,height,width,damage,position,direction,time){
+
         if(type == "default"){
             this.obstacle = new Obstacle(x,y,height,width,damage,position);    
         }
@@ -340,7 +377,9 @@ class Game{
         this.obstacles.push(this.obstacle);
     }
 
+     // vytvori body
     createPoints(){
+
         for (var i =0 ; i< game.world.map.length ; i++){
             if( game.world.map[i] == 2 ){
                 if (game.world.map[i-game.world.columns] == 6){
@@ -354,135 +393,162 @@ class Game{
                 }
             }
         }
+
     }
 
+    // zakladna fyzika
     physics(object){
-        object.y_velocity += 0.8;// gravity
+        object.y_velocity += 0.8; // gravitacia
         object.old_x = object.x;
         object.old_y = object.y;
         object.x += object.x_velocity;
         object.y += object.y_velocity;
-        object.x_velocity *= 0.9;// friction
-        object.y_velocity *= 0.9;// friction    
+        object.x_velocity *= 0.9;
+        object.y_velocity *= 0.9;  
     }
 
+    // spusti hudbu
     playMusic() {
         game.music.volume = 0.03;
         game.music.play();    
     }
 
     drawGUI(){
+
         game.context.font = '20px Trebuchet MS';
         game.context.fillStyle = "red";
+        // vykreslenie prezyvky
         game.context.fillText(game.playername, 50, 50); 
         game.context.fillStyle = "green";
+        // vykreslenie bodov
         game.context.fillText(game.player.points+ " / " + game.points.length, 680, 50); 
-
+        // vykreslenie obrazku bodu
         game.context.drawImage(game.findImage("point"), 0, 0, 12, 12, 658,  35, 18, 18);
-        
+        // vykreslenie avatara (ak hrac zomrie zmeni sa obrazok)
         if(game.player.frozen == false){
-          game.context.drawImage(game.findImage("avatar"), 0, 0, 38, 44, 10, 10, 38, 44); 
-        } else game.context.drawImage(game.findImage("avatar-dead"), 0, 0, 38, 44, 10, 10, 38, 44);
 
+            game.context.drawImage(game.findImage("avatar"), 0, 0, 38, 44, 10, 10, 38, 44); 
+
+        } else game.context.drawImage(game.findImage("avatar-dead"), 0, 0, 38, 44, 10, 10, 38, 44);
+        // vykreslenie zivotov
         if(game.player.lives ==5){
-          game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 10, 60, 20, 20);
-          game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 30, 60, 20, 20);
-          game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 50, 60, 20, 20);  
-          game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 70, 60, 20, 20);
-          game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 90, 60, 20, 20);
+
+            game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 10, 60, 20, 20);
+            game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 30, 60, 20, 20);
+            game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 50, 60, 20, 20);  
+            game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 70, 60, 20, 20);
+            game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 90, 60, 20, 20);
+
         }else if(game.player.lives ==4){
-          game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 10, 60, 20, 20);
-          game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 30, 60, 20, 20);
-          game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 50, 60, 20, 20);
-          game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 70, 60, 20, 20);
+
+            game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 10, 60, 20, 20);
+            game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 30, 60, 20, 20);
+            game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 50, 60, 20, 20);
+            game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 70, 60, 20, 20);
+
         }else if(game.player.lives ==3){
-          game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 10, 60, 20, 20);
-          game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 30, 60, 20, 20);
-          game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 50, 60, 20, 20);
+
+            game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 10, 60, 20, 20);
+            game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 30, 60, 20, 20);
+            game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 50, 60, 20, 20);
+
         }else if(game.player.lives ==2){
-          game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 10, 60, 20, 20);
-          game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 30, 60, 20, 20);
+
+            game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 10, 60, 20, 20);
+            game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 30, 60, 20, 20);
+
         }else if(game.player.lives ==1){
-          game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 10, 60, 20, 20);
+
+            game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 10, 60, 20, 20);
+
         }
 
+        // vykreslenie klucov
         if(game.player.has_gold_key == true){
-          game.context.drawImage(game.findImage("gold_key"), 0, 0, game.gold_key.width, game.gold_key.height, 15, 90, game.gold_key.width, game.gold_key.height);  
+
+            game.context.drawImage(game.findImage("gold_key"), 0, 0, game.gold_key.width, game.gold_key.height, 15, 90, game.gold_key.width, game.gold_key.height);
+
         }
         if(game.player.has_green_key == true){
-          game.context.drawImage(game.findImage("green_key"), 0, 0, game.gold_key.width, game.gold_key.height, 15, 90, game.gold_key.width, game.gold_key.height);  
+
+            game.context.drawImage(game.findImage("green_key"), 0, 0, game.gold_key.width, game.gold_key.height, 15, 90, game.gold_key.width, game.gold_key.height);
+
         }
         if(game.player.has_red_key == true){
+
             game.context.drawImage(game.findImage("red_key"), 0, 0, game.gold_key.width, game.gold_key.height, 15, 90, game.gold_key.width, game.gold_key.height);  
+
           }
     }
 
+    //herna slucka
     loop(){
-        console.log("x "+game.player.x);
-        console.log("y "+game.player.y);
-
+        // spusti hudbu
         game.playMusic();
-
+        // update kamery
         game.camera.update(game.player.x + (game.player.width/2), game.player.y + (game.player.height/2));
-
+        // vykreslenie sveta
         game.world.drawWorld();
-
-        if(game.gold_key.taken == false){
-            game.gold_key.drawKey();    
-        }
-
-        if(game.green_key.taken == false){
-            game.green_key.drawKey();    
-        }
-
-        if(game.red_key.taken == false){
-            game.red_key.drawKey();    
-        }
-
+        // vykreslenie klucov
+        game.gold_key.drawKey();    
+        game.green_key.drawKey();    
+        game.red_key.drawKey();
+        // update a vykreslenie pocitaca
         game.computer.drawComputer();
         game.computer.hit();
         game.computer.animation.updateExplosion();   
-
-
-        game.door.openDoor(game.gold_key,game.player);
-        game.door.drawDoor();
-
+        // update a vykreslenie dveri
+        game.door1.openDoor(game.gold_key,game.player);
+        game.door1.drawDoor();
         game.door2.openDoor(game.green_key,game.player);
         game.door2.drawDoor();
-
-        
         game.door3.openDoor(game.red_key,game.player);
         game.door3.drawDoor();
-
+        // update a vykreslenie extra zivotov 
         game.life1.drawLife();
         game.life1.collectLife();
         game.life2.drawLife();
         game.life2.collectLife();
         game.life3.drawLife();
         game.life3.collectLife();
-
+        // update a vykreslenie pola prekazok
         for (var i=0 ; i < game.obstacles.length ; i++){
+
             game.obstacles[i].drawObstacles(game.obstacles[i]);
             game.obstacles[i].hit(game.obstacles[i]);
+
             if (game.obstacles[i] instanceof MovingObstacle){
+
                 game.obstacles[i].update();    
+
             }
             if (game.obstacles[i] instanceof DisappearingObstacle){
-                game.obstacles[i].visibility();    
-            }
-        }
 
+                game.obstacles[i].visibility();    
+
+            }
+
+        }
+        // update a vykreslenie pola bodov
         for (var i=0 ; i < game.points.length ; i++){
+
             if(game.points[i].taken == false || game.points[i].showText == true){
+
                 game.points[i].drawPoint();
                 game.points[i].collectPoint();
+
             }
+
         }
-        
+        // update a vykreslenie pola nepriatelov
         for (var i=0 ; i < game.enemies.length ; i++){
+
             if (game.enemies[i].alive != true){
+
                 game.enemies.splice(i,1);     
+
             }else {
+
                 game.physics(game.enemies[i]);
                 game.enemies[i].behavior();
                 game.enemies[i].animation.update(game.enemies[i]);
@@ -492,10 +558,12 @@ class Game{
                 game.enemies[i].hit_animation.updateHitEnemy(game.enemies[i]);
                 game.enemies[i].dead(game.enemies[i]);
                 game.enemies[i].attack(game.enemies[i],game.player);
+
             }
         }
-
+        // update a vykreslenie hraca
         if(game.player.alive == true){
+
             game.player.checkShooting();
             game.player.moveLeft();
             game.player.moveRight();
@@ -504,8 +572,8 @@ class Game{
             game.player.animation.update(game.player);
             game.player.updateBullets();
             game.physics(game.player);
-            game.player.PlayerCollision();
-            game.player.BulletCollision();
+            game.player.playerCollision();
+            game.player.bulletCollision();
             game.player.dead();
             game.player.drawPlayer();
             game.player.hit_animation.updateHitPlayer(game.player);
@@ -513,32 +581,37 @@ class Game{
             game.player.findKey(game.gold_key);
             game.player.findKey(game.green_key);
             game.player.findKey(game.red_key);
+
         } else {
+
             game.window1.drawWindow();
             game.button2.click();
+
         }
-
-        game.infobox1.update();
-        game.infobox1.drawInfobox();
-        game.infobox2.update();
-        game.infobox2.drawInfobox();
-        game.infobox3.update();
-        game.infobox3.drawInfobox();
-        game.infobox4.update();
-        game.infobox4.drawInfobox();
-        game.infobox5.update();
-        game.infobox5.drawInfobox();
-        game.infobox6.update();
-        game.infobox6.drawInfobox();
-
+        // update a vykreslenie bublin
+        game.bubble1.update();
+        game.bubble1.drawBubble();
+        game.bubble2.update();
+        game.bubble2.drawBubble();
+        game.bubble3.update();
+        game.bubble3.drawBubble();
+        game.bubble4.update();
+        game.bubble4.drawBubble();
+        game.bubble5.update();
+        game.bubble5.drawBubble();
+        game.bubble6.update();
+        game.bubble6.drawBubble();
+        // update a vykreslenie GUI
         game.drawGUI();
-
+        // ak hra skonci nech vyskoci okno
         if(game.ended == true) {
+
             game.player.frozen = true;
             game.window2.drawWindow();
             game.button3.click();
-        }
 
+        }
+        // zabezpecuje nekonecny cyklus slucky
         window.requestAnimationFrame(game.loop);
 
     }
