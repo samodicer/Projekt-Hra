@@ -80,13 +80,81 @@ class World{
 
     }
 
+    drawInfo(){
+
+      game.context.font = '20px Trebuchet MS';
+      game.context.fillStyle = "red";
+      // vykreslenie prezyvky
+      game.context.fillText(game.playername, 50, 50); 
+      game.context.fillStyle = "green";
+      // vykreslenie bodov
+      game.context.fillText(game.player.points+ " / " + game.points.length, 680, 50); 
+      // vykreslenie obrazku bodu
+      game.context.drawImage(game.findImage("point"), 0, 0, 12, 12, 658,  35, 18, 18);
+      // vykreslenie avatara (ak hrac zomrie zmeni sa obrazok)
+      if(game.player.frozen == false){
+
+          game.context.drawImage(game.findImage("avatar"), 0, 0, 38, 44, 10, 10, 38, 44); 
+
+      } else game.context.drawImage(game.findImage("avatar-dead"), 0, 0, 38, 44, 10, 10, 38, 44);
+      // vykreslenie zivotov
+      if(game.player.lives ==5){
+
+          game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 10, 60, 20, 20);
+          game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 30, 60, 20, 20);
+          game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 50, 60, 20, 20);  
+          game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 70, 60, 20, 20);
+          game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 90, 60, 20, 20);
+
+      }else if(game.player.lives ==4){
+
+          game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 10, 60, 20, 20);
+          game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 30, 60, 20, 20);
+          game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 50, 60, 20, 20);
+          game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 70, 60, 20, 20);
+
+      }else if(game.player.lives ==3){
+
+          game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 10, 60, 20, 20);
+          game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 30, 60, 20, 20);
+          game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 50, 60, 20, 20);
+
+      }else if(game.player.lives ==2){
+
+          game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 10, 60, 20, 20);
+          game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 30, 60, 20, 20);
+
+      }else if(game.player.lives ==1){
+
+          game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 10, 60, 20, 20);
+
+      }
+
+      // vykreslenie klucov
+      if(game.player.has_gold_key == true){
+
+          game.context.drawImage(game.findImage("gold_key"), 0, 0, game.gold_key.width, game.gold_key.height, 15, 90, game.gold_key.width, game.gold_key.height);
+
+      }
+      if(game.player.has_green_key == true){
+
+          game.context.drawImage(game.findImage("green_key"), 0, 0, game.gold_key.width, game.gold_key.height, 15, 90, game.gold_key.width, game.gold_key.height);
+
+      }
+      if(game.player.has_red_key == true){
+
+          game.context.drawImage(game.findImage("red_key"), 0, 0, game.gold_key.width, game.gold_key.height, 15, 90, game.gold_key.width, game.gold_key.height);  
+
+        }
+    }
+
     collision(value_at_index,object,row,column){
 
         switch(value_at_index){  
 
             case 0 :   
-                    if (this.topCollision(object, row)) { return; }// if no top collision
-                    this.rightCollision(object, column);           // try right side collision
+                    if (this.topCollision(object, row)) { return; }// ak nie  zhora
+                    this.rightCollision(object, column);           // skus koliziu sprava
                     break;  
 
             case 1 :    

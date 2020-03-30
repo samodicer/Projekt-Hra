@@ -9,6 +9,7 @@ class Game{
         this.world = new World();
         this.camera = new Camera();
         this.player = new Player(100,500,0,0,100,100,false,false,true,100,500);
+        this.story = new Story();
         this.gold_key = new Key(1800,210,12,32,"gold");
         this.green_key = new Key(4100,210,12,32,"green");
         this.red_key = new Key(4330,160,12,32,"red");
@@ -34,163 +35,16 @@ class Game{
         this.obstacles = [];
         this.images = [];
         this.points = [];
-        this.count = 0;
-        this.story = true;
         this.ended = false;
 
     }
 
-    // odstartuje uvodny pribeh
-    introStory(){
-
-        // skrytie menu a zobrazenie canvasu
-        document.getElementById('menu').style.display="none";
-        document.getElementById('canvas').style.display="block";
-        // pridanie listenerov
-        window.addEventListener("keydown", game.controller.keyListener);
-        window.addEventListener("keyup", game.controller.keyListener);
-        game.canvas.addEventListener("click", game.controller.clickListener);
-        game.canvas.addEventListener("mousemove", game.controller.mousemoveListener);
-        // spustenie hudby
-        game.intro.volume= 0.2;
-        game.intro.play();
-        
-        var story1 = setInterval(() => { 
-            // vycisti canvas
-            game.context.clearRect(0, 0, canvas.width, canvas.height);
-
-            this.count+=0.5;
-            // nastavenie pisma
-            game.context.font = '20px Trebuchet MS';
-            game.context.fillStyle = "black";
-            // vykreslenie obrazkov , textu a tlacidla
-            game.context.drawImage(this.findImage("story_bg"), 0, 0 , 760 , 480 , 0 , 0 , 760 , 480);
-            game.context.drawImage(this.findImage("story1_human"), 0, 0 , 192 , 256 , 0+this.count , 0 , 192, 256);
-            game.context.drawImage(this.findImage("story1_robot"), 0, 0 , 192 , 256 , 575-this.count , 0 , 192, 256);
-            game.context.fillText("Vitaj v roku 2077. Vo svete vyspelých technológií.", 170, 300); 
-            game.context.fillText("Roboti sú už bežnou súčasťou každodenného života.", 160, 325); 
-            game.context.fillText("Využívajú sa hlavne ako pomocníci v domácnostiach.", 160, 350); 
-            game.button1.drawButton();
-            game.button1.click();
-
-            // ak pribeh skonci zmaze interval
-            if(game.story == false) clearInterval(story1);
-
-            if(Math.round(this.count) == 200){
-
-                clearInterval(story1);
-                this.count=0;
-
-                var story2 = setInterval(() => { 
-                    // vycisti canvas
-                    game.context.clearRect(0, 0, canvas.width, canvas.height);
-                    game.context.fillStyle = "black";
-                    this.count+=0.1;
-                    // vykreslenie obrazkov , textu a tlacidla
-                    game.context.drawImage(this.findImage("story_bg"), 0, 0 , 760 , 480 , 0 , 0 , 760 , 480);
-                    game.context.drawImage(this.findImage("story2_assassin"), 0, 0 , 700 , 706 , -100+this.count , 0+this.count , 600+this.count, 606+this.count);
-                    game.context.drawImage(this.findImage("story2_ghost"), 0, 0 , 150 , 220 , 500+this.count , 330-this.count , 150, 223);
-                    game.context.fillText("Avšak náš technologický pokrok", 400, 200);
-                    game.context.fillText("má aj svoju temnú stránku.", 400, 225);
-                    game.context.fillText("Na tajnej základni začali", 400, 250);
-                    game.context.fillText("testovať robtov na armádne účely.", 400, 275);
-                    game.button1.drawButton();
-                    game.button1.click();
-
-                    if(game.story == false) clearInterval(story2);
-
-                    if(Math.round(this.count) == 20){
-
-                        clearInterval(story2);
-                        this.count=0;
-
-                        var story3 = setInterval(() => { 
-                            // vycisti canvas
-                            game.context.clearRect(0, 0, canvas.width, canvas.height);
-                            game.context.fillStyle = "black";
-                            this.count+=0.1;
-                            // vykreslenie obrazkov , textu a tlacidla
-                            game.context.drawImage(this.findImage("story_bg"), 0, 0 , 760 , 480 , 0 , 0 , 760 , 480);
-                            game.context.drawImage(this.findImage("story3_assassin"), 0, 0 , 700 , 706 , -80+this.count , 20+this.count , 620+this.count, 626+this.count);
-                            game.context.drawImage(this.findImage("story3_ghost"), 0, 0 , 150 , 220 , 520+this.count , 310-this.count , 150, 223);
-                            game.context.fillText("Všetky tieto stroje", 450, 100);
-                            game.context.fillText("riadi centrálny počítač", 450, 125);
-                            game.context.fillText("ktorý bol napadnutý", 450, 150);
-                            game.context.fillText("vírusom a zmenil robotov", 450, 175);
-                            game.context.fillText("na nebezpečných protivníkov.", 450, 200);
-                            game.button1.drawButton();
-                            game.button1.click();
-
-                            if(game.story == false) clearInterval(story3);
-
-                            if(Math.round(this.count) == 20){
-
-                                clearInterval(story3);
-                                this.count=0;
-
-                                var story4 = setInterval(() => { 
-                                    // vycisti canvas
-                                    game.context.clearRect(0, 0, canvas.width, canvas.height);
-                                    game.context.fillStyle = "black";
-                                    this.count+=0.1;
-                                    // vykreslenie obrazkov , textu a tlacidla
-                                    game.context.drawImage(this.findImage("story_bg"), 0, 0 , 760 , 480 , 0 , 0 , 760 , 480);
-                                    game.context.drawImage(this.findImage("story4_robot"), 0, 0 , 567 , 556 , -100+this.count , 0+this.count/2 , 567, 556);
-                                    game.context.fillText("Posledná nádej sa vkladá do bojového robota", 310, 300);
-                                    game.context.fillText("najnovšej technológie. Bol vyrobený iba jeden", 310, 325);
-                                    game.context.fillText("za účelom chrániť ľudstvo.", 310, 350);
-                                    game.button1.drawButton();
-                                    game.button1.click();
-
-                                    if(game.story == false) clearInterval(story4);
-
-                                    if(Math.round(this.count) == 20){
-
-                                        clearInterval(story4);
-                                        this.count=0;
-
-                                        var story5 = setInterval(() => { 
-                                            // vycisti canvas
-                                            game.context.clearRect(0, 0, canvas.width, canvas.height);
-                                            game.context.fillStyle = "black";
-                                            this.count+=0.1;
-                                            // vykreslenie obrazkov , textu a tlacidla
-                                            game.context.drawImage(this.findImage("story_bg"), 0, 0 , 760 , 480 , 0 , 0 , 760 , 480);
-                                            game.context.drawImage(this.findImage("story5_centralpc"), 0, 0 , 294 , 287 , 235 , 230-this.count , 294 , 287);
-                                            game.context.fillText("Úlohou je nájsť a zničiť", 270, 100);
-                                            game.context.fillText("centrálny počítač napadnutý vírusom.", 220, 125);
-                                            game.button1.drawButton();
-                                            game.button1.click();
-
-                                            if(game.story == false) clearInterval(story5);
-
-                                            if(Math.round(this.count) == 20){
-
-                                                clearInterval(story5);
-                                                this.count=0;
-                                                this.story=false;
-                                                // zastavit hudbu 
-                                                game.intro.pause();
-                                                // volanie metody start
-                                                this.start();
-
-                                            }
-                                        }, 50);
-                                    }
-                                }, 50); 
-                            }
-                        }, 50); 
-                    }
-                }, 50); 
-
-            }
-         }, 20);
-    }
 
     start(){
-
         // uloženie prezývky hráča 
         this.playername= document.getElementById('player_name').value;
+        // vytovrenie sprite sheetov 
+        game.createSprites();
         // vytvorenie nepriateľov
         game.createEnemy("Ghost",100,100,90,70);
         game.createEnemy("Ghost",600,500,90,70);
@@ -305,8 +159,8 @@ class Game{
 
     }
 
-    // nacita vsetky sprite sheety
-    loadSprites(){
+    // vytvori vsetky sprite sheety
+    createSprites(){
 
         this.sprite_sheet = new Sprite_sheet([[0,1,2,3,4,5,6,7,8,9] , [0,1,2,3,4,5,6,7,8,9] , [0,1,2,3,4,5,6,7,8,9],
                                               [0,1,2,3,4,5,6,7,8,9] , [0,1,2,3,4,5,6,7] , [0,1,2,3,4,5,6,7], 
@@ -413,73 +267,6 @@ class Game{
         game.music.play();    
     }
 
-    drawGUI(){
-
-        game.context.font = '20px Trebuchet MS';
-        game.context.fillStyle = "red";
-        // vykreslenie prezyvky
-        game.context.fillText(game.playername, 50, 50); 
-        game.context.fillStyle = "green";
-        // vykreslenie bodov
-        game.context.fillText(game.player.points+ " / " + game.points.length, 680, 50); 
-        // vykreslenie obrazku bodu
-        game.context.drawImage(game.findImage("point"), 0, 0, 12, 12, 658,  35, 18, 18);
-        // vykreslenie avatara (ak hrac zomrie zmeni sa obrazok)
-        if(game.player.frozen == false){
-
-            game.context.drawImage(game.findImage("avatar"), 0, 0, 38, 44, 10, 10, 38, 44); 
-
-        } else game.context.drawImage(game.findImage("avatar-dead"), 0, 0, 38, 44, 10, 10, 38, 44);
-        // vykreslenie zivotov
-        if(game.player.lives ==5){
-
-            game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 10, 60, 20, 20);
-            game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 30, 60, 20, 20);
-            game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 50, 60, 20, 20);  
-            game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 70, 60, 20, 20);
-            game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 90, 60, 20, 20);
-
-        }else if(game.player.lives ==4){
-
-            game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 10, 60, 20, 20);
-            game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 30, 60, 20, 20);
-            game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 50, 60, 20, 20);
-            game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 70, 60, 20, 20);
-
-        }else if(game.player.lives ==3){
-
-            game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 10, 60, 20, 20);
-            game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 30, 60, 20, 20);
-            game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 50, 60, 20, 20);
-
-        }else if(game.player.lives ==2){
-
-            game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 10, 60, 20, 20);
-            game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 30, 60, 20, 20);
-
-        }else if(game.player.lives ==1){
-
-            game.context.drawImage(game.findImage("life"), 0, 0, 20, 20, 10, 60, 20, 20);
-
-        }
-
-        // vykreslenie klucov
-        if(game.player.has_gold_key == true){
-
-            game.context.drawImage(game.findImage("gold_key"), 0, 0, game.gold_key.width, game.gold_key.height, 15, 90, game.gold_key.width, game.gold_key.height);
-
-        }
-        if(game.player.has_green_key == true){
-
-            game.context.drawImage(game.findImage("green_key"), 0, 0, game.gold_key.width, game.gold_key.height, 15, 90, game.gold_key.width, game.gold_key.height);
-
-        }
-        if(game.player.has_red_key == true){
-
-            game.context.drawImage(game.findImage("red_key"), 0, 0, game.gold_key.width, game.gold_key.height, 15, 90, game.gold_key.width, game.gold_key.height);  
-
-          }
-    }
 
     //herna slucka
     loop(){
@@ -583,7 +370,7 @@ class Game{
             game.player.findKey(game.red_key);
 
         } else {
-
+            // ak hrac zomrie nech vyskoci okno
             game.window1.drawWindow();
             game.button2.click();
 
@@ -601,8 +388,8 @@ class Game{
         game.bubble5.drawBubble();
         game.bubble6.update();
         game.bubble6.drawBubble();
-        // update a vykreslenie GUI
-        game.drawGUI();
+        // vykreslenie Inforamcii
+        game.world.drawInfo();
         // ak hra skonci nech vyskoci okno
         if(game.ended == true) {
 
@@ -611,7 +398,7 @@ class Game{
             game.button3.click();
 
         }
-        // zabezpecuje nekonecny cyklus slucky
+        // zabezpecuje cyklus slucky
         window.requestAnimationFrame(game.loop);
 
     }

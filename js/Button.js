@@ -24,7 +24,7 @@ class Button {
 
                         this.fired=true;
                         game.count=0;
-                        game.story=false;
+                        game.story.playing=false;
                         game.intro.pause();
                         game.start();  
                             

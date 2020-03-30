@@ -90,6 +90,7 @@
         <script type="text/javascript" src="js/Computer.js"></script>
         <script type="text/javascript" src="js/Window.js"></script>
         <script type="text/javascript" src="js/Bubble.js"></script>
+        <script type="text/javascript" src="js/Story.js"></script>
 
     </div>
 
@@ -110,23 +111,24 @@
                 document.getElementById("wrapper").style.height = "0px";
             }
         });
+
         // vytvorenie inštancie objektu Game
         var game = new Game();
-        // načítanie obrázkov,audia
+        // načítanie obrázkov a audia
         game.loadImages();
-        game.loadSprites();
-        game.loadAudio(); 
-        
+        game.loadAudio();
+
+        // validácia prezývky
         function checkNickname() {
             var nickname = document.getElementById("player_name").value;
-            var allowed = /^[a-zA-Z0-9_]{3,15}$/;
+            var allowed = /^[a-zA-Z0-9]{3,15}$/; // povolené znkay a rozsah
 
             if (!allowed.test(nickname)) {
 
                 if(nickname.length < 3) document.getElementById("answer").innerHTML = "Minimálny počet znakov sú 3, maximálny počet je 15.";
                 else document.getElementById("answer").innerHTML = "Povolené sú veľké a malé písmená [A-Z , a-z] a číslice [0-9].";
 
-            } else game.introStory();
+            } else game.story.play(); // ak je prezývka v poriadku spusti príbeh
         }
 
     </script>

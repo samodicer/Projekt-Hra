@@ -49,7 +49,7 @@ class Controller{
         const rect = canvas.getBoundingClientRect();
         game.controller.xtarget = event.clientX - rect.left;
         game.controller.ytarget = event.clientY - rect.top;
-        if(!game.story) game.player.shoot();
+        if(!game.story.playing) game.player.shoot();
 
     }
 
