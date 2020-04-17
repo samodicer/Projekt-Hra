@@ -5,6 +5,7 @@ class World{
         this.columns = 126;
         this.rows = 16;
         this.tile_size = 50;
+        // mapa kde kazde cislo reprezentuje urcitu koliznu hodnotu
         // [ 0=  right,top ] , [ 1= right ] , [ 2= top ] , [ 3= left , top ] , [ 4= left ] , [ 5 = ground ] , [ 6 = wall ] , [ 7 = top left corner ] , [ 8 = top right corner ]
         this.map = [5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,1,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,4,
                     1,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,1,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,4,5,5,5,5,1,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,4,5,1,6,6,6,4,5,1,6,6,6,6,6,6,6,6,6,6,6,6,6,4,1,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,4,
@@ -35,12 +36,10 @@ class World{
             for(var x = game.camera.startTile[0]; x < game.camera.endTile[0]; ++x){
 
               var value = game.world.map[((y*game.world.columns)+x)];
-              /* This is the x and y location at which to cut the tile image out of the
-              tile_sheet.image. */
+              // x a y pozicia podla ktorej sa oreze obrazok tile sheet
               var source_x = (value % game.tile_sheet.columns) * game.tile_sheet.tile_width;
               var source_y = Math.floor(value / game.tile_sheet.columns) * game.tile_sheet.tile_height;
-              /* This is the x and y location at which to draw the tile image we are cutting
-              from the tile_sheet.image to the buffer canvas. */
+              // x a y pozicia na ktorej sa vykresli vyrezany obrazok
               var destination_x = (((y*game.world.columns)+x) % game.world.columns) * game.tile_sheet.tile_width;
               var destination_y = Math.floor(((y*game.world.columns)+x) / game.world.columns) * game.tile_sheet.tile_height;
     
@@ -146,6 +145,17 @@ class World{
           game.context.drawImage(game.findImage("red_key"), 0, 0, game.gold_key.width, game.gold_key.height, 15, 90, game.gold_key.width, game.gold_key.height);  
 
         }
+    }
+
+    // zakladna fyzika
+    physics(object){
+        object.y_velocity += 0.8; // gravitacia
+        object.old_x = object.x;
+        object.old_y = object.y;
+        object.x += object.x_velocity;
+        object.y += object.y_velocity;
+        object.x_velocity *= 0.9;
+        object.y_velocity *= 0.9;  
     }
 
     collision(value_at_index,object,row,column){

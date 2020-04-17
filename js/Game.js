@@ -8,7 +8,7 @@ class Game{
         this.controller = new Controller();
         this.world = new World();
         this.camera = new Camera();
-        this.player = new Player(100,500,0,0,100,100,false,false,true,100,500);
+        this.player = new Player(100,500,100,100);
         this.story = new Story();
         this.gold_key = new Key(1800,210,12,32,"gold");
         this.green_key = new Key(4100,210,12,32,"green");
@@ -201,22 +201,22 @@ class Game{
         
     }
 
-    // vytvori nepriatela podla zadanych parametrov
+    // vytvori nepriatelov podla zadanych parametrov a prida ich do pola
     createEnemy(name,x,y,height,width){
 
         if(name == "Ghost"){
-            this.enemy = new Ghost(x,y,0,0,height,width,x,y,new Animation());      
+            this.enemy = new Ghost(x,y,height,width);      
         }
         if(name == "Assassin"){
-            this.enemy = new Assassin(x,y,0,0,height,width,x,y,new Animation());      
+            this.enemy = new Assassin(x,y,height,width);      
         }
         if(name == "Attacker"){
-            this.enemy = new Attacker(x,y,0,0,height,width,x,y,new Animation());      
+            this.enemy = new Attacker(x,y,height,width);      
         }
         this.enemies.push(this.enemy);
     }
 
-    // vytvori prekazky podla zadanych parametrov
+    // vytvori prekazky podla zadanych parametrov  a prida ich do pola
     createObstacles(type,x,y,height,width,damage,position,direction,time){
 
         if(type == "default"){
@@ -231,7 +231,7 @@ class Game{
         this.obstacles.push(this.obstacle);
     }
 
-     // vytvori body
+     // vytvori body a prida ich do pola
     createPoints(){
 
         for (var i =0 ; i< game.world.map.length ; i++){
@@ -250,16 +250,6 @@ class Game{
 
     }
 
-    // zakladna fyzika
-    physics(object){
-        object.y_velocity += 0.8; // gravitacia
-        object.old_x = object.x;
-        object.old_y = object.y;
-        object.x += object.x_velocity;
-        object.y += object.y_velocity;
-        object.x_velocity *= 0.9;
-        object.y_velocity *= 0.9;  
-    }
 
     // spusti hudbu
     playMusic() {
@@ -301,7 +291,7 @@ class Game{
         // update a vykreslenie pola prekazok
         for (var i=0 ; i < game.obstacles.length ; i++){
 
-            game.obstacles[i].drawObstacles(game.obstacles[i]);
+            game.obstacles[i].drawObstacle(game.obstacles[i]);
             game.obstacles[i].hit(game.obstacles[i]);
 
             if (game.obstacles[i] instanceof MovingObstacle){
@@ -336,15 +326,15 @@ class Game{
 
             }else {
 
-                game.physics(game.enemies[i]);
+                game.world.physics(game.enemies[i]);
                 game.enemies[i].behavior();
                 game.enemies[i].animation.update(game.enemies[i]);
-                game.enemies[i].EnemyCollision();  
+                game.enemies[i].enemyCollision();  
                 game.enemies[i].hit();
                 game.enemies[i].drawEnemy();
                 game.enemies[i].hit_animation.updateHitEnemy(game.enemies[i]);
                 game.enemies[i].dead(game.enemies[i]);
-                game.enemies[i].attack(game.enemies[i],game.player);
+                if (game.enemies[i] instanceof Ghost ||  game.enemies[i] instanceof Assassin) game.enemies[i].attack(game.enemies[i],game.player);
 
             }
         }
@@ -358,7 +348,7 @@ class Game{
             game.player.idle();
             game.player.animation.update(game.player);
             game.player.updateBullets();
-            game.physics(game.player);
+            game.world.physics(game.player);
             game.player.playerCollision();
             game.player.bulletCollision();
             game.player.dead();
@@ -398,7 +388,8 @@ class Game{
             game.button3.click();
 
         }
-        // zabezpecuje cyklus slucky
+
+        // zabezpečuje update slučky
         window.requestAnimationFrame(game.loop);
 
     }

@@ -5,7 +5,7 @@ class Story {
     }
 
 // odstartuje uvodny pribeh
-play(){
+playStory(){
 
     // skrytie menu a zobrazenie canvasu
     document.getElementById('menu').style.display="none";

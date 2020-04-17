@@ -21,13 +21,13 @@ class Door {
         var player_tile_y = Math.floor((player.y + player.height) / game.world.tile_size);
         var player_check_index = (player_tile_y * game.world.columns + player_tile_x);
 
-        if (key.taken == true && player_check_index == door_left_index){
+        if (key.taken == true && player_check_index == door_left_index){ //ak ma hrac kluc a je blizko dveri
 
             if(player.has_gold_key || player.has_green_key || player.has_red_key) {
 
                 game.door_open.volume = 0.1;  
                 game.door_open.play();
-                this.open = true;
+                this.open = true; // otvori dvere
 
                 if(key.color == "gold"){
 
@@ -45,14 +45,14 @@ class Door {
 
                 }
 
-                game.world.map[door_index] = 6;
+                game.world.map[door_index] = 6; // spristupnenie levelu
                 game.world.map[door_index - game.world.columns] = 6;
             }
         }
     }
 
     drawDoor(){    
-
+        //vykreslenie dveri
         if(this.open == false){
 
             game.context.fillStyle = "#545454";

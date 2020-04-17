@@ -10,7 +10,7 @@ class Window {
     }
 
     drawWindow(){
-
+        //vykreslenie okien podla id 
         this.x = game.canvas.width / 2 - this.width / 2 ;
         this.y = game.canvas.height / 2 - this. height / 2;
         game.context.fillStyle = "#f8e728";

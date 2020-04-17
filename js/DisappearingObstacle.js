@@ -10,7 +10,7 @@ class DisappearingObstacle extends Obstacle{
 
     
     visibility(){
-
+        //menenie viditelnosti
         if (this.visible == true){
 
             setTimeout(() => { this.visible = false }, this.time);

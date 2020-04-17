@@ -1,10 +1,11 @@
 class Ghost extends Enemy{
 
-    constructor(x,y,x_velocity,y_velocity,height,width,old_x,old_y,animation){
+    constructor(x,y,height,width){
 
-        super(x,y,x_velocity,y_velocity,height,width,old_x,old_y,animation);
+        super(x,y,height,width);
         this.damage = 1;
         this.lives = 4;
+        this.idling = false;
 
     }
 
@@ -12,8 +13,9 @@ class Ghost extends Enemy{
 
         if(this.alive == true && this.frozen == false) {
 
-            this.x_velocity -= 0.1;
-            this.animation.changeFrame(game.enemy_sprite_sheet.frame_sets[3], 10, 3);
+            this.x_velocity -= 0.1; //pohyb dolava
+            this.idling = false;
+            this.animation.changeFrame(game.enemy_sprite_sheet.frame_sets[3], 10, 3);//zmena animacie
 
         }
     }
@@ -22,16 +24,23 @@ class Ghost extends Enemy{
 
         if(this.alive == true && this.frozen == false) {
 
-            this.x_velocity += 0.1;
-            this.animation.changeFrame(game.enemy_sprite_sheet.frame_sets[2], 10, 2);
+            this.x_velocity += 0.1; //pohyb doprava
+            this.idling = false;
+            this.animation.changeFrame(game.enemy_sprite_sheet.frame_sets[2], 10, 2); //zmena animacie
 
         }
     }
 
     idle() {
 
-        if (this.old_x < this.x) this.animation.changeFrame(game.enemy_sprite_sheet.frame_sets[0], 10, 0);
-        else this.animation.changeFrame(game.enemy_sprite_sheet.frame_sets[1], 10, 1);  
+        if(this.idling == false){
+
+            if (this.old_x < this.x) this.animation.changeFrame(game.enemy_sprite_sheet.frame_sets[0], 10, 0); //zmena animacie
+            else this.animation.changeFrame(game.enemy_sprite_sheet.frame_sets[1], 10, 1);  
+
+        }
+
+        this.idling = true;
 
     }
 
@@ -46,34 +55,47 @@ class Ghost extends Enemy{
         var rounded_playerx = Math.round(game.player.x);
         var rounded_enemyx = Math.round(this.x);
 
-        if(rounded_playerx < rounded_enemyx+10 && rounded_playerx > rounded_enemyx-10 && this.frozen == false){
+        if(rounded_playerx < rounded_enemyx+10 && rounded_playerx > rounded_enemyx-10 && this.frozen == false){ //ak je hrac vzdialeny 
 
             this.idle();
 
-        }else{
+        }else{ //ak nie
 
-            if(rounded_playerx < rounded_enemyx && this.frozen == false) {
+            if(rounded_playerx < rounded_enemyx && this.frozen == false) { //ak je hrac nalavo
 
-                if(check_left_index == 6 && check_left_down_index != 6) this.moveLeft();
-                else this.idle();
+                if(check_left_index == 6 && check_left_down_index != 6) this.moveLeft(); //ak nieje stena, pohyb dolava
+                else this.idle(); // inak stoj
 
-            }else if(rounded_playerx > rounded_enemyx && this.frozen == false) {
-                
-                if(check_right_index == 6 && check_right_down_index != 6) this.moveRight();
-                else this.idle();
+            }else if(rounded_playerx > rounded_enemyx && this.frozen == false) { //ak je hrac napravo
+                 
+                if(check_right_index == 6 && check_right_down_index != 6) this.moveRight(); //ak nieje stena, pohyb doprava
+                else this.idle(); // inak stoj
 
-            }else if (rounded_playerx == rounded_enemyx && this.frozen == false){
+            }else if (rounded_playerx == rounded_enemyx && this.frozen == false){ //ak je hrac aj nepriatel na rovnaj pozicii
 
-                this.idle();
+                this.idle(); //stoj
                 
             }
         }
     }
 
-    
+    attack(enemy,player){
+
+        if(player.overlapsObject(enemy) && enemy.alive == true && player.stunned == false && enemy.frozen == false && player.frozen == false){ // ak sa hrac dotkol nepriatela
+
+            player.lives -= 1; // -1 zivot
+            player.stunned = true;
+            player.hitted = true;
+            game.hit.volume = 0.1;
+            game.hit.play(); 
+            setTimeout(() => { player.hitted = false }, 300);
+            setTimeout(() => { player.stunned = false }, 3000);
+
+        }  
+    }
 
     drawEnemy(){
-
+        //vykreslenie nepriatela
         game.context.fillStyle = "green";
         game.context.drawImage(game.enemy_sprite_sheet.image, this.animation.frame * 100, this.animation.row * 100 , 100, 100, game.camera.offset[0] + this.x-15, game.camera.offset[1] + this.y, 100, 105);
 

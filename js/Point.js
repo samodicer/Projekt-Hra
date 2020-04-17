@@ -14,11 +14,11 @@ class Point {
 
     collectPoint(){
 
-        if (game.player.overlapsObject(this) && this.taken == false){
+        if (game.player.overlapsObject(this) && this.taken == false){ //ak prejde cez bod
 
             this.taken = true;
             this.showText = true;
-            game.player.points += 1;
+            game.player.points += 1; //prida hracovi bod
             game.point.volume = 0.1;
             game.point.load();
             game.point.play();  
@@ -28,7 +28,7 @@ class Point {
     }
 
     drawPoint(){
-
+        //vykreslenie bodov
         if(this.taken == false){   
 
             game.context.drawImage(game.findImage("point"), 0, 0, 12, 12, this.x+game.camera.offset[0],  this.y+game.camera.offset[1], 12, 12);

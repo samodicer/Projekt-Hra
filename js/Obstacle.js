@@ -13,7 +13,7 @@ class Obstacle{
 
     hit(obstacle){
 
-        if(obstacle instanceof DisappearingObstacle){
+        if(obstacle instanceof DisappearingObstacle){//ak je miznuca prekazka neviditelna , nebude davat poskodenie
 
             if(obstacle.visible == false) return;
 
@@ -23,7 +23,7 @@ class Obstacle{
         var player_tile_y = Math.floor((game.player.y + game.player.height) / game.world.tile_size);
         var obstacle_tile_x = Math.floor((this.x + this.width * 0.5) / game.world.tile_size);
 
-        if (obstacle.position == "ground"){
+        if (obstacle.position == "ground"){ 
 
             var obstacle_tile_y = Math.floor((this.y + this.height* 0.5) / game.world.tile_size);
 
@@ -38,9 +38,9 @@ class Obstacle{
 
         if (game.player.frozen == false && game.player.alive == true && game.player.stunned == false){
 
-            if(player_check_index == obstacle_check_index || player_check_index == obstacle_check_index+1){
+            if(player_check_index == obstacle_check_index || player_check_index == obstacle_check_index+1){ // ak sa hrac dotkne prekazky
 
-                game.player.lives -= this.damage;
+                game.player.lives -= this.damage; // - 1 zivot
                 game.player.stunned = true;
                 game.player.hitted = true;
                 game.hit.volume = 0.1;
@@ -52,8 +52,8 @@ class Obstacle{
         }
     }
 
-    drawObstacles(obstacle){
-
+    drawObstacle(obstacle){
+        //vykreslenie prekazok
         if(obstacle instanceof DisappearingObstacle){
 
             if(obstacle.visible == false) return;

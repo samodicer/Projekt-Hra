@@ -112,7 +112,7 @@
             }
         });
 
-        // vytvorenie inštancie objektu Game
+        // vytvorenie inštancie triedy Game
         var game = new Game();
         // načítanie obrázkov a audia
         game.loadImages();
@@ -128,7 +128,7 @@
                 if(nickname.length < 3) document.getElementById("answer").innerHTML = "Minimálny počet znakov sú 3, maximálny počet je 15.";
                 else document.getElementById("answer").innerHTML = "Povolené sú veľké a malé písmená [A-Z , a-z] a číslice [0-9].";
 
-            } else game.story.play(); // ak je prezývka v poriadku spusti príbeh
+            } else game.story.playStory(); // ak je prezývka v poriadku spusti príbeh
         }
 
     </script>

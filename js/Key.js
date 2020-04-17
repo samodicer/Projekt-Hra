@@ -12,7 +12,7 @@ class Key {
     }
 
     drawKey(){
-
+        //vykreslenie kluca
         if (this.color == "gold" && this.taken == false) {
 
             game.context.drawImage(game.findImage("gold_key"), 0, 0, this.width, this.height, this.x+game.camera.offset[0],  this.y+game.camera.offset[1], this.width, this.height);   

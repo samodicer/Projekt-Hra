@@ -13,14 +13,14 @@ class MovingObstacle extends Obstacle{
 
     update(){
         
-        if (this.direction == "l"){
+        if (this.direction == "l"){ //ak ma zacat pohyb vlavo
 
             if(this.count <= 100 && this.left == true) {
 
                 this.count++;
-                this.x--;
+                this.x--; // pohyb vlavo
 
-            }else {
+            }else { // po urcitej dobe zemna strany
 
                 this.left = false;
                 this.right = true;
@@ -29,9 +29,9 @@ class MovingObstacle extends Obstacle{
             if(this.count >= 0 && this.right == true) {
 
                 this.count--;
-                this.x++;
+                this.x++; // pohyb vpravo
 
-            }else {
+            }else { // po urcitej dobe zemna strany
 
                 this.left = true;
                 this.right = false;  
@@ -43,9 +43,9 @@ class MovingObstacle extends Obstacle{
             if(this.count <= 100 && this.right == true) {
 
                 this.count++;
-                this.x++;
+                this.x++; // pohyb vpravo
 
-            }else {
+            }else { // po urcitej dobe zemna strany
 
                 this.right = false;
                 this.left = true;
@@ -54,9 +54,9 @@ class MovingObstacle extends Obstacle{
             if(this.count >= 0 && this.left == true) {
 
                 this.count--;
-                this.x--;
+                this.x--; // pohyb vlavo
 
-            }else {
+            }else { // po urcitej dobe zemna strany
 
                 this.right = true;
                 this.left = false;  

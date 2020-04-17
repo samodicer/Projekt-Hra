@@ -3,73 +3,73 @@ class Bubble {
     constructor(id){
 
         this.id = id;
-        this.hiden = true;
+        this.hidden = true;
         this.fired = false;
 
     }
 
     update(){
-
-        if(this.id == 1){
+        // ak sa hrac dostane do urcitej pozicie nastav bubline premnnu hidden na false
+        if(this.id == 1){ 
 
             if(game.player.x > 200 && game.player.y > 250 && this.fired == false) {
 
-                this.hiden = false;
+                this.hidden = false;
                 this.fired = true;
-                setTimeout(() => { this.hiden = true }, 5000);
+                setTimeout(() => { this.hidden = true }, 4000);
 
             }
         }else if (this.id == 2){
 
             if(game.player.x > 1730 && game.player.y < 250 && this.fired == false) {
 
-                this.hiden = false;
+                this.hidden = false;
                 this.fired = true;
-                setTimeout(() => { this.hiden = true }, 5000);
+                setTimeout(() => { this.hidden = true }, 3000);
 
             }
         }else if (this.id == 3){
 
             if(game.player.x > 3100 && game.player.y > 400 && this.fired == false) {
 
-                this.hiden = false;
+                this.hidden = false;
                 this.fired = true;
-                setTimeout(() => { this.hiden = true }, 5000);
+                setTimeout(() => { this.hidden = true }, 3000);
 
             }
         }else if (this.id == 4){
 
             if(game.player.x > 4050 && game.player.y > 500 && this.fired == false && game.player.has_green_key == false && game.door2.open == false) {
 
-                this.hiden = false;
+                this.hidden = false;
                 this.fired = true;
-                setTimeout(() => { this.hiden = true }, 5000);
+                setTimeout(() => { this.hidden = true }, 3000);
 
             }
         }else if (this.id == 5){
 
             if(game.player.x > 4190 && game.player.y > 500 && this.fired == false && game.player.has_green_key == false && game.door2.open == false) {
 
-                this.hiden = false;
+                this.hidden = false;
                 this.fired = true;
-                setTimeout(() => { this.hiden = true }, 5000);
+                setTimeout(() => { this.hidden = true }, 3000);
 
             }
         }else if (this.id == 6){
 
             if(game.player.x > 5260 && game.player.y > 500 && this.fired == false && game.player.has_green_key == false && game.door2.open == false) {
 
-                this.hiden = false;
+                this.hidden = false;
                 this.fired = true;
-                setTimeout(() => { this.hiden = true }, 5000);
+                setTimeout(() => { this.hidden = true }, 3000);
 
             }
         }
     }
 
     drawBubble(){
-
-        if(this.hiden == false){
+        //vykreslenie bublin polda viditelnosti a id
+        if(this.hidden == false){
 
             var x = game.player.x + 70;
             var y = game.player.y - 50;

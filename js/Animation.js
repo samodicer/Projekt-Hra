@@ -14,7 +14,7 @@ class Animation{
 
     changePlayerFrame(frame_set, delay, row){
 
-        if (this.frame_set != frame_set) {// If the frame set is different:
+        if (this.frame_set != frame_set) {// ak je frame set rozdielny
 
             if( (this.row == 10 ) && (row == 0) ){
 
@@ -23,11 +23,11 @@ class Animation{
                 if(this.delay_animation_counter==40){
 
                     this.delay_animation_counter =0;
-                    this.count = 0;// Reset the count.
-                    this.delay = delay;// Set the delay.
-                    this.frame_index = 0;// Start at the first frame in the new frame set.
-                    this.frame_set = frame_set;// Set the new frame set.
-                    this.frame = this.frame_set[this.frame_index];// Set the new frame value.
+                    this.count = 0;// resetne pocitadlo
+                    this.delay = delay;// nastavenie oneskorenia
+                    this.frame_index = 0;// zacne prvym frameom vo frame sete
+                    this.frame_set = frame_set;// nastavenie noveho frame setu
+                    this.frame = this.frame_set[this.frame_index];// nastavi novy index frame setu 
                     this.row = row;
 
                 }
@@ -38,11 +38,11 @@ class Animation{
                 if(this.delay_animation_counter==40){
 
                     this.delay_animation_counter =0;
-                    this.count = 0;// Reset the count.
-                    this.delay = delay;// Set the delay.
-                    this.frame_index = 0;// Start at the first frame in the new frame set.
-                    this.frame_set = frame_set;// Set the new frame set.
-                    this.frame = this.frame_set[this.frame_index];// Set the new frame value.
+                    this.count = 0;
+                    this.delay = delay;
+                    this.frame_index = 0;
+                    this.frame_set = frame_set;
+                    this.frame = this.frame_set[this.frame_index];
                     this.row = row;
 
                 }
@@ -53,11 +53,11 @@ class Animation{
                 if(this.delay_animation_counter==40){
 
                     this.delay_animation_counter =0;
-                    this.count = 0;// Reset the count.
-                    this.delay = delay;// Set the delay.
-                    this.frame_index = 0;// Start at the first frame in the new frame set.
-                    this.frame_set = frame_set;// Set the new frame set.
-                    this.frame = this.frame_set[this.frame_index];// Set the new frame value.
+                    this.count = 0;
+                    this.delay = delay;
+                    this.frame_index = 0;
+                    this.frame_set = frame_set;
+                    this.frame = this.frame_set[this.frame_index];
                     this.row = row;
 
                 }
@@ -68,22 +68,22 @@ class Animation{
                 if(this.delay_animation_counter==40){
 
                     this.delay_animation_counter =0;
-                    this.count = 0;// Reset the count.
-                    this.delay = delay;// Set the delay.
-                    this.frame_index = 0;// Start at the first frame in the new frame set.
-                    this.frame_set = frame_set;// Set the new frame set.
-                    this.frame = this.frame_set[this.frame_index];// Set the new frame value.
+                    this.count = 0;
+                    this.delay = delay;
+                    this.frame_index = 0;
+                    this.frame_set = frame_set;
+                    this.frame = this.frame_set[this.frame_index];
                     this.row = row;
 
                 }
             }else {
 
                 this.delay_animation_counter = 0;
-                this.count = 0;// Reset the count.
-                this.delay = delay;// Set the delay.
-                this.frame_index = 0;// Start at the first frame in the new frame set.
-                this.frame_set = frame_set;// Set the new frame set.
-                this.frame = this.frame_set[this.frame_index];// Set the new frame value.
+                this.count = 0;
+                this.delay = delay;
+                this.frame_index = 0;
+                this.frame_set = frame_set;
+                this.frame = this.frame_set[this.frame_index];
                 this.row = row;
 
             }
@@ -94,11 +94,11 @@ class Animation{
 
         if (this.frame_set != frame_set) {
 
-            this.count = 0;// Reset the count.
-            this.delay = delay;// Set the delay.
-            this.frame_index = 0;// Start at the first frame in the new frame set.
-            this.frame_set = frame_set;// Set the new frame set.
-            this.frame = this.frame_set[this.frame_index];// Set the new frame value.
+            this.count = 0;
+            this.delay = delay;
+            this.frame_index = 0;
+            this.frame_set = frame_set;
+            this.frame = this.frame_set[this.frame_index];
             this.row = row;
 
         }
@@ -107,13 +107,12 @@ class Animation{
 
     update(object){
 
-        this.count ++;// Keep track of how many cycles have passed since the last frame change.
+        this.count ++;// pocitadlo kolko cyklov preslo od poslednej zmeny frameu
         
-        if (this.count >= this.delay) {// If enough cycles have passed, we change the frame.
+        if (this.count >= this.delay) {// ak preslo dostatok cyklov zmenime frame
           
-          this.count = 0;// Reset the count.
-          /* If the frame index is on the last value in the frame set, reset to 0.
-          If the frame index is not on the last value, just add 1 to it. */
+          this.count = 0;// resetnutie pocitadla
+ 
           if(object.frozen == true) {
 
             this.frame_index = (this.frame_index == this.frame_set.length - 1) ? this.frame_index : this.frame_index + 1;   
@@ -124,62 +123,59 @@ class Animation{
           
           }
 
-          this.frame = this.frame_set[this.frame_index];// Change the current frame value.
+          this.frame = this.frame_set[this.frame_index]; // nastavi momentalny frame index
 
         }
     }
 
     updateHitEnemy(enemy){
 
-        this.count ++;// Keep track of how many cycles have passed since the last frame change.
+        this.count ++;
 
-        if (this.count >= this.delay) {// If enough cycles have passed, we change the frame.
+        if (this.count >= this.delay) {
           
-          this.count = 0;// Reset the count.
-          /* If the frame index is on the last value in the frame set, reset to 0.
-          If the frame index is not on the last value, just add 1 to it. */
+          this.count = 0;
+ 
           if (enemy.hitted == true){
 
             this.frame_index = (this.frame_index == this.frame_set.length - 1) ? 0 : this.frame_index + 1;  
           
           } else this.frame_index =0;
 
-          this.frame = this.frame_set[this.frame_index];// Change the current frame value.
+          this.frame = this.frame_set[this.frame_index];
         
         }   
     }
 
     updateHitPlayer(player){
       
-        this.count ++;// Keep track of how many cycles have passed since the last frame change.
+        this.count ++;
 
-        if (this.count >= this.delay) {// If enough cycles have passed, we change the frame.
+        if (this.count >= this.delay) {
           
-          this.count = 0;// Reset the count.
-          /* If the frame index is on the last value in the frame set, reset to 0.
-          If the frame index is not on the last value, just add 1 to it. */
+          this.count = 0;
+
           if (player.hitted == true ){
 
             this.frame_index = (this.frame_index == this.frame_set.length - 1) ? 0 : this.frame_index + 1;  
           
           } else this.frame_index =0;
 
-          this.frame = this.frame_set[this.frame_index];// Change the current frame value.
+          this.frame = this.frame_set[this.frame_index];
         
         }   
     }
 
     updateExplosion(){ 
 
-      this.count ++;// Keep track of how many cycles have passed since the last frame change.
+      this.count ++;
 
-      if (this.count >= this.delay) {// If enough cycles have passed, we change the frame.
+      if (this.count >= this.delay) {
 
-        this.count = 0;// Reset the count.
-        /* If the frame index is on the last value in the frame set, reset to 0.
-        If the frame index is not on the last value, just add 1 to it. */
+        this.count = 0;
+
         this.frame_index = (this.frame_index == this.frame_set.length - 1) ? 0 : this.frame_index + 1;
-        this.frame = this.frame_set[this.frame_index];// Change the current frame value.
+        this.frame = this.frame_set[this.frame_index];
 
       }
     }

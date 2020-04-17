@@ -18,7 +18,7 @@ class Controller{
 
         switch(event.keyCode) {
     
-          case 65 :// A
+          case  65 :// A
             game.controller.left = answer;
           break;
 
@@ -30,18 +30,20 @@ class Controller{
             game.controller.right = answer;
           break;
 
-          case  37:// left arrow
-          game.controller.left = answer;
+          case  37:// šípka vľavo
+            game.controller.left = answer;
           break;
 
-          case  38:// up arrow
-          game.controller.up = answer;
+          case  38:// šípka hore
+            game.controller.up = answer;
           break;
 
-          case  39:// right arrow
-          game.controller.right = answer;
+          case  39:// šípka vpravo
+            game.controller.right = answer;
           break;
+
         }
+
     }
 
     clickListener = function(event) {
@@ -49,14 +51,14 @@ class Controller{
         const rect = canvas.getBoundingClientRect();
         game.controller.xtarget = event.clientX - rect.left;
         game.controller.ytarget = event.clientY - rect.top;
-        if(!game.story.playing) game.player.shoot();
+        if(!game.story.playing) game.player.shoot(); //ak uz skoncil pribeh, hrac moze strielat
 
     }
 
     mousemoveListener = function(event) {
 
         var rect = game.canvas.getBoundingClientRect();
-        game.controller.mousex = event.clientX - rect.left;
+        game.controller.mousex = event.clientX - rect.left; //x-ova pozicia kurzoru
         
     }
 

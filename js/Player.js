@@ -1,21 +1,21 @@
 class Player{
 
-    constructor(x,y,x_velocity,y_velocity,height,width,jumping,shooting,idling,old_x,old_y){
+    constructor(x,y,height,width){
 
         this.x = x;
         this.y= y;
-        this.old_x = old_x;
-        this.old_y = old_y;
-        this.x_velocity = x_velocity;
-        this.y_velocity = y_velocity;
+        this.old_x = x;
+        this.old_y = y;
+        this.x_velocity = 0;
+        this.y_velocity = 0;
         this.height= height;
         this.width = width;
-        this.jumping = jumping;
-        this.shooting = shooting;
-        this.idling= idling;
         this.bullets= [];
         this.lives = 5;
         this.points = 0;
+        this.jumping = false;
+        this.shooting = false;
+        this.idling= true;
         this.stunned= false;
         this.alive = true;
         this.frozen = false;
@@ -31,9 +31,9 @@ class Player{
 
     updateBullets(){
 
-        for (var i=0 ; i < this.bullets.length ; i++){
+        for (var i=0 ; i < this.bullets.length ; i++){ //prejdenie po poli bullets
 
-            this.bullets[i].updateBullet();
+            this.bullets[i].updateBullet(); // update nabojov
             
         }
 
@@ -41,7 +41,7 @@ class Player{
 
     checkShooting(){
 
-        if (this.bullets.length == 0) this.shooting = false;
+        if (this.bullets.length == 0) this.shooting = false; //ak existuje nejaky naboj
         else this.shooting = true;
 
     }
@@ -50,13 +50,12 @@ class Player{
 
         var tile_x = Math.floor((this.x + this.width * 0.5) / game.world.tile_size);
         var tile_y = Math.floor((this.y + this.height) / game.world.tile_size);
-        // get the value at the tile position in the map
+        // hodnota indexu na ktorom je hrac
         var value_at_index = game.world.map[tile_y * game.world.columns + tile_x];
 
         if (value_at_index != 5 || 6 ) {
 
-            // simply call one of the routing functions in the collision object and pass
-            // in values for the collision tile's location in grid/map space
+            // ak narazi na blok, vola sa funkcia kolizie
             game.world.collision(value_at_index,this, tile_y, tile_x);
     
         }
@@ -70,7 +69,7 @@ class Player{
             game.world.collision(value_at_index,this, tile_y, tile_x);
   
         }   
-        //console.log ( "tile_x: " + tile_x + "<br>tile_y: " + tile_y + "<br>map index: " + tile_y + " * " + game.world.columns + " + " + tile_x + " = " + String(tile_y * game.world.columns + tile_x) + "<br>tile value: " + game.world.map[tile_y * game.world.columns + tile_x] );
+        
     }
 
     bulletCollision(){
@@ -79,14 +78,14 @@ class Player{
 
             var to_delete ;
 
-            for (var i=0 ; i < this.bullets.length ; i++){
+            for (var i=0 ; i < this.bullets.length ; i++){ // prejdenie po poli bullets
 
                 var tile_x = Math.floor((this.bullets[i].x ) / game.world.tile_size);
                 var tile_y = Math.floor((this.bullets[i].y) / game.world.tile_size);
-                // get the value at the tile position in the map
+                //hodnota na ktorej sa naboj nachadza
                 var value_at_index = game.world.map[tile_y * game.world.columns + tile_x];
                 
-                if (value_at_index != 6 ) {
+                if (value_at_index != 6 ) {//ak narazi na stenu
 
                     to_delete = i;
 
@@ -96,7 +95,7 @@ class Player{
 
             if (typeof to_delete !== 'undefined'){
 
-                this.bullets.splice(to_delete,1); 
+                this.bullets.splice(to_delete,1); //vyhodenie z pola
 
             }
         
@@ -108,12 +107,12 @@ class Player{
 
         if (game.controller.left && this.frozen == false && this.alive == true) {
 
-            this.x_velocity -= 0.4;
+            this.x_velocity -= 0.4; //pohyb dolava
             this.idling=false;
 
             if (this.jumping==false) {
 
-                this.animation.changePlayerFrame(game.sprite_sheet.frame_sets[5], 7,5);
+                this.animation.changePlayerFrame(game.sprite_sheet.frame_sets[5], 7,5); // zmena animacie
                 game.step.volume = 0.05;
                 game.step.play();
 
@@ -126,12 +125,12 @@ class Player{
         
         if (game.controller.right && this.frozen == false && this.alive == true) {    
 
-            this.x_velocity += 0.4;
+            this.x_velocity += 0.4; //pohyb dolava
             this.idling=false;
 
             if (this.jumping==false) {
 
-                this.animation.changePlayerFrame(game.sprite_sheet.frame_sets[4], 7,4);
+                this.animation.changePlayerFrame(game.sprite_sheet.frame_sets[4], 7,4); // zmena animacie
                 game.step.volume = 0.05;
                 game.step.play();
 
@@ -143,28 +142,28 @@ class Player{
 
         if (game.controller.up && this.jumping == false && this.frozen == false && this.alive == true) {
 
-            this.y_velocity -= 27;
+            this.y_velocity -= 27; //skok
             this.jumping = true;
             game.jump.volume = 0.04;
             game.jump.play();
 
-            if (this.old_x < this.x && this.idling==false) {
+            if (this.old_x < this.x && this.idling==false) { //ak sa pohybuje doprava
 
-                this.animation.changePlayerFrame(game.sprite_sheet.frame_sets[2], 7, 2);
+                this.animation.changePlayerFrame(game.sprite_sheet.frame_sets[2], 7, 2); // zmena animacie
 
-            }else if (this.idling==true ) {
+            }else if (this.idling==true ) { //ak stoji
 
-                if (game.controller.mousex > this.x+this.width/2+game.camera.offset[0] ) this.animation.changePlayerFrame(game.sprite_sheet.frame_sets[2], 7, 2);
-                else this.animation.changePlayerFrame(game.sprite_sheet.frame_sets[3], 7, 3);
+                if (game.controller.mousex > this.x+this.width/2+game.camera.offset[0] ) this.animation.changePlayerFrame(game.sprite_sheet.frame_sets[2], 7, 2);// zmena animacie
+                else this.animation.changePlayerFrame(game.sprite_sheet.frame_sets[3], 7, 3); // zmena animacie
 
-            }else if (this.old_x == this.x && this.idling==false){
+            }else if (this.old_x == this.x && this.idling==false){ 
 
-                if (game.controller.right) this.animation.changePlayerFrame(game.sprite_sheet.frame_sets[2], 7 , 2);
-                else this.animation.changePlayerFrame(game.sprite_sheet.frame_sets[3], 7, 3);
+                if (game.controller.right) this.animation.changePlayerFrame(game.sprite_sheet.frame_sets[2], 7 , 2); // zmena animacie
+                else this.animation.changePlayerFrame(game.sprite_sheet.frame_sets[3], 7, 3); // zmena animacie
 
-            }else if ((this.old_x > this.x && this.idling==false)) {
+            }else if ((this.old_x > this.x && this.idling==false)) { //ak sa pohybuje dolava
 
-                this.animation.changePlayerFrame(game.sprite_sheet.frame_sets[3], 7, 3);
+                this.animation.changePlayerFrame(game.sprite_sheet.frame_sets[3], 7, 3); // zmena animacie
 
             }
         }
@@ -176,7 +175,7 @@ class Player{
 
             this.idling = true;
 
-            if (game.controller.mousex > this.x+this.width/2+game.camera.offset[0] ) this.animation.changePlayerFrame(game.sprite_sheet.frame_sets[0], 10, 0);          
+            if (game.controller.mousex > this.x+this.width/2+game.camera.offset[0] ) this.animation.changePlayerFrame(game.sprite_sheet.frame_sets[0], 10, 0); //zmena animacie         
             else this.animation.changePlayerFrame(game.sprite_sheet.frame_sets[1], 10, 1);
       
         }
@@ -184,22 +183,22 @@ class Player{
 
     dead(){
 
-        if(this.lives == 0){
+        if(this.lives == 0){ // ak nema zivoty
 
             this.frozen = true;
             setTimeout(() => { this.alive = false }, 4000);
 
-            if (this.old_x < this.x && this.idling == false)  {
+            if (this.old_x < this.x && this.idling == false)  { //ak sa pohybuje doprava
 
-                this.animation.changePlayerFrame(game.sprite_sheet.frame_sets[6], 4, 6);
+                this.animation.changePlayerFrame(game.sprite_sheet.frame_sets[6], 4, 6); //zmena animacie
 
-            } else if (this.old_x > this.x && this.idling == false) {
+            } else if (this.old_x > this.x && this.idling == false) { //ak sa pohybuje dolava
 
-                this.animation.changePlayerFrame(game.sprite_sheet.frame_sets[7], 4, 7);
+                this.animation.changePlayerFrame(game.sprite_sheet.frame_sets[7], 4, 7);//zmena animacie
 
-            } else if (this.idling == true){
+            } else if (this.idling == true){ //ak stoji
 
-                if (this.animation.row == 0 || this.animation.row == 6 ) this.animation.changePlayerFrame(game.sprite_sheet.frame_sets[6], 4, 6);          
+                if (this.animation.row == 0 || this.animation.row == 6 ) this.animation.changePlayerFrame(game.sprite_sheet.frame_sets[6], 4, 6);  //zmena animacie       
                 else this.animation.changePlayerFrame(game.sprite_sheet.frame_sets[7], 4, 7);  
 
             }  
@@ -210,7 +209,7 @@ class Player{
     shoot(){
 
         let side;
-
+        // urcenie strany ktorou je hrac otoceny
         if (this.animation.row == 0 || this.animation.row == 2 || this.animation.row == 4 || this.animation.row == 6 || this.animation.row == 8 || this.animation.row == 10) { 
 
              side = "right";
@@ -219,10 +218,10 @@ class Player{
         
         if (this.alive == true && this.stunned == false && this.frozen == false){
 
-            if(side == "right") var b = new Bullet (this.x+this.width/2+30,this.y+this.height/2+5,side);
+            if(side == "right") var b = new Bullet (this.x+this.width/2+30,this.y+this.height/2+5,side); //vytvorenie naboja
             else var b = new Bullet (this.x+this.width/2-30,this.y+this.height/2+5,side);
 
-            this.bullets.push(b);
+            this.bullets.push(b); //pridanie naboja do pola
             game.shot.volume = 0.05;
             game.shot.load();
             game.shot.play();  
@@ -231,19 +230,19 @@ class Player{
 
         if (this.idling == true && this.frozen == false && this.alive == true && this.stunned == false) {
 
-            if (game.controller.mousex > this.x+this.width/2+game.camera.offset[0]  ){
+            if (game.controller.mousex > this.x+this.width/2+game.camera.offset[0]  ){ //ak je kurzor na pravej strane canvasu
 
-                this.animation.changePlayerFrame(game.sprite_sheet.frame_sets[10], 7, 10);
+                this.animation.changePlayerFrame(game.sprite_sheet.frame_sets[10], 7, 10); //zmena animacie
 
-            } else  this.animation.changePlayerFrame(game.sprite_sheet.frame_sets[11], 7, 11);
+            } else  this.animation.changePlayerFrame(game.sprite_sheet.frame_sets[11], 7, 11); //ak je kurzor na lavej strane canvasu , zmena animacie
 
         } else if (this.idling == false && this.frozen == false && this.alive == true && this.stunned == false){
 
-            if (game.controller.right){
+            if (game.controller.right){ // ak je stlacena klavesa doprava
 
-                this.animation.changePlayerFrame(game.sprite_sheet.frame_sets[8], 7, 8);
+                this.animation.changePlayerFrame(game.sprite_sheet.frame_sets[8], 7, 8); //zmena animacie
 
-            } else  this.animation.changePlayerFrame(game.sprite_sheet.frame_sets[9], 7, 9);  
+            } else  this.animation.changePlayerFrame(game.sprite_sheet.frame_sets[9], 7, 9);   // ak je stlacena klavesa dolava, zmena animacie
 
         }
     }
@@ -258,9 +257,9 @@ class Player{
         var player_check_index = (player_tile_y * game.world.columns + player_tile_x);
         var object_check_index = (object_tile_y * game.world.columns + object_tile_x);
 
-        if (player_check_index == object_check_index){
+        if (player_check_index == object_check_index){ //porovnava indexi na ktorych sa objekt a hrac nachadza
 
-            return true;
+            return true; 
 
         } else return false;
 
@@ -268,7 +267,7 @@ class Player{
 
     findKey(object){
 
-        if (this.overlapsObject(object) && object.taken == false){
+        if (this.overlapsObject(object) && object.taken == false){ // ak prejde cez kluc
 
             if(object.color == "gold"){
 
@@ -294,7 +293,7 @@ class Player{
     }
 
     drawPlayer(){
-
+        //vykreslenie hraca
         if(this.stunned == true && this.frozen == false){
 
             this.stunned_animation.changeFrame(game.stunned_sprite_sheet.frame_sets[0], 3, 0);

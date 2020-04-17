@@ -1,8 +1,8 @@
 class Assassin extends Enemy{
 
-   constructor(x,y,x_velocity,y_velocity,height,width,old_x,old_y,animation){
+   constructor(x,y,height,width){
 
-        super(x,y,x_velocity,y_velocity,height,width,old_x,old_y,animation);
+        super(x,y,height,width);
         this.damage = 0.25;
         this.lives = 4;
         this.jumping = false;
@@ -21,8 +21,8 @@ class Assassin extends Enemy{
     if(this.alive == true && this.frozen == false && this.jumping == false && this.attacking == false) {
 
         this.idling = false;
-        this.x_velocity -= 0.2;
-        this.animation.changeFrame(game.assassin_sprite_sheet.frame_sets[3], 5, 3);
+        this.x_velocity -= 0.2; //pohyb dolava
+        this.animation.changeFrame(game.assassin_sprite_sheet.frame_sets[3], 5, 3); //zmena animacie
 
     }
 }
@@ -32,8 +32,8 @@ class Assassin extends Enemy{
         if(this.alive == true && this.frozen == false && this.jumping == false && this.attacking == false) {
 
             this.idling = false;
-            this.x_velocity += 0.2;
-            this.animation.changeFrame(game.assassin_sprite_sheet.frame_sets[2], 5, 2);
+            this.x_velocity += 0.2; //pohyb doprava
+            this.animation.changeFrame(game.assassin_sprite_sheet.frame_sets[2], 5, 2); //zmena animacie
 
         }
     }
@@ -47,13 +47,13 @@ class Assassin extends Enemy{
 
             if (this.old_x < this.x ) {
 
-                this.y_velocity -= 25;
-                this.animation.changeFrame(game.assassin_sprite_sheet.frame_sets[4], 5, 4);
+                this.y_velocity -= 25; //skok
+                this.animation.changeFrame(game.assassin_sprite_sheet.frame_sets[4], 5, 4); //zmena animacie
 
             } else if (this.old_x > this.x ) {
 
-                this.y_velocity -= 25;
-                this.animation.changeFrame(game.assassin_sprite_sheet.frame_sets[5], 5, 5);
+                this.y_velocity -= 25; //skok
+                this.animation.changeFrame(game.assassin_sprite_sheet.frame_sets[5], 5, 5); //zmena animacie
 
             }
         }
@@ -63,10 +63,14 @@ class Assassin extends Enemy{
 
         if (this.jumping == false && this.frozen == false && this.alive == true && this.attacking == false) {
 
-            this.idling = true;
+            if(this.idling == false){
 
-            if (this.old_x < this.x ) this.animation.changeFrame(game.assassin_sprite_sheet.frame_sets[0], 10, 0);
-            else this.animation.changeFrame(game.assassin_sprite_sheet.frame_sets[1], 10, 1);    
+                if (this.old_x < this.x ) this.animation.changeFrame(game.assassin_sprite_sheet.frame_sets[0], 10, 0); //zmena animacie
+                else this.animation.changeFrame(game.assassin_sprite_sheet.frame_sets[1], 10, 1); 
+            
+            }
+            
+            this.idling = true;
 
         }
     }
@@ -79,6 +83,7 @@ class Assassin extends Enemy{
         this.bulletCollision();
         this.updateBullets();
         this.bulletDamage();
+
         var enemy_tile_x = Math.floor((this.x + this.width * 0.5) / game.world.tile_size);
         var enemy_tile_y = Math.floor((this.y + this.height* 0.7) / game.world.tile_size);
         var check_left_index = game.world.map[(enemy_tile_y * game.world.columns + enemy_tile_x)-1];
@@ -94,32 +99,32 @@ class Assassin extends Enemy{
         var random_jump = Math.random();
         var random_shoot = Math.random();
 
-        if (rounded_player_y < rounded_enemy_y+200 && rounded_player_y > rounded_enemy_y-200){
+        if (rounded_player_y < rounded_enemy_y+200 && rounded_player_y > rounded_enemy_y-200){ // ak je y suradnica hraca a nepriatela v tomto intervale
 
-            if(rounded_playerx < rounded_enemyx +10 && rounded_playerx > rounded_enemyx-10 &&  this.shooting_animation == false){
+            if(rounded_playerx < rounded_enemyx +10 && rounded_playerx > rounded_enemyx-10 &&  this.shooting_animation == false){ //ak je hrac blizko nepraiatela
 
                 this.idle();
     
-            }else{
+            }else{ // ak nie
     
-                if(rounded_playerx < rounded_enemyx &&   this.shooting_animation == false) {
+                if(rounded_playerx < rounded_enemyx &&   this.shooting_animation == false) { //ak je hrac nalavo
     
-                    if(check_left_index == 6 && check_left_up_index == 6 && check_left_down_index != 6) this.moveLeft();
+                    if(check_left_index == 6 && check_left_up_index == 6 && check_left_down_index != 6) this.moveLeft(); //pohyb vlavo
                     else this.idle();
     
-                }else if(rounded_playerx > rounded_enemyx &&  this.shooting_animation == false) {
+                }else if(rounded_playerx > rounded_enemyx &&  this.shooting_animation == false) { // ak je hrac napravo
     
-                    if(check_right_index == 6 && check_right_up_index == 6 && check_right_down_index != 6) this.moveRight();
+                    if(check_right_index == 6 && check_right_up_index == 6 && check_right_down_index != 6) this.moveRight(); //pohyb vpravo
                     else this.idle();
     
-                }else if (rounded_playerx == rounded_enemyx  &&  this.shooting_animation == false){
+                }else if (rounded_playerx == rounded_enemyx  &&  this.shooting_animation == false){ //ak su x-ove suradnice rovnake
     
                     this.idle();
     
                 }
             }
 
-            if(random_jump > 0.98 && game.player.shooting == true &&  this.shooting_animation == false) {
+            if(random_jump > 0.98 && game.player.shooting == true &&  this.shooting_animation == false) { //ak hrac striela - nahodny skok
                 this.jump();   
             }          
 
@@ -136,14 +141,14 @@ class Assassin extends Enemy{
 
                 } else distance = 0;
 
-                if ( distance > 200 &&  distance < 400){
+                if ( distance > 200 &&  distance < 400){ // ak je hrac v urcitej blizkosti , nepriatel vystreli
 
                     this.shoot();   
 
                 }
             } 
 
-            if(this.jumping == true){
+            if(this.jumping == true){ //zrychlenie pri skoku
 
                 if (this.old_x < this.x ) {
 
@@ -156,25 +161,25 @@ class Assassin extends Enemy{
                 }
             }
 
-        } else {
+        } else { // ak je hrac vzdialeny , nepriatel sa prechadza 
 
-            if(check_left_index == 6 && check_left_up_index == 6 && check_left_down_index != 6 && this.left == true) {
+            if(check_left_index == 6 && check_left_up_index == 6 && check_left_down_index != 6 && this.left == true) { //ak nieje pred nepriatelom stena 
 
-                this.moveLeft();
+                this.moveLeft();//pohyb dolava
 
-            }else {
+            }else { // ak narazi na stenu
 
-                this.left = false;
+                this.left = false; //zmeni smer
                 this.right = true;
 
             }
-            if(check_right_index == 6 && check_right_up_index == 6 && check_right_down_index != 6 && this.right == true) {
+            if(check_right_index == 6 && check_right_up_index == 6 && check_right_down_index != 6 && this.right == true) {  //ak nieje pred nepriatelom stena 
 
-                this.moveRight();
+                this.moveRight();//pohyb doprava
 
-            }else {
+            }else { // ak narazi na stenu
 
-                this.left = true;
+                this.left = true; //zmeni smer
                 this.right = false;  
 
             } 
@@ -182,19 +187,65 @@ class Assassin extends Enemy{
         }
     }
 
+    attack(enemy,player){
+
+        var enemy_tile_x = Math.floor((enemy.x + enemy.width * 0.5) / game.world.tile_size);
+        var enemy_tile_y = Math.floor((enemy.y + enemy.height) / game.world.tile_size);
+        var player_tile_x = Math.floor((player.x + enemy.width * 0.5) / game.world.tile_size);
+        var player_tile_y = Math.floor((player.y + enemy.height * 0.5) / game.world.tile_size);
+        var check_player_index = (player_tile_y * game.world.columns + player_tile_x);
+        var check_enemy_left_index = (enemy_tile_y * game.world.columns + enemy_tile_x)-1;
+        var check_enemy_right_index = (enemy_tile_y * game.world.columns + enemy_tile_x)+2;
+        var random_hit = Math.random();
+
+        if(random_hit > 0.95 && enemy.alive == true && enemy.frozen == false && player.frozen == false && player.alive == true && player.stunned == false){// nahodny utok
+
+            if(check_player_index == check_enemy_left_index && this.player_change_position == true ){ // ak je hrac na spravnej pozicii
+                
+                enemy.attacking = true;
+                player.lives -= 1; // - 1 zivot 
+                player.stunned = true;
+                player.hitted = true;
+                game.hit.volume = 0.1;
+                game.hit.play(); 
+                setTimeout(() => { player.hitted = false }, 300);
+                setTimeout(() => { player.stunned = false }, 3000);
+                setTimeout(() => { enemy.attacking  = false ; this.player_change_position = false }, 800);
+            }
+            if(check_player_index == check_enemy_right_index && this.player_change_position == true) {// ak je hrac na spravnej pozicii
+
+                enemy.attacking = true;
+                player.lives -= 1; // - 1 zivot
+                player.stunned = true;
+                player.hitted = true;
+                game.hit.volume = 0.1;
+                game.hit.play(); 
+                setTimeout(() => { player.hitted = false }, 300);
+                setTimeout(() => { player.stunned = false }, 3000);
+                setTimeout(() => { enemy.attacking  = false , this.player_change_position = false}, 800);
+            }
+            if(check_player_index != check_enemy_right_index || check_player_index != check_enemy_left_index) {
+ 
+                this.player_change_position = true;
+
+            }
+        }
+
+    }
+
     shoot(){
 
         let side;
-
+        //ak je hrac vpravo od nepriatela
         if (this.animation.row == 0 || this.animation.row == 2 || this.animation.row == 4 || this.animation.row == 6 || this.animation.row == 8 || this.animation.row == 10) { 
 
              side = "right";
 
-        } else side = "left";
+        } else side = "left"; //ak je hrac vlavo od nepriatela
         
         if (this.alive == true && this.frozen == false && this.attacking == false && game.player.frozen == false && game.player.alive == true){
 
-            if(side == "right") var b = new Bullet (this.x+this.width/2+40,this.y+this.height/3+20,side);
+            if(side == "right") var b = new Bullet (this.x+this.width/2+40,this.y+this.height/3+20,side); //vytvorenie naboja
             else var b = new Bullet (this.x+this.width/2-40,this.y+this.height/3+20,side);
 
             setTimeout(() => { 
@@ -211,13 +262,13 @@ class Assassin extends Enemy{
             if (this.x < game.player.x && this.shooting_animation == true ) {
 
                 this.x_velocity = 0;
-                this.animation.changeFrame(game.assassin_sprite_sheet.frame_sets[8], 4, 8);
+                this.animation.changeFrame(game.assassin_sprite_sheet.frame_sets[8], 4, 8); //zmena animacie
                 setTimeout(() => { this.shooting_animation = false }, 900);
 
             } else {
 
                 this.x_velocity -= 0;
-                this.animation.changeFrame(game.assassin_sprite_sheet.frame_sets[9], 4, 9);
+                this.animation.changeFrame(game.assassin_sprite_sheet.frame_sets[9], 4, 9); //zmena animacie
                 setTimeout(() => { this.shooting_animation = false }, 900);
 
             }
@@ -229,18 +280,18 @@ class Assassin extends Enemy{
 
         if (game.player.frozen == false && this.shooting == true){
 
-            for (var i=0 ; i < this.bullets.length ; i++){
-
+            for (var i=0 ; i < this.bullets.length ; i++){ // prejdenie po poli bullets
+                //ak naboj zasiahol hraca
                 if(this.bullets[i].x >= game.player.x && this.bullets[i].x <= game.player.x + game.player.width && this.bullets[i].y >= game.player.y && this.bullets[i].y <= game.player.y + game.player.height) {    
                     
                     game.player.hitted = true
                     setTimeout(() => { game.player.hitted = false }, 300);
-                    this.bullets.splice(i,1); 
+                    this.bullets.splice(i,1); // vyhodime naboj z pola
                     game.hit.volume = 0.1;
                     game.hit.load();
                     game.hit.play();
 
-                    if (game.player.lives != 0) game.player.lives-= 1;
+                    if (game.player.lives != 0) game.player.lives-= 1; // -1 zivot
                 }
             }
         }
@@ -252,14 +303,14 @@ class Assassin extends Enemy{
 
             var to_delete ;
 
-            for (var i=0 ; i < this.bullets.length ; i++){
+            for (var i=0 ; i < this.bullets.length ; i++){ // prejdenie po poli bullets
 
                 var tile_x = Math.floor((this.bullets[i].x ) / game.world.tile_size);
                 var tile_y = Math.floor((this.bullets[i].y) / game.world.tile_size);
-                // get the value at the tile position in the map
+                //hodnota na ktorej sa naboj nachadza
                 var value_at_index = game.world.map[tile_y * game.world.columns + tile_x];
                 
-                if (value_at_index != 6 ) {
+                if (value_at_index != 6 ) {//ak narazi na stenu
 
                     to_delete = i;
 
@@ -268,7 +319,7 @@ class Assassin extends Enemy{
 
             if (typeof to_delete !== 'undefined'){
 
-                this.bullets.splice(to_delete,1); 
+                this.bullets.splice(to_delete,1); //vyhodenie z pola
 
             }
         
@@ -277,22 +328,22 @@ class Assassin extends Enemy{
 
     updateBullets(){
 
-        for (var i=0 ; i < this.bullets.length ; i++){
+        for (var i=0 ; i < this.bullets.length ; i++){// prejdenie po poli bullets
 
-            this.bullets[i].updateBullet();
+            this.bullets[i].updateBullet();//update nabojov
 
         }
     }
 
     checkShooting(){
 
-        if (this.bullets.length == 0) this.shooting = false;
+        if (this.bullets.length == 0) this.shooting = false; //ak existuju naboje
         else this.shooting = true;
 
     }
 
     drawEnemy(){
-
+        //vykreslenie grafiky nepriatela
         game.context.fillStyle = "green";
         game.context.drawImage(game.assassin_sprite_sheet.image, this.animation.frame * 200, this.animation.row * 200 , 200, 200, game.camera.offset[0] + this.x-15, game.camera.offset[1] + this.y-3, 200, 205);
 

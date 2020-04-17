@@ -16,11 +16,11 @@ class Button {
 
         if(this.fired == false){
 
-            if (game.controller.xtarget > this.x && game.controller.xtarget < this.x+this.width){
+            if (game.controller.xtarget > this.x && game.controller.xtarget < this.x+this.width){ // ak je kurzor na tlacidle
 
                 if (game.controller.ytarget > this.y && game.controller.ytarget < this.y+this.height){
 
-                    if (this.id == 1){
+                    if (this.id == 1){ // preskocenie pribehu
 
                         this.fired=true;
                         game.count=0;
@@ -30,7 +30,7 @@ class Button {
                             
                     }
 
-                    if (this.id == 2){
+                    if (this.id == 2){ // ukoncenie hry
 
                         this.fired=true;
                         location.reload();
@@ -42,7 +42,7 @@ class Button {
     }
 
     drawButton(){
-
+        //vykreslenie tlacidla
         game.context.fillStyle = "black";
         game.context.fillRect(this.x,this.y,this.width, this.height);
         game.context.fillStyle = "white";
