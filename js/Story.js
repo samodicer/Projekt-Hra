@@ -101,7 +101,7 @@ playStory(){
                                 game.context.drawImage(game.findImage("story_bg"), 0, 0 , 760 , 480 , 0 , 0 , 760 , 480);
                                 game.context.drawImage(game.findImage("story4_robot"), 0, 0 , 567 , 556 , -100+this.count , 0+this.count/2 , 567, 556);
                                 game.context.fillText("Posledná nádej sa vkladá do bojového robota", 310, 300);
-                                game.context.fillText("najnovšej technológie. Bol vyrobený iba jeden", 310, 325);
+                                game.context.fillText("najnovšej technológie. Bol vyrobený iba jeden, ", 310, 325);
                                 game.context.fillText("za účelom chrániť ľudstvo.", 310, 350);
                                 game.button1.drawButton();
                                 game.button1.click();

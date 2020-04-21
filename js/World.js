@@ -67,6 +67,7 @@ class World{
         game.context.drawImage(game.findImage("window"), 0, 0, 100, 50, 2625+game.camera.offset[0],  320+game.camera.offset[1], 100, 50);
         game.context.drawImage(game.findImage("window"), 0, 0, 100, 50, 5525+game.camera.offset[0],  290+game.camera.offset[1], 100, 50);
         game.context.drawImage(game.findImage("window"), 0, 0, 100, 50, 4480+game.camera.offset[0],  370+game.camera.offset[1], 100, 50);
+        game.context.drawImage(game.findImage("window"), 0, 0, 100, 50, 3180+game.camera.offset[0],  400+game.camera.offset[1], 100, 50);
         game.context.drawImage(game.findImage("cardrepertory"), 0, 0, 50, 90, 330+game.camera.offset[0],  260+game.camera.offset[1], 50, 90);
         game.context.drawImage(game.findImage("cardrepertory"), 0, 0, 50, 90, 390+game.camera.offset[0],  260+game.camera.offset[1], 50, 90);
         game.context.drawImage(game.findImage("cardrepertory"), 0, 0, 50, 90, 1500+game.camera.offset[0],  612+game.camera.offset[1], 50, 90);
@@ -76,6 +77,11 @@ class World{
         game.context.drawImage(game.findImage("cardrepertory"), 0, 0, 50, 90, 5200+game.camera.offset[0],  310+game.camera.offset[1], 50, 90);
         game.context.drawImage(game.findImage("cardrepertory"), 0, 0, 50, 90, 5250+game.camera.offset[0],  310+game.camera.offset[1], 50, 90);
         game.context.drawImage(game.findImage("cardrepertory"), 0, 0, 50, 90, 5300+game.camera.offset[0],  310+game.camera.offset[1], 50, 90);
+        game.context.drawImage(game.findImage("cardrepertory"), 0, 0, 50, 90, 3900+game.camera.offset[0],  612+game.camera.offset[1], 50, 90);
+        game.context.drawImage(game.findImage("cardrepertory"), 0, 0, 50, 90, 3960+game.camera.offset[0],  612+game.camera.offset[1], 50, 90);
+        game.context.drawImage(game.findImage("bulletin_board"), 0, 0, 90, 80, 500+game.camera.offset[0],  250+game.camera.offset[1], 90, 80);
+        game.context.drawImage(game.findImage("bulletin_board"), 0, 0, 90, 80, 3300+game.camera.offset[0],  600+game.camera.offset[1], 90, 80);
+        game.context.drawImage(game.findImage("machine"), 0, 0, 500, 500, 3450+game.camera.offset[0],  200+game.camera.offset[1], 500, 500);
 
     }
 

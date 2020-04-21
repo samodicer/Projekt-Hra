@@ -75,7 +75,7 @@ class Enemy{
             this.frozen=true;
             setTimeout(() => { this.alive = false ;}, 4000);
 
-            if (this.old_x < this.x )  {
+            /*if (this.old_x < this.x )  {
 
                 if (enemy instanceof Ghost){
 
@@ -118,6 +118,30 @@ class Enemy{
                 this.animation.changeFrame(game.assassin_sprite_sheet.frame_sets[11], 4, 11);  //zmena animacie
                 enemy.dead_animation = true;  
                 
+            }*/
+
+            if (enemy instanceof Ghost){
+                if(this.animation.row == 0 ||this.animation.row == 2){
+                    this.animation.changeFrame(game.enemy_sprite_sheet.frame_sets[6], 4, 6);//zmena animacie
+                }
+                if(this.animation.row == 1 ||this.animation.row == 3){
+                    this.animation.changeFrame(game.enemy_sprite_sheet.frame_sets[7], 4, 7); //zmena animacie
+                }
+            }
+
+            if (enemy instanceof Assassin){
+                if(this.animation.row == 0 ||this.animation.row == 2 ||this.animation.row == 4 ||this.animation.row == 6 ||this.animation.row == 8){
+                    this.animation.changeFrame(game.assassin_sprite_sheet.frame_sets[10], 4, 10);  //zmena animacie
+                }
+                if(this.animation.row == 1 ||this.animation.row == 3 || this.animation.row == 5 ||this.animation.row == 7 || this.animation.row == 9){
+                    this.animation.changeFrame(game.assassin_sprite_sheet.frame_sets[11], 4, 11);  //zmena animacie  
+                }
+            }
+
+            if (enemy instanceof Attacker){
+
+                enemy.dead_animation = true;  
+
             }
         }
     }

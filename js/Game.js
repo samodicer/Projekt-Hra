@@ -116,6 +116,8 @@ class Game{
             ["obstacle_ceiling","./images/obstacle-ceiling.png"],
             ["centralpc","./images/centralpc.png"],
             ["centralpc_destroyed","./images/centralpc-destroyed.png"],
+            ["bulletin_board","./images/bulletin-board.png"],
+            ["machine","./images/machine.png"],
             ["story1_human","./images/story/story1-human.png"],
             ["story1_robot","./images/story/story1-robot.png"],
             ["story2_assassin","./images/story/story2-assassin.png"],
