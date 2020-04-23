@@ -78,7 +78,7 @@ playStory(){
                         game.context.drawImage(game.findImage("story3_assassin"), 0, 0 , 700 , 706 , -80+this.count , 20+this.count , 620+this.count, 626+this.count);
                         game.context.drawImage(game.findImage("story3_ghost"), 0, 0 , 150 , 220 , 520+this.count , 310-this.count , 150, 223);
                         game.context.fillText("Všetky tieto stroje", 450, 100);
-                        game.context.fillText("riadi centrálny počítač", 450, 125);
+                        game.context.fillText("riadi centrálny počítač,", 450, 125);
                         game.context.fillText("ktorý bol napadnutý", 450, 150);
                         game.context.fillText("vírusom a zmenil robotov", 450, 175);
                         game.context.fillText("na nebezpečných protivníkov.", 450, 200);
