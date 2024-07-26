@@ -36,7 +36,7 @@ class Game{
         this.images = [];
         this.points = [];
         this.ended = false;
-
+        this.fpsInterval, this.startTime, this.now, this.then, this.elapsed;
     }
 
 
@@ -81,8 +81,10 @@ class Game{
         // vytvorenie bodov
         game.createPoints();
         // spustenie hernej slučky
+        game.fpsInterval = 1000 / 90;
+        game.then = Date.now();
+        game.startTime = game.then;
         window.requestAnimationFrame(game.loop);
-
     }
 
     // vytvorenie pola obrazkov 
@@ -261,7 +263,22 @@ class Game{
 
 
     //herna slucka
-    loop(){
+    loop() {
+
+        // zabezpečuje update slučky
+        window.requestAnimationFrame(game.loop);
+
+        // vypočíta uplynutý čas od poslednej slučky
+        game.now = Date.now();
+        game.elapsed = game.now - game.then;
+
+        // ak neuplynul dostatok času, neupdatne slučku
+        if (game.elapsed <= game.fpsInterval) {
+            return;
+        }
+
+        game.then = game.now - (game.elapsed % game.fpsInterval);
+
         // spusti hudbu
         game.playMusic();
         // update kamery
@@ -390,9 +407,6 @@ class Game{
             game.button3.click();
 
         }
-
-        // zabezpečuje update slučky
-        window.requestAnimationFrame(game.loop);
 
     }
 
